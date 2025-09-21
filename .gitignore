@@ -1,0 +1,20 @@
+# Build directories
+/build/
+/bin/
+
+# CMake files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# IDE/project files
+*.user
+*.suo
+*.vcxproj*
+*.idea/
+*.vscode/
+
+# System files
+.DS_Store
+*.swp
