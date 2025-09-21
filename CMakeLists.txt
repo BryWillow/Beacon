@@ -1,30 +1,25 @@
-cmake_minimum_required(VERSION 3.22)
-project(Beacon VERSION 1.0 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.20)
+project(Beacon)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# Header-only libraries
-add_library(common INTERFACE)
-target_include_directories(common INTERFACE src/common)
+#------------------------------#
+# Enable testing (if any)
+#------------------------------#
+enable_testing()
 
-add_library(strategies INTERFACE)
-target_include_directories(strategies INTERFACE src/strategies)
+#------------------------------#
+# Include src subdirectory
+#   - Contains all libraries and executables
+#------------------------------#
+add_subdirectory(src)
 
-# Function to add apps
-function(add_exchange_app app_name src_dir)
-    file(GLOB APP_SRCS "${src_dir}/*.cpp")
-    if(NOT APP_SRCS)
-        message(WARNING "No sources found for app ${app_name} in ${src_dir}")
-        return()
-    endif()
-    add_executable(${app_name} ${APP_SRCS})
-    target_link_libraries(${app_name} PRIVATE common strategies)
-endfunction()
+#------------------------------#
+# Include tests subdirectory (optional)
+#------------------------------#
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests")
+    add_subdirectory(tests)
+endif()
 
-# Market data apps
-add_exchange_app(nsdq_market_data_v1_listener src/apps/nsdq/market_data/v1/listener)
-add_exchange_app(nsdq_market_data_v1_replayer src/apps/nsdq/market_data/v1/replayer)
-add_exchange_app(nsdq_market_data_v1_generator src/apps/nsdq/market_data/v1/generator)
-
-# Execution app
-add_exchange_app(nsdq_execution_v1 src/apps/nsdq/execution/v1/execution)

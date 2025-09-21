@@ -1,2 +1,0 @@
-a458260 - Initial commit of Beacon project (BryWillow, 2025-09-19)
-273144a - Initial Beacon snapshot (pre-migration) (BryWillow, 2025-09-19)

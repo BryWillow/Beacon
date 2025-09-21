@@ -1,5 +1,7 @@
 # Build directories
 /build/
+
+# Binaries and archives
 /bin/
 
 # CMake files
@@ -7,14 +9,21 @@ CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
+compile_commands.json
 
 # IDE/project files
 *.user
 *.suo
 *.vcxproj*
 *.idea/
-*.vscode/
+.vscode/*.code-workspace
 
 # System files
 .DS_Store
 *.swp
+
+# Optional C++ outputs
+*.o
+*.log
+core
+
