@@ -4,10 +4,11 @@
 # @author      Bryan Camp
 # @brief       Fully bulletproof build script for Market Data Pipeline
 # @details     Handles Debug, Release, All, Clean builds with:
-#              - Out-of-source builds in temporary folder
-#              - Stub generation
-#              - Release notes & archives
-#              - Optional Debug tests
+#              - Out-of-source builds (bin/Debug, bin/Release)
+#              - Stub generation for missing main.cpp files
+#              - Removal of old *_v1 binaries
+#              - Release notes & rebuild scripts
+#              - Optional Debug unit tests
 # @usage       ./build.sh [Debug|Release|All|Clean] [--run-tests=true|false]
 ###############################################################################
 
@@ -45,7 +46,7 @@ fi
 # @brief    Remove all build directories, binaries, and root-level CMake artifacts
 #==============================#
 CLEAN_ALL() {
-    rm -rf "$PROJECT_ROOT/.tmp_build"
+    rm -rf "$PROJECT_ROOT/build"
     rm -rf "$PROJECT_ROOT/bin/Debug"
     rm -rf "$PROJECT_ROOT/bin/Release"
     rm -f "$PROJECT_ROOT/CMakeCache.txt"
@@ -60,53 +61,55 @@ CLEAN_ALL() {
 # @brief    Generate stub main.cpp files if missing
 #==============================#
 CREATE_STUBS() {
-    EXEC_DIR="$PROJECT_ROOT/src/apps/nsdq/execution/v1"
-    MD_DIR="$PROJECT_ROOT/src/apps/nsdq/market_data/v1"
+    EXEC_DIR="$PROJECT_ROOT/src/apps/nsdq/execution"
+    MD_DIR="$PROJECT_ROOT/src/apps/nsdq/market_data"
     mkdir -p "$EXEC_DIR" "$MD_DIR"
 
     [[ -f "$EXEC_DIR/main.cpp" ]] || cat <<EOL > "$EXEC_DIR/main.cpp"
 #include <iostream>
-int main() { std::cout << "NSDQ Execution v1 running" << std::endl; return 0; }
+int main() { std::cout << "NSDQ Execution running" << std::endl; return 0; }
 EOL
 
-    MD_FILES=("generator_main.cpp" "listener_main.cpp" "replayer_main.cpp")
+    MD_FILES=("generator.cpp" "listener.cpp" "replayer.cpp")
     MD_NAMES=("Generator" "Listener" "Replayer")
     for i in "${!MD_FILES[@]}"; do
         file="${MD_FILES[$i]}"
         name="${MD_NAMES[$i]}"
         [[ -f "$MD_DIR/$file" ]] || cat <<EOL > "$MD_DIR/$file"
 #include <iostream>
-int main() { std::cout << "NSDQ Market Data $name v1 running" << std::endl; return 0; }
+int main() { std::cout << "NSDQ Market Data $name running" << std::endl; return 0; }
 EOL
     done
 }
 
 #==============================#
 # Function: BUILD_TYPE
-# @brief    Perform CMake build out-of-source in a temporary folder
+# @brief    Perform CMake build out-of-source
 # @param    BUILD   Debug or Release
 #==============================#
 BUILD_TYPE() {
     BUILD=$1
-    TMP_BUILD_DIR="$PROJECT_ROOT/.tmp_build/$BUILD"
+    BUILD_DIR="$PROJECT_ROOT/build_$BUILD"
     BIN_DIR="$PROJECT_ROOT/bin/$BUILD"
 
-    rm -rf "$TMP_BUILD_DIR"
-    mkdir -p "$TMP_BUILD_DIR" "$BIN_DIR"
+    # Clean stale build artifacts
+    rm -rf "$BUILD_DIR"
+    rm -f  "$PROJECT_ROOT/CMakeCache.txt"
+    rm -rf "$PROJECT_ROOT/CMakeFiles"
+    rm -f  "$PROJECT_ROOT/Makefile"
+    rm -f  "$PROJECT_ROOT/cmake_install.cmake"
+    rm -f  "$PROJECT_ROOT/compile_commands.json"
 
-    cd "$TMP_BUILD_DIR"
+    # Recreate build + bin directories
+    mkdir -p "$BUILD_DIR" "$BIN_DIR"
 
+    # Configure & build
+    cd "$BUILD_DIR"
     cmake -DCMAKE_BUILD_TYPE=$BUILD \
-          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
           -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="$BIN_DIR" \
           "$PROJECT_ROOT"
-
     cmake --build . --config $BUILD
-
-    [[ -f "$TMP_BUILD_DIR/compile_commands.json" ]] && cp "$TMP_BUILD_DIR/compile_commands.json" "$BIN_DIR/"
-
     cd "$PROJECT_ROOT"
-    rm -rf "$TMP_BUILD_DIR"
 }
 
 #==============================#
@@ -168,8 +171,8 @@ ARCHIVE_BUILD() {
 #!/bin/bash
 set -e
 git checkout $GIT_HASH
-mkdir -p build/$BUILD
-cd build/$BUILD
+mkdir -p build_$BUILD
+cd build_$BUILD
 cmake -DCMAKE_BUILD_TYPE=$BUILD ../..
 cmake --build . --config $BUILD
 cd ../..
@@ -181,6 +184,19 @@ EOL
     if [ $COUNT -gt $((MAX_ARCHIVES*2)) ]; then
         ls -1t "$ARCHIVE_DIR" | tail -n +$((MAX_ARCHIVES*2+1)) | xargs -I {} rm "$ARCHIVE_DIR/{}"
     fi
+}
+
+#==============================#
+# Function: CLEAN_OLD_V1_BINARIES
+# @brief    Remove old _v1 binaries from bin directories
+#==============================#
+CLEAN_OLD_V1_BINARIES() {
+    for BUILD in Debug Release; do
+        BIN_DIR="$PROJECT_ROOT/bin/$BUILD"
+        if [ -d "$BIN_DIR" ]; then
+            find "$BIN_DIR" -maxdepth 1 -type f -name "*_v1" -exec rm -f {} \;
+        fi
+    done
 }
 
 #==============================#
@@ -198,12 +214,14 @@ case "$MODE" in
         TEST_RESULTS=$(RUN_UNIT_TESTS || echo "Some tests failed")
         WRITE_RELEASE_NOTES "Debug" "$TEST_RESULTS"
         ARCHIVE_BUILD "Debug"
+        CLEAN_OLD_V1_BINARIES
         echo "Debug build succeeded."
         ;;
     Release)
         BUILD_TYPE "Release"
         WRITE_RELEASE_NOTES "Release" "Not applicable"
         ARCHIVE_BUILD "Release"
+        CLEAN_OLD_V1_BINARIES
         echo "Release build succeeded."
         ;;
     All)
@@ -215,6 +233,7 @@ case "$MODE" in
         BUILD_TYPE "Release"
         WRITE_RELEASE_NOTES "Release" "Not applicable"
         ARCHIVE_BUILD "Release"
+        CLEAN_OLD_V1_BINARIES
         echo "All builds succeeded."
         ;;
     *)
