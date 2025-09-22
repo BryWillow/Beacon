@@ -1,29 +1,21 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
-PROJECT_ROOT="$(pwd)"
-INCLUDE_DIR="$PROJECT_ROOT/include"
-NSDQ_DIR="$INCLUDE_DIR/nsdq"
+CMAKE_FILE="./CMakeLists.txt"
 
-echo "[INFO] Organizing NSDQ headers in $INCLUDE_DIR ..."
+if [[ ! -f "$CMAKE_FILE" ]]; then
+    echo "[ERROR] CMakeLists.txt not found at $CMAKE_FILE"
+    exit 1
+fi
 
-# List of NSDQ headers you want to move
-NSDQ_HEADERS=(
-    "itch_message.h"
-    "itch_udp_listener.h"
-    "itch_udp_replayer.h"
-)
+echo "[INFO] Updating CMakeLists.txt ..."
 
-for header in "${NSDQ_HEADERS[@]}"; do
-    if [[ -f "$INCLUDE_DIR/$header" ]]; then
-        mv "$INCLUDE_DIR/$header" "$NSDQ_DIR/"
-        echo "[Move] $header -> nsdq/"
-    else
-        echo "[Skip] $header not found in $INCLUDE_DIR"
-    fi
-done
+# Use sed to replace old headers with new ones
+sed -i.bak -e 's|itch_message.h|md_itch_message.h|g' \
+           -e 's|itch_file_generator.h|md_itch_generator.h|g' \
+           -e 's|itch_message_udp_replayer.h|md_itch_udp_replayer.h|g' \
+           -e 's|itch_udp_listener.h|md_itch_udp_listener.h|g' "$CMAKE_FILE"
 
-# Remove empty files (optional)
-find "$NSDQ_DIR" -type f -size 0 -exec rm -v {} \;
+rm -f "$CMAKE_FILE.bak"
 
-echo "[Done] NSDQ headers organized."
+echo "[DONE] CMakeLists.txt update complete."
