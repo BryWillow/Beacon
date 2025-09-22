@@ -1,0 +1,78 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Clean Build",
+            "type": "shell",
+            "command": "${workspaceFolder}/build.sh Clean",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": ["$gcc"],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true
+            }
+        },
+        {
+            "label": "Debug Build + Tests",
+            "type": "shell",
+            "command": "${workspaceFolder}/build.sh Debug --run-tests=true",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true
+            }
+        },
+        {
+            "label": "Debug Build (No Tests)",
+            "type": "shell",
+            "command": "${workspaceFolder}/build.sh Debug --run-tests=false",
+            "group": "build",
+            "problemMatcher": ["$gcc"],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Release Build",
+            "type": "shell",
+            "command": "${workspaceFolder}/build.sh Release",
+            "group": "build",
+            "problemMatcher": ["$gcc"],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "All Builds + Tests",
+            "type": "shell",
+            "command": "${workspaceFolder}/build.sh All --run-tests=true",
+            "group": "build",
+            "problemMatcher": ["$gcc"],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        }
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "ms-vscode.cpptools",                 // C/C++ IntelliSense, debugging, and code navigation
+        "ms-vscode.cmake-tools",              // CMake integration and build system support
+        "matepek.vscode-catch2-test-adapter", // GoogleTest / Catch2 test explorer integration
+        "twxs.cmake",                         // Optional: CMake syntax highlighting
+        "ms-vscode.cpptools-extension-pack"   // Optional: useful extensions for C++ developers
+    ]
+}
