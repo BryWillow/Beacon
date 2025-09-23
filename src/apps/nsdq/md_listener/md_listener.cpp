@@ -10,8 +10,9 @@
 #include <unordered_map>
 #include <thread>
 #include "json.hpp"
-#include "nsdq/itch_message.h"
-#include "nsdq/itch_udp_listener.h"
+#include "nsdq/md_itch_message.h"
+#include "nsdq/md_itch_udp_listener.h"
+#include "spsc_ringbuffer_consumer_internal.h"
 #include "spsc_ringbuffer.h"
 #include "spsc_ringbuffer_consumer.h"
 

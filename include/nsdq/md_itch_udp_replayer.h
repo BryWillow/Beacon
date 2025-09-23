@@ -1,20 +1,23 @@
 // ---------------------------------------------------------------------------
-// File        : itch_message_udp_replayer.h
-// Project     : HftSimulator
+// File        : md_itch_udp_replayer.h
+// Project     : Beacon
 // Component   : Common
-// Description : Replays ITCH message from a file over UDP
+// Description : Replays ITCH messages from a file over UDP with low-latency
 // Author      : Bryan Camp
 // ---------------------------------------------------------------------------
 
 #pragma once
 
 #include <atomic>
+#include <fstream>
 #include <memory>
+#include <stdexcept>
 #include <string>
+#include <vector>
 
-#include "itch_message.h"
-#include "pinned_thread.h"
-#include "cpu_pause.h"
+#include "md_itch_message.h"
+#include "utils/pinned_thread.h"
+#include "utils/cpu_pause.h"
 #include "constants.h"  // defines NO_PINNING
 
 /**
@@ -28,19 +31,11 @@
  */
 class ItchMessageUdpReplayer {
 public:
-    /**
-     * @brief Construct a replayer
-     * @param fileName Path to the ITCH message file
-     * @param destIp Destination IP for UDP
-     * @param destPort Destination UDP port
-     * @param speedFactor Replay speed multiplier (1.0 = real-time)
-     * @param cpuCore Optional CPU core to pin the thread (NO_PINNING = no pin)
-     */
     ItchMessageUdpReplayer(const std::string& fileName,
                            const std::string& destIp,
                            uint16_t destPort,
-                           double   speedFactor,
-                           int      cpuCore = hft::NO_CPU_PINNING)
+                           double speedFactor,
+                           int cpuCore = hft::NO_CPU_PINNING)
         : _fileName(fileName)
         , _destIp(destIp)
         , _destPort(destPort)
@@ -49,52 +44,66 @@ public:
         , _stopFlag(false)
     {}
 
-    /// Deleted copy and move constructors to enforce unique ownership
     ItchMessageUdpReplayer(const ItchMessageUdpReplayer&) = delete;
     ItchMessageUdpReplayer(ItchMessageUdpReplayer&&) = delete;
     ItchMessageUdpReplayer& operator=(const ItchMessageUdpReplayer&) = delete;
     ItchMessageUdpReplayer& operator=(ItchMessageUdpReplayer&&) = delete;
 
-    /// @brief Start the replay thread
     void start() {
         _thread = std::make_unique<PinnedThread>(
-            [this](std::atomic<bool>& stop) {
-                replayLoop(stop);
-            },
+            [this](std::atomic<bool>& stop) { replayLoop(stop); },
             _cpuCore,
             _stopFlag
         );
     }
 
-    /// @brief Stop the replay thread
     void stop() {
         _stopFlag.store(true, std::memory_order_relaxed);
         if (_thread) _thread->join();
     }
 
-    /// @brief Returns true if all messages have been replayed
     bool finished() const {
-        return _current_index >= total_messages_;
+        return _currentIndex >= _totalMessages;
+    }
+
+    void loadAllMessages() {
+        std::ifstream inFile(_fileName, std::ios::binary | std::ios::ate);
+        if (!inFile) {
+            throw std::runtime_error("Failed to open ITCH message file: " + _fileName);
+        }
+
+        auto fileSize = inFile.tellg();
+        if (fileSize % sizeof(ItchMessage) != 0) {
+            throw std::runtime_error("File size is not aligned with ItchMessage size");
+        }
+
+        _totalMessages = static_cast<size_t>(fileSize / sizeof(ItchMessage));
+        _messages.reserve(_totalMessages);
+
+        inFile.seekg(0, std::ios::beg);
+        _messages.resize(_totalMessages);
+        inFile.read(reinterpret_cast<char*>(_messages.data()), fileSize);
     }
 
 private:
-    /// @brief Actual replay loop executed on the pinned thread
     void replayLoop(std::atomic<bool>& stop) {
-        while (!stop.load(std::memory_order_relaxed)) {
-            ItchMessage msg{}; // populate message from file/memory
-            // send message via UDP
-            _mm_pause();       // reduce CPU pressure while spinning
+        while (!stop.load(std::memory_order_relaxed) && _currentIndex < _totalMessages) {
+            const auto& msg = _messages[_currentIndex++];
+            // TODO: send msg over UDP
+            _mm_pause(); // reduce CPU pressure while spinning
         }
     }
 
 private:
-    std::string             _fileName;
-    std::string             _destIp;
-    uint16_t                _destPort;
-    double                  _speedFactor;
-    int                     _cpuCore;
-    std::atomic<bool>       _stopFlag;
+    std::string _fileName;
+    std::string _destIp;
+    uint16_t _destPort;
+    double _speedFactor;
+    int _cpuCore;
+    std::atomic<bool> _stopFlag;
     std::unique_ptr<PinnedThread> _thread;
-    std::atomic<size_t>     _current_index{0};
-    size_t                  total_messages_{0};
+    std::atomic<size_t> _currentIndex{0};
+    size_t _totalMessages{0};
+
+    std::vector<ItchMessage> _messages; ///< Preloaded ITCH messages in memory
 };

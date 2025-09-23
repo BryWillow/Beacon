@@ -21,10 +21,10 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#include "itch_message.h"
+#include "md_itch_message.h"
 #include "spsc_ringbuffer.h"
-#include "pinned_thread.h"
-#include "cpu_pause.h"
+#include "utils/pinned_thread.h"
+#include "utils/cpu_pause.h"
 #include "constants.h"
 
 /**
@@ -54,7 +54,7 @@ public:
           _shouldStop(false),
           _isRunning(false)
     {
-        if (_cpuCore < hft::NO_CPU_PINNING) 
+        if (_cpuCore < hft::NO_CPU_PINNING)
             throw std::invalid_argument("Invalid CPU core index: " + std::to_string(_cpuCore));
     }
 

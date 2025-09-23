@@ -9,8 +9,7 @@
         "**/CMakeFiles": true,
         "**/*.o": true,
         "**/*.obj": true,
-        "**/.gitignore": true,
-        "**/CMakeLists.txt": true
+        "**/.gitignore": true
     },
 
     // -------------------------

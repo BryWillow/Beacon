@@ -1,47 +1,73 @@
-cmake_minimum_required(VERSION 3.20)
+# ---------------------------------------------------------------------------
+# File        : CMakeLists.txt
+# Project     : Beacon
+# Author      : Bryan Camp
+# Description : Top-level build configuration for the Beacon Market Data Pipeline.
+#               Cross-platform (Linux/MacOS) modern CMake setup for low-latency
+#               HFT-style applications.
+# ---------------------------------------------------------------------------
 
-project(MarketDataPipeline LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.24)
+project(Beacon LANGUAGES CXX)
 
+# ------------------------------
+# Compiler & language settings
+# ------------------------------
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-#==============================#
+# ------------------------------
 # Include directories
-#==============================#
-include_directories(
-    ${PROJECT_SOURCE_DIR}/src/common
+# ------------------------------
+# Add include/ to all targets
+include_directories(${PROJECT_SOURCE_DIR}/include)
+
+# Vendor includes (e.g., json.hpp)
+include_directories(${PROJECT_SOURCE_DIR}/vendor/json)
+
+# ------------------------------
+# Common header-only library
+# ------------------------------
+add_library(common INTERFACE)
+target_include_directories(common INTERFACE
+    ${PROJECT_SOURCE_DIR}/include
 )
 
-#==============================#
-# Common header-only library
-#==============================#
-add_library(common INTERFACE)
-target_include_directories(common INTERFACE ${PROJECT_SOURCE_DIR}/src/common)
-
-#==============================#
+# ------------------------------
 # NSDQ Execution binary
-#==============================#
-set(NSDQ_EXEC_SRC
+# ------------------------------
+add_executable(nsdq_execution
     src/apps/nsdq/execution/main.cpp
 )
-
-add_executable(nsdq_execution ${NSDQ_EXEC_SRC})
 target_link_libraries(nsdq_execution PRIVATE common)
 
-#==============================#
+# ------------------------------
 # NSDQ Market Data binaries
-#==============================#
-set(NSDQ_MD_SRC
-    src/apps/nsdq/market_data/generator_main.cpp
+# ------------------------------
+# Generator
+add_executable(nsdq_generator
+    src/apps/nsdq/md_generator/md_generator.cpp
 )
-
-add_executable(nsdq_generator src/apps/nsdq/market_data/generator_main.cpp)
 target_link_libraries(nsdq_generator PRIVATE common)
 
-add_executable(nsdq_listener src/apps/nsdq/market_data/listener_main.cpp)
+# Listener
+add_executable(nsdq_listener
+    src/apps/nsdq/md_listener/md_listener.cpp
+)
 target_link_libraries(nsdq_listener PRIVATE common)
 
-add_executable(nsdq_replayer src/apps/nsdq/market_data/replayer_main.cpp)
+# Replayer
+add_executable(nsdq_replayer
+    src/apps/nsdq/md_playback/md_replayer.cpp
+)
 target_link_libraries(nsdq_replayer PRIVATE common)
 
+# ------------------------------
+# Notes
+# ------------------------------
+# - All include paths use ${PROJECT_SOURCE_DIR}/include
+# - Vendor headers (json.hpp) added explicitly to include path
+# - Header-only "common" library provides shared utilities
+# - Cross-platform: works on Linux and MacOS
+# - Future: add multi-feed support by creating separate targets

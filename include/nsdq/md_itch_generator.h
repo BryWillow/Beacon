@@ -12,8 +12,8 @@
 #include <random>
 #include <string>
 #include <filesystem>
-#include "itch_message.h"
-#include "captured_message.h"
+#include "md_itch_message.h"
+#include "md_itch_captured_message.h"
 
 /**
  * @class ItchFileGenerator
@@ -37,7 +37,7 @@ public:
      */
     static void Generate(const std::string& fileName, size_t numMessages) {
         std::filesystem::path dataDir("data");
-        if (!std::filesystem::exists(dataDir)) 
+        if (!std::filesystem::exists(dataDir))
             std::filesystem::create_directories(dataDir);
 
         std::filesystem::path filePath = dataDir / fileName;
@@ -65,7 +65,7 @@ public:
 
             tsNs += 1 + (rng() % 100);  // simulate spacing
 
-            CapturedMessage capMsg{};
+            CapturedItchMessage capMsg{};
             capMsg.msg  = msg;
             capMsg.tsNs = tsNs;
 

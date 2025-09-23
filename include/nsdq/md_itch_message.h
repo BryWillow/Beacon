@@ -17,7 +17,7 @@
 #include <immintrin.h>  // SSE/AVX intrinsics if needed
 #endif
 
-#include "hton_utils.h" // htonll / ntohll helpers
+#include "utils/hton_utils.h" // htonll / ntohll helpers
 
 /**
  * @brief Buy/Sell side of an order
