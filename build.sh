@@ -80,6 +80,16 @@ EOL
 int main() { std::cout << "NSDQ Market Data $name running" << std::endl; return 0; }
 EOL
     done
+
+    # ============================== #
+    # NSDQ Matching Engine stub
+    # ============================== #
+    ME_DIR="$PROJECT_ROOT/src/apps/nsdq/matching_engine"
+    mkdir -p "$ME_DIR"
+    [[ -f "$ME_DIR/main.cpp" ]] || cat <<EOL > "$ME_DIR/main.cpp"
+#include <iostream>
+int main() { std::cout << "NSDQ Matching Engine running" << std::endl; return 0; }
+EOL
 }
 
 #==============================#
@@ -92,25 +102,27 @@ BUILD_TYPE() {
     BUILD_DIR="$PROJECT_ROOT/build_$BUILD"
     BIN_DIR="$PROJECT_ROOT/bin/$BUILD"
 
-    # Clean stale build artifacts
-    rm -rf "$BUILD_DIR"
-    rm -f  "$PROJECT_ROOT/CMakeCache.txt"
-    rm -rf "$PROJECT_ROOT/CMakeFiles"
-    rm -f  "$PROJECT_ROOT/Makefile"
-    rm -f  "$PROJECT_ROOT/cmake_install.cmake"
-    rm -f  "$PROJECT_ROOT/compile_commands.json"
+    # Recreate bin directory if missing
+    mkdir -p "$BIN_DIR"
 
-    # Recreate build + bin directories
-    mkdir -p "$BUILD_DIR" "$BIN_DIR"
+    # If build folder exists, just reconfigure; else, create it
+    if [ ! -d "$BUILD_DIR" ]; then
+        mkdir -p "$BUILD_DIR"
+    fi
 
-    # Configure & build
     cd "$BUILD_DIR"
+
+    # Force CMake configure (detect all executables)
     cmake -DCMAKE_BUILD_TYPE=$BUILD \
           -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="$BIN_DIR" \
           "$PROJECT_ROOT"
+
+    # Build all targets
     cmake --build . --config $BUILD
+
     cd "$PROJECT_ROOT"
 }
+
 
 #==============================#
 # Function: RUN_UNIT_TESTS
@@ -241,4 +253,3 @@ case "$MODE" in
         exit 1
         ;;
 esac
-

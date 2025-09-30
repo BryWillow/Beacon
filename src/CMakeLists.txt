@@ -62,6 +62,14 @@ add_executable(nsdq_replayer
 target_link_libraries(nsdq_replayer PRIVATE common)
 
 # ============================== #
+# NSDQ Matching Engine binary
+# ============================== #
+add_executable(nsdq_matching_engine
+    src/apps/nsdq/matching_engine/main.cpp
+)
+target_link_libraries(nsdq_matching_engine PRIVATE common)
+
+# ============================== #
 # Notes:
 #   - All headers and utilities in 'include/' are available to executables via 'common'
 #   - Vendor libraries (e.g., json.hpp) are included via common INTERFACE include

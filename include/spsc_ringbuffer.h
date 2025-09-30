@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
 // File        : spsc_ringbuffer.h
-// Project     : HftSimulator
+// Project     : Beacon
 // Component   : Common
 // Description : Lock-free single-producer single-consumer ring buffer
 // Author      : Bryan Camp
@@ -79,7 +79,7 @@ public:
      */
     bool tryPush(const T& item) noexcept(std::is_nothrow_copy_assignable_v<T>) {
         const size_t nextHead = (_head + 1) & (Capacity - 1);
-        if (nextHead == _tail) { 
+        if (nextHead == _tail) {
             _droppedMessageCount.fetch_add(1, std::memory_order_relaxed);
             return false;
         }

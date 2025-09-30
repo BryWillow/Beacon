@@ -1,0 +1,96 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Beacon",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "nsdq_execution::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-nsdq_execution-Debug-ad082df029b1c3f54f5e.json",
+					"name" : "nsdq_execution",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "nsdq_generator::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-nsdq_generator-Debug-35a84454e100d1108730.json",
+					"name" : "nsdq_generator",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "nsdq_listener::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-nsdq_listener-Debug-73284d5cc75a28c9972e.json",
+					"name" : "nsdq_listener",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "nsdq_matching_engine::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-nsdq_matching_engine-Debug-a8f993001a1b7baf7a6f.json",
+					"name" : "nsdq_matching_engine",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "nsdq_replayer::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-nsdq_replayer-Debug-e49d0e6555a0543123fc.json",
+					"name" : "nsdq_replayer",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/build_Debug",
+		"source" : "/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

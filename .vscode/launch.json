@@ -55,6 +55,17 @@
             "MIMode": "lldb",
             "stopAtEntry": false,
             "externalConsole": false
+        },
+        {
+            "name": "Debug Matching Engine",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/Debug/nsdq_matching_engine",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "MIMode": "lldb",
+            "stopAtEntry": false,
+            "externalConsole": false
         }
     ]
 }

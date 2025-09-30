@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
 // File        : hton_utils.h
-// Project     : HftSimulator
+// Project     : Beacon
 // Component   : Common
 // Description : Cross-platform helpers for 64-bit host/network byte order conversion
 // Author      : Bryan Camp
