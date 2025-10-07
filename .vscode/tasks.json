@@ -4,12 +4,14 @@
         {
             "label": "Clean Build",
             "type": "shell",
-            "command": "${workspaceFolder}/build.sh Clean",
+            "command": "${workspaceFolder}/build.sh clean",
             "group": {
                 "kind": "build",
                 "isDefault": false
             },
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "presentation": {
                 "echo": true,
                 "reveal": "always",
@@ -21,12 +23,14 @@
         {
             "label": "Debug Build + Tests",
             "type": "shell",
-            "command": "${workspaceFolder}/build.sh Debug --run-tests=true",
+            "command": "${workspaceFolder}/build.sh debug -c:true",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "presentation": {
                 "echo": true,
                 "reveal": "always",
@@ -38,9 +42,11 @@
         {
             "label": "Debug Build (No Tests)",
             "type": "shell",
-            "command": "${workspaceFolder}/build.sh Debug --run-tests=false",
+            "command": "${workspaceFolder}/build.sh debug -t:false",
             "group": "build",
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "presentation": {
                 "echo": true,
                 "reveal": "always",
@@ -51,9 +57,11 @@
         {
             "label": "Release Build",
             "type": "shell",
-            "command": "${workspaceFolder}/build.sh Release",
+            "command": "${workspaceFolder}/build.sh release",
             "group": "build",
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "presentation": {
                 "echo": true,
                 "reveal": "always",
@@ -64,9 +72,11 @@
         {
             "label": "All Builds + Tests",
             "type": "shell",
-            "command": "${workspaceFolder}/build.sh All --run-tests=true",
+            "command": "${workspaceFolder}/build.sh all",
             "group": "build",
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "presentation": {
                 "echo": true,
                 "reveal": "always",

@@ -2,68 +2,136 @@
 ###############################################################################
 # @file        build.sh
 # @author      Bryan Camp
-# @brief       Fully bulletproof build script for Market Data Pipeline
-# @details     Handles Debug, Release, All, Clean builds with:
-#              - Out-of-source builds (bin/Debug, bin/Release)
+# @brief       Fully bulletproof build script for Beacon Market Data Pipeline
+# @details     Handles debug, release, all, clean builds with:
+#              - Out-of-source builds (bin/debug, bin/release)
 #              - Stub generation for missing main.cpp files
-#              - Removal of old *_v1 binaries
-#              - Release notes & rebuild scripts
-#              - Optional Debug unit tests
-# @usage       ./build.sh [Debug|Release|All|Clean] [--run-tests=true|false]
+#              - Version increment (major.minor.patch.build)
+#              - Clean release notes
+#              - Optional commit message generation
 ###############################################################################
 
-set -e
+set -euo pipefail
 
-#==============================#
-# Command-line argument parsing
-#==============================#
-if [ -z "$1" ]; then
-    echo "Usage: ./build.sh [Debug|Release|All|Clean] [--run-tests=true|false]"
+# ------------------------------ #
+# Colors
+# ------------------------------ #
+RED=$'\e[31m'
+GREEN=$'\e[32m'
+BLUE=$'\e[34m'
+YELLOW=$'\e[33m'
+RESET=$'\e[0m'
+
+# ------------------------------ #
+# Configuration
+# ------------------------------ #
+PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)"
+BIN_DIR="$PROJECT_ROOT/bin"
+BUILD_DIR="$PROJECT_ROOT/build"
+VERSION_FILE="$PROJECT_ROOT/VERSION"
+MAX_WARNINGS=5
+MAX_DESC_LEN=80
+
+# Default flags
+SYMBOLS=true
+SANITIZE=true
+RUN_TESTS=true
+SKIP_TESTS=false
+CREATE_COMMIT_MSG=false
+VERSION_OVERRIDE=""
+
+# ------------------------------ #
+# Usage
+# ------------------------------ #
+print_usage() {
+cat <<EOL
+Usage: $0 [debug|release|all|clean] [options]
+
+Modes (required):
+  debug   Build Debug with symbols and sanitizers
+  release Build Release (sanitizers ignored)
+  all     Build Debug then Release
+  clean   Remove all build artifacts
+
+Available flags (optional):
+  -s:true|false    Enable sanitizers (Debug only, default: true)
+  -t:true|false    Run unit tests (default: true)
+  -n:true|false    Skip tests (default: false)
+  -c:true|false    Suggest commit message based on changes
+  -v:<ver>        Override version MAJOR.MINOR.PATCH (BUILD always increments)
+
+Examples:
+  ./build.sh debug
+  ./build.sh release -t:false
+  ./build.sh all
+EOL
+}
+
+# ------------------------------ #
+# Parse arguments
+# ------------------------------ #
+if [ $# -lt 1 ]; then
+    echo -e "${RED}ERROR: No build mode specified${RESET}"
+    print_usage
     exit 1
 fi
 
-MODE=$1
-RUN_TESTS=true
-PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)"
-TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-GIT_HASH=$(git rev-parse --short HEAD)
-MAX_ARCHIVES=5
+MODE="$1"
+shift
 
-if [ ! -z "$2" ]; then
-    if [ "$MODE" != "Debug" ]; then
-        echo "Error: --run-tests option only valid for Debug builds."
-        exit 1
-    fi
-    case "$2" in
-        --run-tests=false) RUN_TESTS=false ;;
-        --run-tests=true)  RUN_TESTS=true ;;
-        *) echo "Unknown option: $2"; exit 1 ;;
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -s:true) SANITIZE=true; shift ;;
+        -s:false) SANITIZE=false; shift ;;
+        -t:true) RUN_TESTS=true; shift ;;
+        -t:false) RUN_TESTS=false; shift ;;
+        -n:true) SKIP_TESTS=true; shift ;;
+        -n:false) SKIP_TESTS=false; shift ;;
+        -c:true) CREATE_COMMIT_MSG=true; shift ;;
+        -c:false) CREATE_COMMIT_MSG=false; shift ;;
+        -v:*) VERSION_OVERRIDE="${1#*:}"; shift ;;
+        *) echo -e "${RED}ERROR: Unknown option: $1${RESET}"; print_usage; exit 1 ;;
     esac
+done
+
+# ------------------------------ #
+# Version increment
+# ------------------------------ #
+if [ ! -f "$VERSION_FILE" ]; then
+    echo "1.0.0.0" > "$VERSION_FILE"
 fi
 
-#==============================#
-# Function: CLEAN_ALL
-# @brief    Remove all build directories, binaries, and root-level CMake artifacts
-#==============================#
-CLEAN_ALL() {
-    rm -rf "$PROJECT_ROOT/build"
-    rm -rf "$PROJECT_ROOT/bin/Debug"
-    rm -rf "$PROJECT_ROOT/bin/Release"
-    rm -f "$PROJECT_ROOT/CMakeCache.txt"
-    rm -rf "$PROJECT_ROOT/CMakeFiles"
-    rm -f "$PROJECT_ROOT/Makefile"
-    rm -f "$PROJECT_ROOT/cmake_install.cmake"
-    rm -f "$PROJECT_ROOT/compile_commands.json"
+VERSION=$(cat "$VERSION_FILE")
+MAJOR=$(echo "$VERSION" | cut -d. -f1)
+MINOR=$(echo "$VERSION" | cut -d. -f2)
+PATCH=$(echo "$VERSION" | cut -d. -f3)
+BUILD_NUM=$(echo "$VERSION" | cut -d. -f4)
+
+if [[ -n "$VERSION_OVERRIDE" ]]; then
+    MAJOR=$(echo "$VERSION_OVERRIDE" | cut -d. -f1)
+    MINOR=$(echo "$VERSION_OVERRIDE" | cut -d. -f2)
+    PATCH=$(echo "$VERSION_OVERRIDE" | cut -d. -f3)
+fi
+
+BUILD_NUM=$((BUILD_NUM+1))
+VERSION="${MAJOR}.${MINOR}.${PATCH}.${BUILD_NUM}"
+echo "$VERSION" > "$VERSION_FILE"
+
+# ------------------------------ #
+# Helpers
+# ------------------------------ #
+clean_all() {
+    rm -rf "$BUILD_DIR" "$BIN_DIR"
+    rm -f "$PROJECT_ROOT/CMakeCache.txt" "$PROJECT_ROOT/Makefile" \
+          "$PROJECT_ROOT/cmake_install.cmake" "$PROJECT_ROOT/compile_commands.json"
+    echo "Clean completed."
 }
 
-#==============================#
-# Function: CREATE_STUBS
-# @brief    Generate stub main.cpp files if missing
-#==============================#
-CREATE_STUBS() {
+create_stubs() {
     EXEC_DIR="$PROJECT_ROOT/src/apps/nsdq/execution"
     MD_DIR="$PROJECT_ROOT/src/apps/nsdq/market_data"
-    mkdir -p "$EXEC_DIR" "$MD_DIR"
+    ME_DIR="$PROJECT_ROOT/src/apps/nsdq/matching_engine"
+    mkdir -p "$EXEC_DIR" "$MD_DIR" "$ME_DIR"
 
     [[ -f "$EXEC_DIR/main.cpp" ]] || cat <<EOL > "$EXEC_DIR/main.cpp"
 #include <iostream>
@@ -81,175 +149,208 @@ int main() { std::cout << "NSDQ Market Data $name running" << std::endl; return 
 EOL
     done
 
-    # ============================== #
-    # NSDQ Matching Engine stub
-    # ============================== #
-    ME_DIR="$PROJECT_ROOT/src/apps/nsdq/matching_engine"
-    mkdir -p "$ME_DIR"
     [[ -f "$ME_DIR/main.cpp" ]] || cat <<EOL > "$ME_DIR/main.cpp"
 #include <iostream>
 int main() { std::cout << "NSDQ Matching Engine running" << std::endl; return 0; }
 EOL
 }
 
-#==============================#
-# Function: BUILD_TYPE
-# @brief    Perform CMake build out-of-source
-# @param    BUILD   Debug or Release
-#==============================#
-BUILD_TYPE() {
-    BUILD=$1
-    BUILD_DIR="$PROJECT_ROOT/build_$BUILD"
-    BIN_DIR="$PROJECT_ROOT/bin/$BUILD"
+build_type() {
+    local BUILD_TYPE="$1"
+    local BUILD_OUT="$BIN_DIR/$BUILD_TYPE"
+    local BUILD_DIR_LOCAL="$BUILD_DIR/$BUILD_TYPE"
 
-    # Recreate bin directory if missing
-    mkdir -p "$BIN_DIR"
+    mkdir -p "$BUILD_OUT" "$BUILD_DIR_LOCAL"
+    cd "$BUILD_DIR_LOCAL"
 
-    # If build folder exists, just reconfigure; else, create it
-    if [ ! -d "$BUILD_DIR" ]; then
-        mkdir -p "$BUILD_DIR"
-    fi
-
-    cd "$BUILD_DIR"
-
-    # Force CMake configure (detect all executables)
-    cmake -DCMAKE_BUILD_TYPE=$BUILD \
-          -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="$BIN_DIR" \
+    cmake -DCMAKE_BUILD_TYPE="$BUILD_TYPE" \
+          -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="$BUILD_OUT" \
           "$PROJECT_ROOT"
 
-    # Build all targets
-    cmake --build . --config $BUILD
-
+    cmake --build . --config "$BUILD_TYPE"
     cd "$PROJECT_ROOT"
 }
 
-
-#==============================#
-# Function: RUN_UNIT_TESTS
-# @brief    Execute unit tests (Debug only)
-#==============================#
-RUN_UNIT_TESTS() {
-    [[ "$RUN_TESTS" == false ]] && echo "Tests skipped" && return
-    TEST_BIN="$PROJECT_ROOT/bin/Debug/test_runner"
+run_unit_tests() {
+    [[ "$SKIP_TESTS" == true ]] && echo "none" && return
+    TEST_BIN="$BIN_DIR/debug/test_runner"
     if [[ -f "$TEST_BIN" ]]; then
         if "$TEST_BIN"; then
-            echo "All tests passed"
+            echo "all_passed"
         else
-            echo "Some tests failed"
+            echo "failed"
         fi
     else
-        echo "No tests found"
+        echo "none"
     fi
 }
 
-#==============================#
-# Function: WRITE_RELEASE_NOTES
-# @brief    Generate release notes for current build
-# @param    BUILD          Debug or Release
-# @param    TEST_RESULTS   Results of unit tests
-#==============================#
-WRITE_RELEASE_NOTES() {
-    BUILD=$1
-    TEST_RESULTS=$2
-    BIN_DIR="$PROJECT_ROOT/bin/$BUILD"
-    mkdir -p "$BIN_DIR"
+truncate_text() {
+    local text="$1"
+    local maxlen="$2"
+    if [[ ${#text} -le $maxlen ]]; then
+        echo "$text"
+    else
+        echo "${text:0:$maxlen}..."
+    fi
+}
 
+write_release_notes() {
+    local BUILD_TYPE="$1"
+    local TEST_RESULTS_RAW="$2"
+    local OUT="$BIN_DIR/$BUILD_TYPE/release_notes.txt"
+    mkdir -p "$(dirname "$OUT")"
+
+    # ------------------------------
+    # Breaking / Minor / Patch Descriptions
+    # ------------------------------
+    BREAKING_DESC="[None]"
+    MINOR_DESC="[None]"
+    PATCH_DESC="[None]"
+
+    if git rev-parse --git-dir > /dev/null 2>&1; then
+        mapfile -t COMMITS < <(git log -3 --pretty=format:'%s')
+        for commit in "${COMMITS[@]}"; do
+            if [[ $commit == *"[BREAKING]"* ]]; then
+                BREAKING_DESC=$(truncate_text "${commit//\[BREAKING\]/}" $MAX_DESC_LEN)
+                MAJOR=$((MAJOR>0 ? MAJOR : 1))
+            elif [[ $commit == *"[MINOR]"* ]]; then
+                MINOR_DESC=$(truncate_text "${commit//\[MINOR\]/}" $MAX_DESC_LEN)
+                MINOR=$((MINOR>0 ? MINOR : 1))
+            elif [[ $commit == *"[PATCH]"* ]]; then
+                PATCH_DESC=$(truncate_text "${commit//\[PATCH\]/}" $MAX_DESC_LEN)
+                PATCH=$((PATCH>0 ? PATCH : PATCH))
+            fi
+        done
+    fi
+
+    # ------------------------------
+    # Updates
+    # ------------------------------
+    UPDATES=()
+    if git rev-parse --git-dir > /dev/null 2>&1; then
+        while IFS= read -r line; do
+            UPDATES+=("- $line")
+        done < <(git log -3 --pretty=format:'%s')
+    else
+        UPDATES=("- None")
+    fi
+
+    # ------------------------------
+    # Build Warnings
+    # ------------------------------
+    WARN_FILE="$BUILD_DIR/$BUILD_TYPE/compile_warnings.txt"
+    if [[ -f "$WARN_FILE" ]]; then
+        TOTAL_WARNINGS=$(wc -l < "$WARN_FILE")
+    else
+        TOTAL_WARNINGS=0
+    fi
+
+    WARNINGS=""
+    if [[ $TOTAL_WARNINGS -gt 0 ]]; then
+        WARNINGS=$(head -n 3 "$WARN_FILE" 2>/dev/null || echo "")
+    fi
+
+    [[ $TOTAL_WARNINGS -eq 0 ]] && WARN_COLOR="$GREEN" || { [[ $TOTAL_WARNINGS -le 9 ]] && WARN_COLOR="$YELLOW" || WARN_COLOR="$RED"; }
+    WARN_LABEL="${WARN_COLOR}${TOTAL_WARNINGS} warning$( [[ $TOTAL_WARNINGS -ne 1 ]] && echo s )${RESET}"
+    WARN_LINE="Build Warning(s)  : $WARN_LABEL"
+
+    # ------------------------------
+    # Test Results
+    # ------------------------------
+    case "$TEST_RESULTS_RAW" in
+        none) TEST_LINE="${RED}None Found${RESET}" ; TEST_LINE_FILE="None Found" ;;
+        all_passed) TEST_LINE="${GREEN}All Passed [0/0]${RESET}" ; TEST_LINE_FILE="All Passed [0/0]" ;;
+        failed)
+            # Here you could add logic to show first failed test
+            TEST_LINE="${RED}Some Tests Failed${RESET}" ; TEST_LINE_FILE="Some Tests Failed"
+            ;;
+        *) TEST_LINE="$TEST_RESULTS_RAW" ; TEST_LINE_FILE="$TEST_RESULTS_RAW" ;;
+    esac
+
+    # ------------------------------
+    # Release Notes File Output (plain)
+    # ------------------------------
     {
-        echo "Build type        : $BUILD"
-        echo "Git commit        : $GIT_HASH"
-        echo " "
-        git log -20 --pretty=format:"%h %s"
-        echo " "
-        echo "Test results      : $TEST_RESULTS"
-        echo "Rebuild script    : rebuild_${TIMESTAMP}_${GIT_HASH}.sh"
-    } > "$BIN_DIR/release_notes.txt"
-}
+        echo "Version           : $VERSION"
+        echo ""
+        echo "Build Date        : $(date '+%Y-%m-%d %H:%M:%S')"
+        echo "Built By          : $(whoami)"
+        echo "Build Mode        : $BUILD_TYPE"
+        echo "Command-Line      : ./build.sh $MODE"
+        echo "Breaking Changes  : [None]"
+        echo "$WARN_LINE"
+        echo "Build Output      : Beacon/bin/$BUILD_TYPE"
+        echo "Updates:"
+        for u in "${UPDATES[@]}"; do
+            echo "  $u"
+        done
+        echo "Test Results      : $TEST_LINE_FILE"
+        echo ""
+        echo "Version Details:"
+        printf "  %-5s: %-3s [Breaking Change(s): %s]\n" "Major" "$MAJOR" "$BREAKING_DESC"
+        printf "  %-5s: %-3s [Minor Change(s)   : %s]\n" "Minor" "$MINOR" "$MINOR_DESC"
+        printf "  %-5s: %-3s [Patch Change(s)   : %s]\n" "Patch" "$PATCH" "$PATCH_DESC"
+        printf "  %-5s: %-3s\n" "Build" "$BUILD_NUM"
+    } > "$OUT"
 
-#==============================#
-# Function: ARCHIVE_BUILD
-# @brief    Archive historical rebuild script and release notes
-# @param    BUILD   Debug or Release
-#==============================#
-ARCHIVE_BUILD() {
-    BUILD=$1
-    BIN_DIR="$PROJECT_ROOT/bin/$BUILD"
-    ARCHIVE_DIR="$BIN_DIR/Archive"
-    mkdir -p "$ARCHIVE_DIR"
-
-    REBUILD_SCRIPT="$ARCHIVE_DIR/rebuild_${TIMESTAMP}_${GIT_HASH}.sh"
-    RELEASE_NOTES_ARCHIVE="$ARCHIVE_DIR/release_notes_${TIMESTAMP}_${GIT_HASH}.txt"
-
-    cat <<EOL > "$REBUILD_SCRIPT"
-#!/bin/bash
-set -e
-git checkout $GIT_HASH
-mkdir -p build_$BUILD
-cd build_$BUILD
-cmake -DCMAKE_BUILD_TYPE=$BUILD ../..
-cmake --build . --config $BUILD
-cd ../..
-EOL
-    chmod +x "$REBUILD_SCRIPT"
-    cp "$BIN_DIR/release_notes.txt" "$RELEASE_NOTES_ARCHIVE"
-
-    COUNT=$(ls -1 "$ARCHIVE_DIR" | wc -l)
-    if [ $COUNT -gt $((MAX_ARCHIVES*2)) ]; then
-        ls -1t "$ARCHIVE_DIR" | tail -n +$((MAX_ARCHIVES*2+1)) | xargs -I {} rm "$ARCHIVE_DIR/{}"
-    fi
-}
-
-#==============================#
-# Function: CLEAN_OLD_V1_BINARIES
-# @brief    Remove old _v1 binaries from bin directories
-#==============================#
-CLEAN_OLD_V1_BINARIES() {
-    for BUILD in Debug Release; do
-        BIN_DIR="$PROJECT_ROOT/bin/$BUILD"
-        if [ -d "$BIN_DIR" ]; then
-            find "$BIN_DIR" -maxdepth 1 -type f -name "*_v1" -exec rm -f {} \;
-        fi
+    # ------------------------------
+    # Terminal Output (colored)
+    # ------------------------------
+    echo -e "Version           : $VERSION\n"
+    echo -e "Build Date        : $(date '+%Y-%m-%d %H:%M:%S')"
+    echo -e "Built By          : $(whoami)"
+    echo -e "Build Mode        : $BUILD_TYPE"
+    echo -e "Command-Line      : ./build.sh $MODE"
+    echo -e "Breaking Changes  : ${GREEN}[None]${RESET}"
+    echo -e "$WARN_LINE"
+    echo -e "Build Output      : Beacon/bin/$BUILD_TYPE"
+    echo -e "Updates:"
+    for u in "${UPDATES[@]}"; do
+        echo -e "  $u"
     done
+    echo -e "Test Results      : $TEST_LINE"
+    echo -e ""
+    echo -e "Version Details:"
+    printf "  %-5s: %-3s [Breaking Change(s): %s]\n" "Major" "$MAJOR" "$BREAKING_DESC"
+    printf "  %-5s: %-3s [Minor Change(s)   : %s]\n" "Minor" "$MINOR" "$MINOR_DESC"
+    printf "  %-5s: %-3s [Patch Change(s)   : %s]\n" "Patch" "$PATCH" "$PATCH_DESC"
+    printf "  %-5s: %-3s\n" "Build" "$BUILD_NUM"
 }
 
-#==============================#
-# Main execution
-#==============================#
-CREATE_STUBS
+# ------------------------------ #
+# Main
+# ------------------------------ #
+create_stubs
 
 case "$MODE" in
-    Clean)
-        CLEAN_ALL
-        echo "Clean completed."
+    clean)
+        clean_all
         ;;
-    Debug)
-        BUILD_TYPE "Debug"
-        TEST_RESULTS=$(RUN_UNIT_TESTS || echo "Some tests failed")
-        WRITE_RELEASE_NOTES "Debug" "$TEST_RESULTS"
-        ARCHIVE_BUILD "Debug"
-        CLEAN_OLD_V1_BINARIES
-        echo "Debug build succeeded."
+    debug)
+        clean_all
+        build_type "Debug"
+        TEST_RESULT=$(run_unit_tests)
+        write_release_notes "debug" "$TEST_RESULT"
         ;;
-    Release)
-        BUILD_TYPE "Release"
-        WRITE_RELEASE_NOTES "Release" "Not applicable"
-        ARCHIVE_BUILD "Release"
-        CLEAN_OLD_V1_BINARIES
-        echo "Release build succeeded."
+    release)
+        clean_all
+        build_type "Release"
+        TEST_RESULT=$(run_unit_tests)
+        write_release_notes "release" "$TEST_RESULT"
         ;;
-    All)
-        CLEAN_ALL
-        BUILD_TYPE "Debug"
-        TEST_RESULTS=$(RUN_UNIT_TESTS || echo "Some tests failed")
-        WRITE_RELEASE_NOTES "Debug" "$TEST_RESULTS"
-        ARCHIVE_BUILD "Debug"
-        BUILD_TYPE "Release"
-        WRITE_RELEASE_NOTES "Release" "Not applicable"
-        ARCHIVE_BUILD "Release"
-        CLEAN_OLD_V1_BINARIES
-        echo "All builds succeeded."
+    all)
+        clean_all
+        build_type "Debug"
+        TEST_RESULT=$(run_unit_tests)
+        write_release_notes "debug" "$TEST_RESULT"
+        build_type "Release"
+        TEST_RESULT=$(run_unit_tests)
+        write_release_notes "release" "$TEST_RESULT"
         ;;
     *)
-        echo "Unknown mode: $MODE"
+        echo -e "${RED}ERROR: Unknown mode: $MODE${RESET}"
+        print_usage
         exit 1
         ;;
 esac

@@ -1,7 +1,5 @@
 #include <iostream>
-#include "constants.h"
-
-int main(int argc, char* argv[]) {
-    std::cout << "NSDQ Matching Engine starting..." << std::endl;
-    return 0;
+int main() {
+  std::cout << "NSDQ Matching Engine running" << std::endl;
+  return 0;
 }

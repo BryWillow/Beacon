@@ -1,0 +1,80 @@
+Transcript saved: Beacon project conversation snapshot
+Date: 2025-10-05
+
+--- BEGIN TRANSCRIPT SUMMARY ---
+
+(Trimmed and structured snapshot of the interactive session between user and assistant.)
+
+1) Conversation Overview & Context
+- Project: Beacon (C++20, CMake, performance-sensitive market data pipeline for NSDQ ITCH)
+- Workspace path: /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon
+- Key apps: generator, replayer, UDP receiver (listener), matching engine
+- Build: single top-level CMakeLists.txt and build.sh controls debug/release/all and versioning (MAJOR.MINOR.PATCH.BUILD)
+- Vendor: googletest included locally (intentionally vendored)
+- User constraints: keep CMake simple (single top-level CMake), no commits without explicit permission, Doxygen-only comment style, header files must be `.h` and implementation `.cpp`, target OS macOS and Linux only, build number behavior fixed.
+
+2) Changes made in workspace (preview edits applied locally, not pushed)
+- Added Doxygen `@file` tags to several headers (preview edits saved in workspace):
+  - include/nsdq/market_data/itch/v5/itch_file_generator.h
+  - include/nsdq/market_data/itch/v5/itch_udp_replayer.h
+  - include/nsdq/market_data/itch/v5/itch_parser.h
+  - include/nsdq/market_data/itch/v5/itch_messages.h
+  - include/hft/networking/hton_utils.h
+
+Note: These were applied as non-invasive text edits to header blocks to satisfy the user's Doxygen `@file` requirement. No code behavior was changed.
+
+- Added (earlier) a small AI stub and CI workflow drafts (files present in workspace; not committed): include/ai_client.h, src/common_lib/ai_client.cpp, docs/ai_integration.md, .github/workflows/ci.yml, .github/workflows/release.yml, docs/ci.md
+
+3) Scans and findings
+- File extension scan: `.cc` files largely in `vendor/googletest` (expected). Only `vendor/json/json.hpp` found as `.hpp`.
+- Doxygen `@file` tokens: none present prior to the header edits; some top-level scripts had `@file` comments.
+- Many headers used a dash-style header block; none had `@file` tags originally.
+- Debug build run: The assistant ran the debug build via the project's `build.sh` earlier and confirmed success (build artifacts in bin/Debug). This run was performed after adding small helper/CI files.
+
+4) Design & recommendations provided
+- HFT-friendly metrics design (non-blocking, per-thread buffers, sample struct model, timestamps using monotonic clocks, NDJSON or binary capture formats, histograms for latency percentiles).
+- Replayer modes: burst, speedFactor (scaled deltas), fixedRate; recommendation to record generator timestamps in capture files.
+- SpScQueue performance: power-of-two sizing, index masking, cache-line padding, relaxed atomics, preallocation, non-blocking tryPush semantics, and overflow policies.
+- Networking: use sendmmsg/recvmmsg for batching on Linux, TPACKET for highest throughput; portable wrappers for clarity.
+- Matching engine: shard by symbol, per-shard data structures, avoid global locks, prefer pre-reserved hash or fixed arrays.
+
+5) CI/CD & testing plan
+- CI: Build matrix (ubuntu/macOS) to run `./build.sh debug -t:true` and fail CI on test failures. Use `actions/checkout@v4` with `fetch-depth: 0`.
+- Release: trigger on tag; verify tag vs `VERSION` file; run `./build.sh release -t:false` and upload `bin/Release/**` as artifacts. Do not allow releasing from uncommitted artifacts.
+- Versioning rule update: The user mandated four-part versions; release tags and VERSION file should match `MAJOR.MINOR.PATCH.BUILD` exactly; CI should enforce exact equality. To avoid `build.sh` incrementing BUILD during release CI (which would break equality), propose an opt-in env var `CI_SKIP_BUILD_INCREMENT=true` to prevent increment in CI release runs.
+- Unit tests: Add `enable_testing()` and `test_runner` target in CMake, integrate vendored googletest, add minimal unit tests at `tests/test_basic.cpp` (hton/ntoh roundtrip, sizeof static_asserts), run tests in CI and via build.sh locally.
+
+6) Pending tasks / Todos
+- Prepare full `@file` patch list for remaining project headers (in-progress)
+- Create candidate rename list for non-vendor non-conforming extensions (not started)
+- Create CI enforcement script for `@file` tags and extensions (in-progress)
+- HFT performance suggestions (in-progress — delivered list)
+- CI changes: propose to create release verification script and CI edits (user chose to defer actual application)
+
+7) User-specific constraints reiterated
+- Never make commits without explicit permission.
+- Use Doxygen-only comments.
+- Keep one top-level CMakeLists.txt; do not split or add extra CMake roots.
+- Googletest is a local dependency and must remain vendored.
+- Version file must always be four fields; release tags must match four fields exactly. No version downgrades.
+
+8) Recent actions by assistant (delta since last user message)
+- Recorded `@file` insertions into five headers (preview edits applied to the workspace; user has not requested commit).
+- Prepared plans and CI/release guard recommendations.
+- Updated the in-session todo list to include CI and performance items as in-progress.
+
+--- END TRANSCRIPT SUMMARY ---
+
+Notes:
+- This file is a snapshot and contains sensitive project and conversation details. It's stored in the repository at the user's request.
+- I did not commit or push any changes to the remote repository; all edits are made locally in the workspace.
+
+If you want this saved elsewhere (different filename, or pushed to a branch), tell me where and I will prepare a preview patch or a PR bundle for your review.
+
+```
+
+-- APPENDED ACTIVITY LOG ---------------------------------------------------
+Timestamp: 2025-10-05T00:00:00-07:00
+- User made manual edits to several headers and undid some assistant edits; assistant re-verified file contents before further changes.
+- Assistant inserted `@file` tags into dash-style headers where missing; no implementation changes were made.
+- User requested that the conversation be persisted; this transcript (and appended log) serve that request.
