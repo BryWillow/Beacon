@@ -1,45 +1,46 @@
+# ------------------------------
 # Build directories
+# ------------------------------
 /build/
-/build_Debug/   #artifacts
-/build_Release/ #artifacts
+/build_Debug/   # artifacts
+/build_Release/ # artifacts
 
+# ------------------------------
 # Binaries and archives
+# ------------------------------
 /bin/
 
+# ------------------------------
 # CMake files
+# ------------------------------
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
 compile_commands.json
 
+# ------------------------------
 # VS Code-Related files
+# ------------------------------
 *.user
 *.suo
 *.vcxproj*
 *.idea/
 *.db
-.vscode/*browse*
-.vscode/*vc.db*
+.vscode/browse.vc.db
+.vscode/*.vc.db
 
-
+# ------------------------------
 # System files
+# ------------------------------
 .DS_Store
 *.swp
 
+# ------------------------------
 # Optional C++ outputs
+# ------------------------------
 *.o
 *.log
 core
 
-build_Debug/.cmake/api/v1/query/client-vscode/query.json
-build_Debug/.cmake/api/v1/reply/cache-v2-cda4e79740bf6f70d4f1.json
-build_Debug/.cmake/api/v1/reply/cmakeFiles-v1-878023e82fb684c4e079.json
-build_Debug/.cmake/api/v1/reply/codemodel-v2-3b1fcbc71b645e3f00ee.json
-build_Debug/.cmake/api/v1/reply/directory-.-Debug-f5ebdc15457944623624.json
-build_Debug/.cmake/api/v1/reply/index-2025-09-22T00-36-58-0274.json
-build_Debug/.cmake/api/v1/reply/target-nsdq_execution-Debug-53340b385ba28296dac2.json
-build_Debug/.cmake/api/v1/reply/target-nsdq_generator-Debug-e0b485b8a288dfe48839.json
-build_Debug/.cmake/api/v1/reply/target-nsdq_listener-Debug-af18b07221455a02002c.json
-build_Debug/.cmake/api/v1/reply/target-nsdq_replayer-Debug-c1844d086fd493531cf6.json
-build_Debug/.cmake/api/v1/reply/toolchains-v1-da227db5da8a76fa7793.json
+
