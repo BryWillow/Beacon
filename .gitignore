@@ -1,5 +1,7 @@
 # Build directories
 /build/
+/build_Debug/   #artifacts
+/build_Release/ #artifacts
 
 # Binaries and archives
 /bin/
@@ -11,17 +13,14 @@ cmake_install.cmake
 Makefile
 compile_commands.json
 
-# IDE/project files
+# VS Code-Related files
 *.user
 *.suo
 *.vcxproj*
 *.idea/
 *.db
-browse.vc.db
-browse.vs.db
-browse*
-.vscode/*
-.vscode/*.code-workspace
+.vscode/*browse*
+.vscode/*vc.db*
 
 
 # System files

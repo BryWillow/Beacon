@@ -209,7 +209,11 @@ write_release_notes() {
     PATCH_DESC="[None]"
 
     if git rev-parse --git-dir > /dev/null 2>&1; then
-        mapfile -t COMMITS < <(git log -3 --pretty=format:'%s')
+        COMMITS=()
+        while IFS= read -r line; do
+            COMMITS+=("$line")
+        done < <(git log -3 --pretty=format:'%s')
+
         for commit in "${COMMITS[@]}"; do
             if [[ $commit == *"[BREAKING]"* ]]; then
                 BREAKING_DESC=$(truncate_text "${commit//\[BREAKING\]/}" $MAX_DESC_LEN)
@@ -251,21 +255,16 @@ write_release_notes() {
         WARNINGS=$(head -n 3 "$WARN_FILE" 2>/dev/null || echo "")
     fi
 
-    [[ $TOTAL_WARNINGS -eq 0 ]] && WARN_COLOR="$GREEN" || { [[ $TOTAL_WARNINGS -le 9 ]] && WARN_COLOR="$YELLOW" || WARN_COLOR="$RED"; }
-    WARN_LABEL="${WARN_COLOR}${TOTAL_WARNINGS} warning$( [[ $TOTAL_WARNINGS -ne 1 ]] && echo s )${RESET}"
-    WARN_LINE="Build Warning(s)  : $WARN_LABEL"
+    WARN_LINE="Build Warning(s)  : ${TOTAL_WARNINGS} warning$( [[ $TOTAL_WARNINGS -ne 1 ]] && echo s )"
 
     # ------------------------------
     # Test Results
     # ------------------------------
     case "$TEST_RESULTS_RAW" in
-        none) TEST_LINE="${RED}None Found${RESET}" ; TEST_LINE_FILE="None Found" ;;
-        all_passed) TEST_LINE="${GREEN}All Passed [0/0]${RESET}" ; TEST_LINE_FILE="All Passed [0/0]" ;;
-        failed)
-            # Here you could add logic to show first failed test
-            TEST_LINE="${RED}Some Tests Failed${RESET}" ; TEST_LINE_FILE="Some Tests Failed"
-            ;;
-        *) TEST_LINE="$TEST_RESULTS_RAW" ; TEST_LINE_FILE="$TEST_RESULTS_RAW" ;;
+        none) TEST_LINE_FILE="None Found" ;;
+        all_passed) TEST_LINE_FILE="All Passed [0/0]" ;;
+        failed) TEST_LINE_FILE="Some Tests Failed" ;;
+        *) TEST_LINE_FILE="$TEST_RESULTS_RAW" ;;
     esac
 
     # ------------------------------
@@ -293,29 +292,6 @@ write_release_notes() {
         printf "  %-5s: %-3s [Patch Change(s)   : %s]\n" "Patch" "$PATCH" "$PATCH_DESC"
         printf "  %-5s: %-3s\n" "Build" "$BUILD_NUM"
     } > "$OUT"
-
-    # ------------------------------
-    # Terminal Output (colored)
-    # ------------------------------
-    echo -e "Version           : $VERSION\n"
-    echo -e "Build Date        : $(date '+%Y-%m-%d %H:%M:%S')"
-    echo -e "Built By          : $(whoami)"
-    echo -e "Build Mode        : $BUILD_TYPE"
-    echo -e "Command-Line      : ./build.sh $MODE"
-    echo -e "Breaking Changes  : ${GREEN}[None]${RESET}"
-    echo -e "$WARN_LINE"
-    echo -e "Build Output      : Beacon/bin/$BUILD_TYPE"
-    echo -e "Updates:"
-    for u in "${UPDATES[@]}"; do
-        echo -e "  $u"
-    done
-    echo -e "Test Results      : $TEST_LINE"
-    echo -e ""
-    echo -e "Version Details:"
-    printf "  %-5s: %-3s [Breaking Change(s): %s]\n" "Major" "$MAJOR" "$BREAKING_DESC"
-    printf "  %-5s: %-3s [Minor Change(s)   : %s]\n" "Minor" "$MINOR" "$MINOR_DESC"
-    printf "  %-5s: %-3s [Patch Change(s)   : %s]\n" "Patch" "$PATCH" "$PATCH_DESC"
-    printf "  %-5s: %-3s\n" "Build" "$BUILD_NUM"
 }
 
 # ------------------------------ #
