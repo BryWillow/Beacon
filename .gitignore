@@ -16,7 +16,9 @@ compile_commands.json
 *.suo
 *.vcxproj*
 *.idea/
+*.db
 .vscode/*.code-workspace
+
 
 # System files
 .DS_Store
