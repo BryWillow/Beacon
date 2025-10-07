@@ -17,6 +17,7 @@ compile_commands.json
 *.vcxproj*
 *.idea/
 *.db
+.vscode/*.db
 .vscode/*.code-workspace
 
 
