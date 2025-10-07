@@ -18,42 +18,51 @@
 
 namespace spsc = beacon::hft::ringbuffer;
 
-namespace beacon::nsdq::market_data::itch {
-
-/**
- * @class ItchParser
- * @brief Converts raw ITCH packets into message variants and pushes them to a ring buffer.
- *
- * Usage:
- *   SpScRingBuffer<ItchMessageVariant> buffer;
- *   ItchParser parser(buffer);
- *   parser.parsePacket(data, length);
- */
-class ItchParser {
-   public:
-    explicit ItchParser(spsc::SpScRingBuffer<ItchMessageVariant>& buffer) : _ringBuffer(buffer) {}
+namespace beacon::nsdq::market_data::itch
+{
 
     /**
-     * @brief Parse a single packet of ITCH messages
-     * @param data Raw packet bytes
-     * @param len Packet length
+     * @class ItchParser
+     * @brief Converts raw ITCH packets into message variants and pushes them to a ring buffer.
      *
-     * Throws std::runtime_error if packet is truncated or contains an unknown message type.
+     * Usage:
+     *   SpScRingBuffer<ItchMessageVariant> buffer;
+     *   ItchParser parser(buffer);
+     *   parser.parsePacket(data, length);
      */
-    void parsePacket(const char* data, size_t len) {
-        size_t offset = 0;
+    class ItchParser
+    {
+    public:
+        explicit ItchParser(spsc::SpScRingBuffer<ItchMessageVariant> &buffer)
+            : _ringBuffer(buffer) {}
 
-        auto ensureBytes = [&](size_t required) {
-            if (offset + required > len) {
-                throw std::runtime_error("Packet truncated");
-            }
-        };
+        /**
+         * @brief Parse a single packet of ITCH messages
+         * @param data Raw packet bytes
+         * @param len Packet length
+         *
+         * @throws std::runtime_error if packet is malformed or an unknown type.
+         */
+        void parsePacket(const char *data, size_t len)
+        {
+            size_t offset = 0;
 
-        while (offset < len) {
-            MessageType type = static_cast<MessageType>(data[offset]);
+            auto ensureBytes = [&](size_t required)
+            {
+                if (offset + required > len)
+                {
+                    throw std::runtime_error("Packet truncated");
+                }
+            };
 
-            switch (type) {
-                case MessageType::AddOrder: {
+            while (offset < len)
+            {
+                MessageType type = static_cast<MessageType>(data[offset]);
+
+                switch (type)
+                {
+                case MessageType::AddOrder:
+                {
                     ensureBytes(sizeof(AddOrderMessage));
                     AddOrderMessage msg;
                     std::memcpy(&msg, data + offset, sizeof(msg));
@@ -61,7 +70,8 @@ class ItchParser {
                     offset += sizeof(msg);
                     break;
                 }
-                case MessageType::Trade: {
+                case MessageType::Trade:
+                {
                     ensureBytes(sizeof(TradeMessage));
                     TradeMessage msg;
                     std::memcpy(&msg, data + offset, sizeof(msg));
@@ -69,7 +79,8 @@ class ItchParser {
                     offset += sizeof(msg);
                     break;
                 }
-                case MessageType::OrderExecuted: {
+                case MessageType::OrderExecuted:
+                {
                     ensureBytes(sizeof(OrderExecutedMessage));
                     OrderExecutedMessage msg;
                     std::memcpy(&msg, data + offset, sizeof(msg));
@@ -77,7 +88,8 @@ class ItchParser {
                     offset += sizeof(msg);
                     break;
                 }
-                case MessageType::OrderCancel: {
+                case MessageType::OrderCancel:
+                {
                     ensureBytes(sizeof(OrderCancelMessage));
                     OrderCancelMessage msg;
                     std::memcpy(&msg, data + offset, sizeof(msg));
@@ -85,7 +97,8 @@ class ItchParser {
                     offset += sizeof(msg);
                     break;
                 }
-                case MessageType::OrderDelete: {
+                case MessageType::OrderDelete:
+                {
                     ensureBytes(sizeof(OrderDeleteMessage));
                     OrderDeleteMessage msg;
                     std::memcpy(&msg, data + offset, sizeof(msg));
@@ -93,7 +106,8 @@ class ItchParser {
                     offset += sizeof(msg);
                     break;
                 }
-                case MessageType::ReplaceOrder: {
+                case MessageType::ReplaceOrder:
+                {
                     ensureBytes(sizeof(ReplaceOrderMessage));
                     ReplaceOrderMessage msg;
                     std::memcpy(&msg, data + offset, sizeof(msg));
@@ -101,7 +115,8 @@ class ItchParser {
                     offset += sizeof(msg);
                     break;
                 }
-                case MessageType::MarketDepth: {
+                case MessageType::MarketDepth:
+                {
                     ensureBytes(sizeof(MarketDepthMessage));
                     MarketDepthMessage msg;
                     std::memcpy(&msg, data + offset, sizeof(msg));
@@ -111,12 +126,12 @@ class ItchParser {
                 }
                 default:
                     throw std::runtime_error("Unknown ITCH message type");
+                }
             }
         }
-    }
 
-   private:
-    spsc::SpScRingBuffer<ItchMessageVariant>& _ringBuffer;  ///< Ring buffer for parsed messages
-};
+    private:
+        spsc::SpScRingBuffer<ItchMessageVariant> &_ringBuffer; ///< Ring buffer for parsed messages
+    };
 
-}  // namespace beacon::nsdq::market_data::itch
+} // namespace beacon::nsdq::market_data::itch
