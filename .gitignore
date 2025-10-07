@@ -20,7 +20,7 @@ compile_commands.json
 browse.vc.db
 browse.vs.db
 browse*
-./vscode/*
+.vscode/*
 .vscode/*.code-workspace
 
 
