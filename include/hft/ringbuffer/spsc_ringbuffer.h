@@ -32,67 +32,78 @@ namespace beacon::hft::ringbuffer
      * - High-water mark optionally monitored.
      */
     template <typename T, size_t Capacity = beacon::hft::core::DEFAULT_RING_BUFFER_CAPACITY>
-    class SpScRingBuffer
-{
-public:
+    class SpScRingBuffer {
+      public:
         SpScRingBuffer()
             : _head(0), _tail(0), _dropped(0), _highWaterMark(0) {}
 
+        // Non-copyable
         SpScRingBuffer(const SpScRingBuffer &) = delete;
         SpScRingBuffer &operator=(const SpScRingBuffer &) = delete;
 
+        // Non-movable
         SpScRingBuffer(SpScRingBuffer &&) = delete;
         SpScRingBuffer &operator=(SpScRingBuffer &&) = delete;
 
         /**
-         * @brief Attempt to push an item into the buffer.
-         * @param item The item to push
-         * @return true if successfully pushed, false if buffer was full
+         * @brief  Lock-freen attempt to push an item onto the ring buffer.
+         * @param  Item The item to push onto the ring buffer.
+         * @return True if the ring buffer had space for item. False otherwise.
+         * @note   There is no alerting if tryPush fails.
          */
-        bool tryPush(const T &item)
-        {
-            const size_t head = _head.load(std::memory_order_relaxed);
-            const size_t next = increment(head);
+        bool tryPush(const T& item) {
+          const size_t head = _head.load(std::memory_order_relaxed);
+          const size_t next = increment(head);
 
-            if (next == _tail.load(std::memory_order_acquire))
-            {
-                _dropped.fetch_add(1, std::memory_order_relaxed);
-                return false;
-            }
+          if (next == _tail.load(std::memory_order_acquire)) {
+            // The buffer is full.
+            _dropped.fetch_add(1, std::memory_order_relaxed)
+            return false;
+          }
 
-            _buffer[head] = item;
-            _head.store(next, std::memory_order_release);
-            updateHighWaterMark(next);
-            return true;
+          // The buffer has space for the item Insert it.
+          _buffer[head] = item;
+          _head.store(next, std::memory_order_release);
+
+          // Keep track of the most full the ring buffer has ever been.
+          updateHighWaterMark(next);
+
+          return true;
         }
 
         /**
-         * @brief Attempt to pop an item from the buffer.
-         * @param item Output parameter to store the popped item
-         * @return true if successfully popped, false if buffer was empty
+         * @brief Lock-free attempt to pop an item from the ring buffer.
+         * @param item Output parameter to store the popped item.
+         * @return True if the ring buffer has items to pop. False otherwise.
+         * @note   There is no alerting if tryPush fails.
          */
-        bool tryPop(T &item)
-        {
-            const size_t tail = _tail.load(std::memory_order_relaxed);
-            if (tail == _head.load(std::memory_order_acquire))
-            {
-                return false;
-            }
+        bool tryPop(T& item){
+          const size_t tail = _tail.load(std::memory_order_relaxed);
+          if (tail == _head.load(std::memory_order_acquire)) {
+            // The ring buffer is empty.
+            return false;
+          }
 
-            item = _buffer[tail];
-            _tail.store(increment(tail), std::memory_order_release);
-            return true;
+          // Set the out parameter and advance the tail.
+          item = _buffer[tail];
+          _tail.store(increment(tail), std::memory_order_release);
+
+          return true;
         }
 
         /**
-         * @brief Returns number of messages dropped due to full buffer
+         * @brief Returns total number of lost due to the ring buffer being full.
          */
-        size_t dropped() const { return _dropped.load(std::memory_order_relaxed); }
+        size_t dropped() const {
+          return _dropped.load(std::memory_order_relaxed);
+        }
 
         /**
-         * @brief Returns the current high-water mark
+         * @brief Returns the most full that the ring buffer has ever been,.
          */
-        size_t highWaterMark() const { return _highWaterMark.load(std::memory_order_relaxed); }
+        size_t highWaterMark() const {
+          return _highWaterMark.load(std::memory_order_relaxed);
+        }
 
     private:
         std::array<T, Capacity> _buffer;
@@ -103,6 +114,11 @@ public:
 
         size_t increment(size_t idx) const noexcept { return (idx + 1) % Capacity; }
 
+        /**
+         * @brief Maintains the most full that the fing buffer has ever been.
+         * @param head The current head index used to measure the ring buffer size.
+         * @note  Be cautious as we use the modulo operator.
+         */
         void updateHighWaterMark(size_t head)
         {
             size_t current = _highWaterMark.load(std::memory_order_relaxed);
