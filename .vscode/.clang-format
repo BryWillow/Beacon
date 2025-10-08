@@ -1,0 +1,9 @@
+BasedOnStyle: LLVM
+UseTab: Never
+BraceWrapping:
+  AfterFunction: false
+  AfterClass: false
+  AfterControlStatement: false
+  AfterNamespace: false
+  BeforeElse: true
+

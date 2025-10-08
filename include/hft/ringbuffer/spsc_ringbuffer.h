@@ -31,10 +31,10 @@ namespace beacon::hft::ringbuffer
      * - Tracks dropped messages when buffer is full.
      * - High-water mark optionally monitored.
      */
-    template <typename T, size_t Capacity = constants::DEFAULT_RING_BUFFER_CAPACITY>
+    template <typename T, size_t Capacity = beacon::hft::core::DEFAULT_RING_BUFFER_CAPACITY>
     class SpScRingBuffer
-    {
-    public:
+{
+public:
         SpScRingBuffer()
             : _head(0), _tail(0), _dropped(0), _highWaterMark(0) {}
 

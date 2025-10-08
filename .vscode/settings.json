@@ -1,51 +1,58 @@
 {
-    // -------------------------
-    // Hide build and temporary folders
-    // -------------------------
-    "files.exclude": {
-        "**/build_Debug": true,
-        "**/build_Release": true,
-        "**/.tmp_build": true,
-        "**/CMakeFiles": true,
-        "**/*.o": true,
-        "**/*.obj": true,
-        "**/.gitignore": true
-    },
-
-    // -------------------------
-    // CMake Tools settings
-    // -------------------------
-    "cmake.buildDirectory": "${workspaceFolder}/build_Debug",
-    "cmake.generator": "Unix Makefiles",
-    "cmake.configureOnOpen": true,
-    "cmake.configureSettings": {
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
-    },
-
-    // -------------------------
-    // C++ IntelliSense settings
-    // -------------------------
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
-    "C_Cpp.intelliSenseEngine": "Default",
-    "C_Cpp.intelliSenseEngineFallback": "Enabled",
-    "C_Cpp.autocomplete": "Default",
-
-    // -------------------------
-    // GoogleTest / Test Explorer
-    // -------------------------
-    "cmake.ctestArgs": [
-        "--verbose"
-    ],
-    "testing.autoDiscover": true,
-    "testing.gtestAdapterEnabled": true,
-    "testing.gtestInclude": "**/tests/*.cpp",
-    "testing.cppunitAdapterEnabled": false,
-
-    // -------------------------
-    // Editor preferences (optional)
-    // -------------------------
-    "editor.formatOnSave": true,
-    "editor.tabSize": 4,
-    "editor.insertSpaces": true,
-    "files.trimTrailingWhitespace": true
+  // -------------------------
+  // Hide build and temporary folders
+  // -------------------------
+  "files.exclude": {
+    "**/build_Debug": true,
+    "**/build_Release": true,
+    "**/.tmp_build": true,
+    "**/CMakeFiles": true,
+    "**/*.o": true,
+    "**/*.obj": true,
+    "**/.gitignore": true
+  },
+  // -------------------------
+  // CMake Tools settings
+  // -------------------------
+  "cmake.buildDirectory": "${workspaceFolder}/build_Debug",
+  "cmake.generator": "Unix Makefiles",
+  "cmake.configureOnOpen": true,
+  "cmake.configureSettings": {
+    "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+  },
+  // -------------------------
+  // C++ IntelliSense settings
+  // -------------------------
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+  "C_Cpp.intelliSenseEngine": "Default",
+  "C_Cpp.intelliSenseEngineFallback": "Enabled",
+  "C_Cpp.autocomplete": "Default",
+  // -------------------------
+  // GoogleTest / Test Explorer
+  // -------------------------
+  "cmake.ctestArgs": [
+    "--verbose"
+  ],
+  "testing.autoDiscover": true,
+  "testing.gtestAdapterEnabled": true,
+  "testing.gtestInclude": "**/tests/*.cpp",
+  "testing.cppunitAdapterEnabled": false,
+  // -------------------------
+  // Editor preferences (optional)
+  // -------------------------
+  "editor.formatOnSave": true,
+  "files.trimTrailingWhitespace": true,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "editor.autoIndent": "full",
+  // -------------------------
+  // Clang settings
+  // -------------------------
+  "C_Cpp.clang_format_fallbackStyle": "file",
+  "C_Cpp.clang_format_style": ".vscode/.clang-format",
+  "files.associations": {
+    "MLTable": "yaml",
+    "variant": "cpp"
+  }
 }
