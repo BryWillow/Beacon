@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// @file        nsdq_common_types.h
+// @file        nsdq_common_enums.h
 // Project     : Beacon
 // Component   : NSDQ Common
 // Description : Shared enums and type definitions for ITCH & OUCH messages
@@ -12,41 +12,37 @@
 
 namespace beacon::nsdq::common
 {
-
     /**
      * @enum Side
      * @brief Buy or Sell side indicator for orders
      */
-    enum class Side : uint8_t
-    {
-        Buy = 'B', ///< Buy side
-        Sell = 'S' ///< Sell side
+    enum class Side : uint8_t {
+      Buy =  'B', ///< Buy side
+      Sell = 'S'  ///< Sell side
     };
 
     /**
-     * @enum UpdateAction
-     * @brief Market depth update action
+     * @enum UpdateType
+     * @brief Market depth update types
      */
-    enum class UpdateAction : uint8_t
-    {
-        Add = 'A',    ///< Add a new order / level
-        Delete = 'D', ///< Remove an order / level
-        Modify = 'M'  ///< Modify an existing order / level
+    enum class UpdateType : uint8_t{
+      Add =    'A', ///< Add a new order / level
+      Delete = 'D', ///< Remove an order / level
+      Modify = 'M'  ///< Modify an existing order / level
     };
 
     /**
      * @enum MessageType
      * @brief Generic message type codes for ITCH / OUCH
      */
-    enum class MessageType : uint8_t
-    {
-        AddOrder = 'A',      ///< Add Order
-        Trade = 'P',         ///< Trade (ITCH: P or Q)
-        OrderExecuted = 'E', ///< Order Executed
-        OrderCancel = 'X',   ///< Cancel an order
-        OrderDelete = 'D',   ///< Delete an order
-        ReplaceOrder = 'U',  ///< Replace an order
-        MarketDepth = 'R'    ///< Market depth update
+    enum class MessageType : uint8_t {
+      AddOrder =      'A', ///< Add Order
+      Trade =         'P', ///< Trade (ITCH: P or Q)
+      OrderExecuted = 'E', ///< Order Executed
+      OrderCancel =   'X', ///< Cancel an order
+      OrderDelete =   'D', ///< Delete an order
+      ReplaceOrder =  'U', ///< Replace an order
+      MarketDepth =   'R'  ///< Market depth update
     };
 
     /**

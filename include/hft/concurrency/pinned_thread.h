@@ -2,7 +2,7 @@
 // @file        pinned_thread.h
 // Project     : Beacon
 // Component   : HFT / Concurrency
-// Description : RAII wrapper for threads optionally pinned to a CPU core
+// Description : Pins an std::thread to a specific core. RAII-friendly.
 // Author      : Bryan Camp
 // ---------------------------------------------------------------------------
 
@@ -11,33 +11,36 @@
 #include <thread>
 #include <atomic>
 #include <iostream>
+#include "thread_utils.h"
 
 namespace beacon::hft::concurrency
 {
-
-    class PinnedThread
-    {
+  class PinnedThread
+  {
     public:
-        template <typename Fn>
-        PinnedThread(Fn &&fn, int core, std::atomic<bool> &stopFlag)
-        {
-            _thread = std::thread([fn = std::forward<Fn>(fn), core, &stopFlag]() mutable
-                                  { fn(stopFlag); });
-        }
+      template <typename Fn>
+      PinnedThread(Fn&& fn, int core) {
+        auto fnLocal = std::forward<Fn>(fn);  // take ownership of the user-provided function
+        auto threadFn = [&fnLocal, this]() {  // capture by reference so we have access to _stopFlag
+          fnLocal(_stopFlag);                 // invoke the user's function with atomic _stopFlag
+        };
+        _thread = std::thread(threadFn);      // start the thread which now has _stopFlag
+        ThreadUtils::pinThreadToCore(_thread, core); // pin the thread to the specified core
+      }
 
-        ~PinnedThread()
-        {
-            if (_thread.joinable())
-                _thread.join();
-        }
-        void join()
-        {
-            if (_thread.joinable())
-                _thread.join();
-        }
+      ~PinnedThread() {
+        if (_thread.joinable())
+          _thread.join();
+      }
+
+      void stop() {
+        _stopFlag.store(true, std::memory_order_relaxed);
+        if (_thread.joinable())
+          _thread.join();
+      }
 
     private:
-        std::thread _thread;
-    };
-
+      std::atomic<bool> _stopFlag;
+      std::thread _thread;
+  };
 } // namespace beacon::hft::concurrency

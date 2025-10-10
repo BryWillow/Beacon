@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.26)
 project(Beacon LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -25,9 +25,6 @@ set(NSDQ_APPS
     nsdq_execution
 )
 
-# -----------------------------------------------------------------------------
-# Executables
-# -----------------------------------------------------------------------------
 foreach(app IN LISTS NSDQ_APPS)
     if(app STREQUAL "nsdq_generator")
         add_executable(${app} apps/nsdq/nsdq_generator/md_generator.cpp)
@@ -41,3 +38,26 @@ foreach(app IN LISTS NSDQ_APPS)
 
     target_link_libraries(${app} PRIVATE common Threads::Threads)
 endforeach()
+
+# -----------------------------------------------------------------------------
+# Enable testing
+# -----------------------------------------------------------------------------
+enable_testing()
+
+# -----------------------------------------------------------------------------
+# GoogleTest (local copy)
+# -----------------------------------------------------------------------------
+add_subdirectory(vendor/googletest)
+
+# -----------------------------------------------------------------------------
+# Unit Tests
+# -----------------------------------------------------------------------------
+add_executable(test_itch_file_generator
+  tests/itch_file_generator/itch_file_generator.cpp
+)
+target_link_libraries(test_itch_file_generator
+  PRIVATE common Threads::Threads gtest gtest_main
+)
+
+add_test(NAME test_itch_file_generator
+         COMMAND test_itch_file_generator)

@@ -52,7 +52,7 @@ class ItchMessageUdpReplayer {
      */
     ItchMessageUdpReplayer(const std::string& fileName, const std::string& destIp,
                            uint16_t destPort, double speedFactor,
-                           int cpuCore = bhcore::NO_CPU_PINNING)
+                           int cpuCore = hft::NO_CPU_PINNING)
         : _fileName(fileName),
           _destIp(destIp),
           _destPort(destPort),
@@ -90,7 +90,7 @@ class ItchMessageUdpReplayer {
     void stop() {
         _stopFlag.store(true, std::memory_order_relaxed);
         if (_thread)
-            _thread->join();
+            _thread->stop();
     }
 
     /** @brief Check if all messages have been replayed */

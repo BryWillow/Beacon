@@ -2,13 +2,8 @@
 ###############################################################################
 # @file        build.sh
 # @author      Bryan Camp
-# @brief       Fully bulletproof build script for Beacon Market Data Pipeline
-# @details     Handles debug, release, all, clean builds with:
-#              - Out-of-source builds (bin/debug, bin/release)
-#              - Stub generation for missing main.cpp files
-#              - Version increment (major.minor.patch.build)
-#              - Clean release notes
-#              - Optional commit message generation
+# @component   Beacon Build System
+# @description Fully bulletproof build script for Beacon Market Data Pipeline
 ###############################################################################
 
 set -euo pipefail
@@ -171,18 +166,29 @@ build_type() {
     cd "$PROJECT_ROOT"
 }
 
+# ------------------------------ #
+# Run unit tests (safe if none exist)
+# ------------------------------ #
 run_unit_tests() {
     [[ "$SKIP_TESTS" == true ]] && echo "none" && return
-    TEST_BIN="$BIN_DIR/debug/test_runner"
-    if [[ -f "$TEST_BIN" ]]; then
-        if "$TEST_BIN"; then
-            echo "all_passed"
-        else
-            echo "failed"
-        fi
-    else
+
+    shopt -s nullglob
+    TEST_BINS=( "$BIN_DIR/debug/test_*" )
+    shopt -u nullglob
+
+    if [[ ${#TEST_BINS[@]} -eq 0 ]]; then
         echo "none"
+        return
     fi
+
+    for TEST_BIN in "${TEST_BINS[@]}"; do
+        if ! "$TEST_BIN"; then
+            echo "failed"
+            return
+        fi
+    done
+
+    echo "all_passed"
 }
 
 truncate_text() {
@@ -201,9 +207,6 @@ write_release_notes() {
     local OUT="$BIN_DIR/$BUILD_TYPE/release_notes.txt"
     mkdir -p "$(dirname "$OUT")"
 
-    # ------------------------------
-    # Breaking / Minor / Patch Descriptions
-    # ------------------------------
     BREAKING_DESC="[None]"
     MINOR_DESC="[None]"
     PATCH_DESC="[None]"
@@ -228,9 +231,6 @@ write_release_notes() {
         done
     fi
 
-    # ------------------------------
-    # Updates
-    # ------------------------------
     UPDATES=()
     if git rev-parse --git-dir > /dev/null 2>&1; then
         while IFS= read -r line; do
@@ -240,9 +240,6 @@ write_release_notes() {
         UPDATES=("- None")
     fi
 
-    # ------------------------------
-    # Build Warnings
-    # ------------------------------
     WARN_FILE="$BUILD_DIR/$BUILD_TYPE/compile_warnings.txt"
     if [[ -f "$WARN_FILE" ]]; then
         TOTAL_WARNINGS=$(wc -l < "$WARN_FILE")
@@ -257,9 +254,6 @@ write_release_notes() {
 
     WARN_LINE="Build Warning(s)  : ${TOTAL_WARNINGS} warning$( [[ $TOTAL_WARNINGS -ne 1 ]] && echo s )"
 
-    # ------------------------------
-    # Test Results
-    # ------------------------------
     case "$TEST_RESULTS_RAW" in
         none) TEST_LINE_FILE="None Found" ;;
         all_passed) TEST_LINE_FILE="All Passed [0/0]" ;;
@@ -267,9 +261,6 @@ write_release_notes() {
         *) TEST_LINE_FILE="$TEST_RESULTS_RAW" ;;
     esac
 
-    # ------------------------------
-    # Release Notes File Output (plain)
-    # ------------------------------
     {
         echo "Version           : $VERSION"
         echo ""
