@@ -8,7 +8,9 @@
 
 #include <gtest/gtest.h>
 #include <filesystem>
-#include "nsdq/market_data/itch/stubs/itch_file_generator.h"
+#include <fstream>
+#include "nsdq/market_data/itch/messages_active.h"
+#include "nsdq/market_data/itch/itch_file_generator.h"
 
 namespace beaconmd = beacon::nsdq::market_data::itch;
 namespace fs = std::filesystem;
