@@ -8,4 +8,4 @@
 
 #pragma once
 
-#include <nsdq/market_data/itch/v5/itch_messages.h> ///< Current live version
+#include "nsdq/market_data/itch/v5/itch_message_types.h" ///< Current live version

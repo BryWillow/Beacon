@@ -10,8 +10,8 @@
 #include <iostream>
 #include <thread>
 #include "json.hpp"
-#include "nsdq/md_itch_udp_replayer.h"
-#include "constants.h"
+#include "nsdq_itch_udp_replayer.h"
+//#include "constants.h"
 
 using json = nlohmann::json;
 std::atomic<bool> g_stopFlag{false};
@@ -70,16 +70,8 @@ int main(int argc, char* argv[])
     }
     cfg.filePath = filePath.string();
 
-    ItchMessageUdpReplayer replayer(cfg.filePath,cfg.destIp,cfg.destPort,cfg.replaySpeed,cfg.cpuCore);
-    std::cout << "[Replayer] Loading messages...\n";
-    replayer.loadAllMessages();
-    std::cout << "[Replayer] Loaded " << cfg.numMessages << " messages.\n";
-    replayer.start();
-
-    while(!replayer.finished() && !g_stopFlag.load(std::memory_order_relaxed)) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-
+    ItchMessageUdpPlayer replayer(cfg.filePath,cfg.destPort);//,cfg.replaySpeed,cfg.cpuCore);
+    replayer.run();
     replayer.stop();
     std::cout << "[Replayer] Replay complete.\n";
   }

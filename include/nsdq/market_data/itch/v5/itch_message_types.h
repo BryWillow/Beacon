@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// @file        itch_message_layout.h
+// @file        itch_message_types.h
 // Project     : Beacon
 // Component   : NSDQ ITCH 5.0
 // Description : ITCH 5.0 message definitions and variant wrapper
@@ -18,13 +18,13 @@ namespace beacon::nsdq::market_data::itch {
  * @brief ITCH 5.0 message type codes
  */
 enum class MessageType : uint8_t {
-  AddOrder = 'A',       ///< Add order message
-  Trade = 'P',          ///< Trade message
+  AddOrder =      'A',  ///< Add order message
+  Trade =         'P',  ///< Trade message
   OrderExecuted = 'E',  ///< Order executed
-  OrderCancel = 'X',    ///< Cancel an order
-  OrderDelete = 'D',    ///< Delete an order
-  ReplaceOrder = 'U',   ///< Replace an order
-  MarketDepth = 'R'     ///< Market depth update
+  OrderCancel =   'X',  ///< Cancel an order
+  OrderDelete =   'D', ///< Delete an order
+  ReplaceOrder =  'U', ///< Replace an order
+  MarketDepth =   'R'  ///< Market depth update
 };
 
 /**
@@ -106,6 +106,21 @@ struct MarketDepthMessage {
  * @brief Variant type representing any ITCH message
  */
 using ItchMessageVariant =
-  std::variant<AddOrderMessage, TradeMessage, OrderExecutedMessage, OrderCancelMessage,
-  OrderDeleteMessage, ReplaceOrderMessage, MarketDepthMessage>;
+  std::variant<
+    AddOrderMessage,
+    TradeMessage,
+    OrderExecutedMessage,
+    OrderCancelMessage,
+    OrderDeleteMessage,
+    ReplaceOrderMessage,
+    MarketDepthMessage>;
+
+  enum class ItchMessageKind : uint8_t {
+    AddOrder,
+    Trade,
+    Cancel,
+    Delete,
+    Replace,
+    MarketDepth
+  };
 }  // namespace beacon::nsdq::market_data::itch

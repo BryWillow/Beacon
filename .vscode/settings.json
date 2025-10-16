@@ -53,6 +53,7 @@
   "C_Cpp.clang_format_style": ".vscode/.clang-format",
   "files.associations": {
     "MLTable": "yaml",
-    "variant": "cpp"
+    "variant": "cpp",
+    "iostream": "cpp"
   }
 }

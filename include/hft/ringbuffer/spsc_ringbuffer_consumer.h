@@ -15,7 +15,6 @@
 
 #include "spsc_ringbuffer.h"
 #include "core/cpu_pause.h"
-#include "constants.h"
 #include "thread_utils.h"
 
 namespace beaconcore = beacon::hft::core;

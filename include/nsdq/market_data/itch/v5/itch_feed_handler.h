@@ -13,8 +13,8 @@
 #include <cstring>
 #include <stdexcept>
 
-#include "itch_messages.h"
-#include "spsc_ringbuffer.h"
+#include "itch_message_types.h"
+#include "hft/ringbuffer/spsc_ringbuffer.h"
 
 namespace beaconrb = beacon::hft::ringbuffer;
 

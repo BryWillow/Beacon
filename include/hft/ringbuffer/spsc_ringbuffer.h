@@ -12,10 +12,12 @@
 #include <cstddef>
 #include <array>
 #include <algorithm>
-#include "constants.h" // for DEFAULT_RING_BUFFER_CAPACITY
 
 namespace beacon::hft::ringbuffer
 {
+  /** @brief Default capacity for single-producer single-consumer ring buffers */
+  inline constexpr int DEFAULT_RING_BUFFER_CAPACITY = 1024;
+
   /**
    * @class SpScRingBuffer
    * @brief Lock-free, fixed-capacity ring buffer for single producer / single consumer.
@@ -30,7 +32,7 @@ namespace beacon::hft::ringbuffer
    * - Tracks dropped messages when buffer is full.
    * - High-water mark optionally monitored.
    */
-  template <typename T, size_t Capacity = beacon::hft::DEFAULT_RING_BUFFER_CAPACITY>
+  template <typename T, size_t Capacity = DEFAULT_RING_BUFFER_CAPACITY>
   class SpScRingBuffer {
     public:
       SpScRingBuffer()
@@ -45,7 +47,7 @@ namespace beacon::hft::ringbuffer
       SpScRingBuffer &operator=(SpScRingBuffer &&) = delete;
 
       /**
-       * @brief  Lock-freen attempt to push an item onto the ring buffer.
+       * @brief  Lock-free attempt to push an item onto the ring buffer.
        * @param  Item The item to push onto the ring buffer.
        * @return True if the ring buffer had space for item. False otherwise.
        * @note   There is no alerting if tryPush fails.
@@ -56,7 +58,7 @@ namespace beacon::hft::ringbuffer
 
         if (next == _tail.load(std::memory_order_acquire)) {
           // The buffer is full.
-          _dropped.fetch_add(1, std::memory_order_relaxed)
+          _dropped.fetch_add(1, std::memory_order_relaxed);
           return false;
         }
 
