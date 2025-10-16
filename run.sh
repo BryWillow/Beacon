@@ -1,172 +1,111 @@
-#!/bin/bash
-###############################################################################
-# @file        run.sh
-# @author      Bryan Camp
-# @brief       Run Market Data Pipeline: Listener + Replayer + optional generator
-# @details     Handles Debug/Release builds, generator parameter validation,
-#              listener/replayer startup, and prints a simple ASCII report.
-###############################################################################
-
+#!/usr/bin/env bash
 set -e
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-BUILD_TYPE=${1:-Debug}
-BIN_DIR="$PROJECT_ROOT/bin/$BUILD_TYPE"
-DATA_DIR="$PROJECT_ROOT/data"
+# ---------------------------------------------------------------------------
+# @project   : Beacon Ecosystem
+# @version   : 1.0.6       # Initial version; will auto-update
+# @date      : $(date +%Y-%m-%d)
+# @build_by  : Bryan Camp
+# ---------------------------------------------------------------------------
 
-GEN_RUN=false
-GEN_ARGS=()
-ITCH_FILE=""
-MAX_TRIES=5
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+VERSION_FILE="$REPO_ROOT/VERSION"
+RELEASE_NOTES="$REPO_ROOT/ReleaseNotes.txt"
 
-#==============================#
-# Function: prompt_for_generator
-# @brief    Prompt user to run generator and collect parameters
-#==============================#
-prompt_for_generator() {
-    echo "Do you want to run the generator? [y/n]"
-    read -r response
-    if [[ "$response" =~ ^[Yy]$ ]]; then
-        GEN_RUN=true
-        local tries=0
-        while [[ $tries -lt $MAX_TRIES ]]; do
-            echo "Enter generator arguments (space-separated, no duplicates):"
-            read -r -a args
-            # Validate duplicates
-            local dup=false
-            for arg in "${args[@]}"; do
-                count=0
-                for a in "${args[@]}"; do [[ "$a" == "$arg" ]] && ((count++)); done
-                if [[ $count -gt 1 ]]; then
-                    dup=true
-                    echo "Duplicate argument: $arg"
-                fi
-            done
-            if $dup; then
-                ((tries++))
-                continue
-            fi
-            GEN_ARGS=("${args[@]}")
-            break
-        done
-        if [[ $tries -eq $MAX_TRIES ]]; then
-            echo "Failed to provide valid generator arguments after $MAX_TRIES tries."
-            exit 1
-        fi
-        # Determine output file
-        ITCH_FILE="$DATA_DIR/default.itch"
+cd "$REPO_ROOT"
+
+# Check for uncommitted changes
+if [[ -n $(git status --porcelain) ]]; then
+    echo "Warning: You have uncommitted changes. Commit them before release."
+    exit 1
+fi
+
+# Check for changes since last release
+last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+changes_since_last=$(git log ${last_tag}..HEAD --oneline)
+if [[ -z "$changes_since_last" ]]; then
+    echo "No changes since last release. Cannot create a release."
+    exit 1
+fi
+
+# Load current version
+if [[ -f "$VERSION_FILE" ]]; then
+    IFS='.' read -r MAJOR MINOR PATCH BUILD < "$VERSION_FILE"
+else
+    MAJOR=1
+    MINOR=0
+    PATCH=0
+    BUILD=0
+fi
+
+# Determine type of change
+increment_patch=0
+increment_minor=0
+increment_major=0
+while read -r hash msg; do
+    if [[ $msg == *BREAKING* ]]; then
+        increment_major=1
+    elif [[ $msg == *ENHANCEMENT* ]]; then
+        increment_minor=1
+    else
+        increment_patch=1
     fi
-}
+done <<< "$(git log ${last_tag}..HEAD --pretty=format:"%H %s")"
 
-#==============================#
-# Function: prompt_for_itch_file
-# @brief    Prompt user to specify an existing .itch file
-#==============================#
-prompt_for_itch_file() {
-    if [[ "$GEN_RUN" == true ]]; then
-        echo "Generator will produce $ITCH_FILE"
-        return
-    fi
-    local tries=0
-    while [[ $tries -lt $MAX_TRIES ]]; do
-        echo "Enter path to existing .itch file:"
-        read -r file
-        if [[ ! -f "$file" ]]; then
-            echo "File does not exist."
-            ((tries++))
-            continue
-        fi
-        if [[ "$file" != *.itch ]]; then
-            echo "File must end with .itch"
-            ((tries++))
-            continue
-        fi
-        ITCH_FILE="$file"
-        break
-    done
-    if [[ $tries -eq $MAX_TRIES ]]; then
-        echo "Failed to provide valid .itch file after $MAX_TRIES tries."
-        exit 1
-    fi
-}
+if [[ $increment_major -eq 1 ]]; then
+    ((MAJOR++))
+    MINOR=0
+    PATCH=0
+    BUILD=0
+elif [[ $increment_minor -eq 1 ]]; then
+    ((MINOR++))
+    PATCH=0
+    BUILD=0
+elif [[ $increment_patch -eq 1 ]]; then
+    ((PATCH++))
+    BUILD=0
+fi
 
-#==============================#
-# Function: run_generator
-# @brief    Run generator if requested
-#==============================#
-run_generator() {
-    if [[ "$GEN_RUN" == false ]]; then return; fi
-    mkdir -p "$DATA_DIR"
-    echo "Running generator with arguments: ${GEN_ARGS[*]}"
-    "$BIN_DIR/nsdq_generator" "${GEN_ARGS[@]}" --output "$ITCH_FILE"
-    echo "Generator completed: $ITCH_FILE"
-}
+# Increment build number
+((BUILD++))
+NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}.${BUILD}"
+echo "$NEW_VERSION" > "$VERSION_FILE"
 
-#==============================#
-# Function: start_listener
-# @brief    Start listener in background
-#==============================#
-start_listener() {
-    LISTENER_BIN="$BIN_DIR/nsdq_listener"
-    if [[ ! -x "$LISTENER_BIN" ]]; then
-        echo "Error: Listener binary not found at $LISTENER_BIN"
-        exit 1
-    fi
-    echo "Starting listener..."
-    "$LISTENER_BIN" &
-    LISTENER_PID=$!
-    sleep 1 # Give time to start
-}
+# Gather last 500 commits
+COMMITS=$(git log -n 500 --pretty=format:"%H %s")
 
-#==============================#
-# Function: start_replayer
-# @brief    Start replayer and load messages
-#==============================#
-start_replayer() {
-    REPLAYER_BIN="$BIN_DIR/nsdq_replayer"
-    if [[ ! -x "$REPLAYER_BIN" ]]; then
-        echo "Error: Replayer binary not found at $REPLAYER_BIN"
-        kill $LISTENER_PID
-        exit 1
-    fi
-    echo "Loading messages from $ITCH_FILE into memory..."
-    "$REPLAYER_BIN" --file "$ITCH_FILE"
-    echo "Replayer finished."
-}
+# Generate ReleaseNotes.txt
+tmpfile=$(mktemp)
+{
+    echo "# ---------------------------------------------------------------------------"
+    echo "# @project   : Beacon Ecosystem"
+    echo "# @version   : $NEW_VERSION"
+    echo "# @date      : $(date +%Y-%m-%d)"
+    echo "# @build_by  : Bryan Camp"
+    echo "# ---------------------------------------------------------------------------"
+    echo
+    echo "This release contains $(git log ${last_tag}..HEAD --oneline | wc -l | tr -d ' ') updates. See below:"
+    echo
+    git log ${last_tag}..HEAD --pretty=format:"v$NEW_VERSION, %h, %s"
+    echo
+    echo "Last 500 commits:"
+    while read -r hash msg; do
+        echo "v$NEW_VERSION, $hash, $msg"
+    done <<< "$COMMITS"
+} > "$tmpfile"
 
-#==============================#
-# Function: shutdown
-# @brief    Cleanly stop listener
-#==============================#
-shutdown() {
-    if ps -p $LISTENER_PID > /dev/null; then
-        kill $LISTENER_PID
-        wait $LISTENER_PID 2>/dev/null
-    fi
-}
+# Open editor for tweaks
+EDITOR="${EDITOR:-vi}"
+$EDITOR "$tmpfile"
 
-#==============================#
-# Function: print_report
-# @brief    Print simple ASCII report
-#==============================#
-print_report() {
-    local count
-    count=$(wc -l < "$ITCH_FILE")
-    echo "==================== REPORT ===================="
-    echo "Date/Time  : $(date)"
-    echo "File       : $ITCH_FILE"
-    echo "Messages   : $count"
-    echo "================================================"
-}
+# Finalize ReleaseNotes.txt
+cp "$tmpfile" "$RELEASE_NOTES"
+rm "$tmpfile"
 
-#==============================#
-# Main execution
-#==============================#
-prompt_for_generator
-prompt_for_itch_file
-run_generator
-start_listener
-start_replayer
-shutdown
-print_report
+# Commit and tag
+git add "$VERSION_FILE" "$RELEASE_NOTES"
+commit_msg="Release $NEW_VERSION"
+git commit -m "$commit_msg"
+git tag "v$NEW_VERSION"
 
+echo "Release $NEW_VERSION generated, committed, and tagged."
