@@ -1,42 +1,43 @@
 # ---------------------------------------------------------------------------
 # @project   : Beacon Ecosystem
-# @version   : 1.0.6.68
+# @version   : 1.0.6.69
 # @date      : 2025-10-16
 # @build_by  : Bryan Camp
 # ---------------------------------------------------------------------------
 
 This release contains 0 updates. See below:
 
-v1.0.6.68, c18f67d, updated version number
-v1.0.6.68, 261a82e, Added release notes
-v1.0.6.68, b73b2d6, Updated top-level and out-of-source build scripts for file_generator.
-v1.0.6.68, 6b8711b, Complete directory restructure. Added out of source build script for file_generator.
-v1.0.6.68, 325b1b1, Complete directory restructure. Added out of source build script for file_generator.
-v1.0.6.68, a80008d, Remove build artifacts.
-v1.0.6.68, f061b8d, Cleaned up the itch feed handler. Added scripts to set up unit tests.
-v1.0.6.68, 0b8e9a7, refactored PinnedThread
-v1.0.6.68, 3eea51d, Fixed spacing itch_messages.h..
-v1.0.6.68, 0ba08e9, Fixed spacing itch_messages.h..
-v1.0.6.68, 1688bd3, Fixed spacing and comments in spsc queue.
-v1.0.6.68, e402e26, Fixed spacing and comments in spsc queue.
-v1.0.6.68, f77a715, Starting migrating from tabs to spaces.
-v1.0.6.68, c41e994, Fixed a small doxygen comment
-v1.0.6.68, 5be41bb, Fix .gitignore to ignore VSCode database files.
-v1.0.6.68, 7ec50cc, Fixed broken commit.Fixed broken commit.Fixed broken commit.Fixed broken commit.Fixed broken commit.Fixed broken commit.Fixed broken commit.Fixed broken commit.Fixed broken commit.
-v1.0.6.68, 0b8b47e, complete directory refactor
-v1.0.6.68, f49eb17, complete directory refactor
-v1.0.6.68, fc97609, complete directory refactor
-v1.0.6.68, c2c8812, complete directory refactor
-v1.0.6.68, 9cd173d, complete directory refactor
-v1.0.6.68, 5bdf1d3, added the matching engine project
-v1.0.6.68, 8e3cdc5, - Renamed captured message header to md_captured_itch_message.h - Updated ITCH generator and UDP replayer to load messages in memory - Standardized member variable naming with  prefix - Added pinned thread and CPU pause utilities - Improved Linux/MacOS CMake build structure
-v1.0.6.68, 226d798, - itch_message.h -> md_itch_message.h - itch_udp_listener.h -> md_itch_udp_listener.h - itch_file_generator.h -> md_itch_generator.h - itch_message_udp_replayer.h -> md_itch_udp_replayer.h - Updated all #includes in source files - Updated CMakeLists.txt to match new file names
-v1.0.6.68, 6e42fc4, Refactor project layout: - Move headers to exchange-specific folders under include/ - Remove empty common folder - Remove legacy v1 source directories
-v1.0.6.68, a229668, Cleanup: removed legacy v1 sources and src/CMakeLists.txt
-v1.0.6.68, b52fb4b, Add googletest and json local dependencies. Add personal vscode settings.
-v1.0.6.68, 0fa6b42, Created a more robust run script.
-v1.0.6.68, 662a3f1, Cleanup build scripts.
-v1.0.6.68, 26c32ba, Clean initial commit with reorganized directory structure.
-v1.0.6.68, ee3cd84, Initial commit - clean slate
+v1.0.6.69, 13cb37b, Updated release script.
+v1.0.6.69, c18f67d, updated version number
+v1.0.6.69, 261a82e, Added release notes
+v1.0.6.69, b73b2d6, Updated top-level and out-of-source build scripts for file_generator.
+v1.0.6.69, 6b8711b, Complete directory restructure. Added out of source build script for file_generator.
+v1.0.6.69, 325b1b1, Complete directory restructure. Added out of source build script for file_generator.
+v1.0.6.69, a80008d, Remove build artifacts.
+v1.0.6.69, f061b8d, Cleaned up the itch feed handler. Added scripts to set up unit tests.
+v1.0.6.69, 0b8e9a7, refactored PinnedThread
+v1.0.6.69, 3eea51d, Fixed spacing itch_messages.h..
+v1.0.6.69, 0ba08e9, Fixed spacing itch_messages.h..
+v1.0.6.69, 1688bd3, Fixed spacing and comments in spsc queue.
+v1.0.6.69, e402e26, Fixed spacing and comments in spsc queue.
+v1.0.6.69, f77a715, Starting migrating from tabs to spaces.
+v1.0.6.69, c41e994, Fixed a small doxygen comment
+v1.0.6.69, 5be41bb, Fix .gitignore to ignore VSCode database files.
+v1.0.6.69, 7ec50cc, Fixed broken commit.Fixed broken commit.Fixed broken commit.Fixed broken commit.Fixed broken commit.Fixed broken commit.Fixed broken commit.Fixed broken commit.Fixed broken commit.
+v1.0.6.69, 0b8b47e, complete directory refactor
+v1.0.6.69, f49eb17, complete directory refactor
+v1.0.6.69, fc97609, complete directory refactor
+v1.0.6.69, c2c8812, complete directory refactor
+v1.0.6.69, 9cd173d, complete directory refactor
+v1.0.6.69, 5bdf1d3, added the matching engine project
+v1.0.6.69, 8e3cdc5, - Renamed captured message header to md_captured_itch_message.h - Updated ITCH generator and UDP replayer to load messages in memory - Standardized member variable naming with  prefix - Added pinned thread and CPU pause utilities - Improved Linux/MacOS CMake build structure
+v1.0.6.69, 226d798, - itch_message.h -> md_itch_message.h - itch_udp_listener.h -> md_itch_udp_listener.h - itch_file_generator.h -> md_itch_generator.h - itch_message_udp_replayer.h -> md_itch_udp_replayer.h - Updated all #includes in source files - Updated CMakeLists.txt to match new file names
+v1.0.6.69, 6e42fc4, Refactor project layout: - Move headers to exchange-specific folders under include/ - Remove empty common folder - Remove legacy v1 source directories
+v1.0.6.69, a229668, Cleanup: removed legacy v1 sources and src/CMakeLists.txt
+v1.0.6.69, b52fb4b, Add googletest and json local dependencies. Add personal vscode settings.
+v1.0.6.69, 0fa6b42, Created a more robust run script.
+v1.0.6.69, 662a3f1, Cleanup build scripts.
+v1.0.6.69, 26c32ba, Clean initial commit with reorganized directory structure.
+v1.0.6.69, ee3cd84, Initial commit - clean slate
 ------------------------------------------------------------
 

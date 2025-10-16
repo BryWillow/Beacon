@@ -3,8 +3,8 @@ set -e
 
 # ---------------------------------------------------------------------------
 # @project   : Beacon Ecosystem
-# @version   : 1.0.6       # Initial version; will auto-update
-# @date      : $(date +%Y-%m-%d)
+# @version   :
+# @date      :
 # @build_by  : Bryan Camp
 # ---------------------------------------------------------------------------
 
@@ -12,100 +12,75 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 VERSION_FILE="$REPO_ROOT/VERSION"
 RELEASE_NOTES="$REPO_ROOT/ReleaseNotes.txt"
 
+# Go to repo root
 cd "$REPO_ROOT"
 
-# Check for uncommitted changes
-if [[ -n $(git status --porcelain) ]]; then
-    echo "Warning: You have uncommitted changes. Commit them before release."
-    exit 1
+# 1. Check for uncommitted changes
+if ! git diff-index --quiet HEAD --; then
+    echo "WARNING: You have uncommitted changes. Please commit or stash them before releasing."
 fi
 
-# Check for changes since last release
-last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-changes_since_last=$(git log ${last_tag}..HEAD --oneline)
-if [[ -z "$changes_since_last" ]]; then
-    echo "No changes since last release. Cannot create a release."
-    exit 1
+# 2. Ensure VERSION file exists
+if [[ ! -f "$VERSION_FILE" ]]; then
+    echo "0.0.0.0" > "$VERSION_FILE"
 fi
 
-# Load current version
-if [[ -f "$VERSION_FILE" ]]; then
-    IFS='.' read -r MAJOR MINOR PATCH BUILD < "$VERSION_FILE"
+VERSION=$(cat "$VERSION_FILE")
+IFS='.' read -r MAJOR MINOR PATCH BUILD <<< "$VERSION"
+
+# 3. Detect what type of update this is (simplified placeholder)
+#    This can later be replaced with commit message analysis
+#    For now, just increment build
+BUILD=$((BUILD + 1))
+NEW_VERSION="$MAJOR.$MINOR.$PATCH.$BUILD"
+
+# 4. Prepare ReleaseNotes.txt header
+CURRENT_DATE=$(date +%Y-%m-%d)
+cat > "$RELEASE_NOTES" <<EOF
+# ---------------------------------------------------------------------------
+# @project   : Beacon Ecosystem
+# @version   : $NEW_VERSION
+# @date      : $CURRENT_DATE
+# @build_by  : Bryan Camp
+# ---------------------------------------------------------------------------
+
+This release contains 0 updates. See below:
+
+# Instructions (edit only if desired):
+# To commit this release notes:
+#   git add ReleaseNotes.txt
+#   git commit -m "Release notes for $NEW_VERSION"
+#   git tag -a "v$NEW_VERSION" -m "Tag for release $NEW_VERSION"
+EOF
+
+# 5. Detect commits included in this release
+#    For simplicity, use all commits since last tag
+LAST_TAG=$(git describe --tags --abbrev=0 || echo "")
+if [[ -z "$LAST_TAG" ]]; then
+    COMMITS=$(git log -500 --pretty=format:"v$NEW_VERSION, %h, %s")
 else
-    MAJOR=1
-    MINOR=0
-    PATCH=0
-    BUILD=0
+    COMMITS=$(git log "$LAST_TAG"..HEAD --pretty=format:"v$NEW_VERSION, %h, %s" -500)
 fi
 
-# Determine type of change
-increment_patch=0
-increment_minor=0
-increment_major=0
-while read -r hash msg; do
-    if [[ $msg == *BREAKING* ]]; then
-        increment_major=1
-    elif [[ $msg == *ENHANCEMENT* ]]; then
-        increment_minor=1
-    else
-        increment_patch=1
-    fi
-done <<< "$(git log ${last_tag}..HEAD --pretty=format:"%H %s")"
-
-if [[ $increment_major -eq 1 ]]; then
-    ((MAJOR++))
-    MINOR=0
-    PATCH=0
-    BUILD=0
-elif [[ $increment_minor -eq 1 ]]; then
-    ((MINOR++))
-    PATCH=0
-    BUILD=0
-elif [[ $increment_patch -eq 1 ]]; then
-    ((PATCH++))
-    BUILD=0
+# 6. Add commits to ReleaseNotes.txt
+if [[ -z "$COMMITS" ]]; then
+    echo "---- No commits detected ----" >> "$RELEASE_NOTES"
+else
+    echo "$COMMITS" >> "$RELEASE_NOTES"
 fi
 
-# Increment build number
-((BUILD++))
-NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}.${BUILD}"
+# 7. Write ReleaseNotes.txt to debug and release dirs
+for mode in debug release; do
+    DEST="$REPO_ROOT/bin/file_generator/$mode/ReleaseNotes.txt"
+    mkdir -p "$(dirname "$DEST")"
+    cp "$RELEASE_NOTES" "$DEST"
+done
+
+# 8. Update VERSION file
 echo "$NEW_VERSION" > "$VERSION_FILE"
 
-# Gather last 500 commits
-COMMITS=$(git log -n 500 --pretty=format:"%H %s")
-
-# Generate ReleaseNotes.txt
-tmpfile=$(mktemp)
-{
-    echo "# ---------------------------------------------------------------------------"
-    echo "# @project   : Beacon Ecosystem"
-    echo "# @version   : $NEW_VERSION"
-    echo "# @date      : $(date +%Y-%m-%d)"
-    echo "# @build_by  : Bryan Camp"
-    echo "# ---------------------------------------------------------------------------"
-    echo
-    echo "This release contains $(git log ${last_tag}..HEAD --oneline | wc -l | tr -d ' ') updates. See below:"
-    echo
-    git log ${last_tag}..HEAD --pretty=format:"v$NEW_VERSION, %h, %s"
-    echo
-    echo "Last 500 commits:"
-    while read -r hash msg; do
-        echo "v$NEW_VERSION, $hash, $msg"
-    done <<< "$COMMITS"
-} > "$tmpfile"
-
-# Open editor for tweaks
-EDITOR="${EDITOR:-vi}"
-$EDITOR "$tmpfile"
-
-# Finalize ReleaseNotes.txt
-cp "$tmpfile" "$RELEASE_NOTES"
-rm "$tmpfile"
-
-# Commit and tag
-git add "$VERSION_FILE" "$RELEASE_NOTES"
-commit_msg="Release $NEW_VERSION"
-git commit -m "$commit_msg"
-git tag "v$NEW_VERSION"
-
-echo "Release $NEW_VERSION generated, committed, and tagged."
+# 9. Summary message
+echo ""
+echo "Prepared ReleaseNotes.txt for version $NEW_VERSION."
+echo "Review the file and edit only the notes/comments if desired."
+echo "Instructions for committing and tagging are included as comments in the file."
