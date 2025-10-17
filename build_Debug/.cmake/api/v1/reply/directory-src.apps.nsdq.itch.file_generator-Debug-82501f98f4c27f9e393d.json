@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "src/apps/nsdq/itch/file_generator",
+		"source" : "src/apps/nsdq/itch/file_generator"
+	}
+}
