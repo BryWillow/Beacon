@@ -1,3 +1,9 @@
+# Release Notes
+
+## Release Version: `v1.2.3.4`
+**Release Date**: 2025-10-16  
+**Author**: Bryan Camp  
+
 ---
 
 ### Summary
@@ -43,3 +49,33 @@ After running the `build.sh` script, the executables for each application will b
 
 ```plaintext
 bin/<app_name>/<mode>/
+```
+
+- `<app_name>`: The name of the application (e.g., `file_generator`, `udp_replayer`, `matching_engine`).
+- `<mode>`: The build mode, which can be `debug` or `release`.
+
+#### Example:
+- For the `file_generator` application built in `debug` mode:
+  ```plaintext
+  bin/file_generator/debug/
+  ```
+- For the `udp_replayer` application built in `release` mode:
+  ```plaintext
+  bin/udp_replayer/release/
+  ```
+
+---
+
+### Checking Out a Specific Version
+
+To check out a specific version of the Beacon project, use the following Git command:
+
+```bash
+git checkout tags/v1.2.3.4
+```
+
+This will give you a read-only view of the source code for that version. To return to the main branch, run:
+
+```bash
+git checkout main
+```
