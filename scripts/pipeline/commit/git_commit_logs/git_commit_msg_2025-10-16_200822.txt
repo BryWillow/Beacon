@@ -1,0 +1,39 @@
+Commit Timestamp: 2025-10-16_200822
+Version: 1.0.6.70
+
+* Staged files:
+  - .vscode/browse.vc.db-shm
+  - README.md
+  - README_progress.md
+  - ReleaseNotes.txt
+  - VERSION
+  - build.sh
+  - build_Debug/.cmake/api/v1/query/client-vscode/query.json
+  - build_Debug/.cmake/api/v1/reply/cache-v2-eeed0462122ed1c142b9.json
+  - build_Debug/.cmake/api/v1/reply/cmakeFiles-v1-2b5f41a03c632fed729a.json
+  - build_Debug/.cmake/api/v1/reply/codemodel-v2-33920074a1474ec944b1.json
+  - build_Debug/.cmake/api/v1/reply/directory-.-Debug-f5ebdc15457944623624.json
+  - build_Debug/.cmake/api/v1/reply/directory-src.apps.nsdq.itch.file_generator-Debug-82501f98f4c27f9e393d.json
+  - build_Debug/.cmake/api/v1/reply/index-2025-10-16T23-55-29-0449.json
+  - build_Debug/.cmake/api/v1/reply/target-file_generator-Debug-1eba32d17ca714615aea.json
+  - build_Debug/.cmake/api/v1/reply/toolchains-v1-bfc008b845094f5566a9.json
+  - build_backup.sh
+  - scripts/pipeline/README.md
+  - scripts/pipeline/build/README.md
+  - scripts/pipeline/build/build_file_generator.sh
+  - scripts/pipeline/build/build_matching_engine.sh
+  - scripts/pipeline/build/build_udp_replayer.sh
+  - scripts/pipeline/commit/git_commit.sh
+  - scripts/pipeline/release/BUILD_COMMIT.md
+  - scripts/pipeline/release/README.md
+  - scripts/pipeline/release/aggregate_release_notes.sh
+  - scripts/pipeline/start_cme_pipeline.sh
+  - utils/style/check_format.sh
+  - utils/style/check_headers.py
+
+* Build info:
+  - Debug and Release binaries built via build.sh
+  - Unit tests passed (if enabled)
+
+* Notes:
+  - To recreate build: run ./build.sh [debug|release|all]

@@ -1,0 +1,87 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.26"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "src/apps/nsdq/itch/file_generator",
+					"jsonFile" : "directory-src.apps.nsdq.itch.file_generator-Debug-82501f98f4c27f9e393d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.26"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "src/apps/nsdq/itch/file_generator",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Beacon"
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "file_generator",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 1,
+					"id" : "file_generator::@bc164dc98bf624664db4",
+					"jsonFile" : "target-file_generator-Debug-1eba32d17ca714615aea.json",
+					"name" : "file_generator",
+					"projectIndex" : 1
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/build_Debug",
+		"source" : "/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 8
+	}
+}

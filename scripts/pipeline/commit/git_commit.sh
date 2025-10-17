@@ -7,9 +7,17 @@
 
 set -euo pipefail
 
-LOG_DIR="$(dirname "$0")/git_commit_logs"
+# Ensure we are in the top-level Beacon directory
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+# Ensure the log directory path is absolute
+LOG_DIR="$REPO_ROOT/scripts/pipeline/commit/git_commit_logs"
 mkdir -p "$LOG_DIR"
 TIMESTAMP=$(date +%Y-%m-%d_%H%M%S)
+
+# Stage all changes
+git add .
 
 # Get staged files
 STAGED=$(git diff --cached --name-only)
@@ -50,6 +58,14 @@ echo ""
 cat "$COMMIT_MSG_FILE"
 echo ""
 read -p "Would you really like to commit these files? Type 'yes' to confirm: " CONFIRM
+
+# Prompt user for additional commit message
+read -p "Would you like to add extra details to the commit message? (leave blank to skip): " EXTRA_MSG
+if [[ -n "$EXTRA_MSG" ]]; then
+    echo "" >> "$COMMIT_MSG_FILE"
+    echo "* Additional Notes:" >> "$COMMIT_MSG_FILE"
+    echo "$EXTRA_MSG" >> "$COMMIT_MSG_FILE"
+fi
 
 if [[ "$CONFIRM" == "yes" ]]; then
     git commit -F "$COMMIT_MSG_FILE"
