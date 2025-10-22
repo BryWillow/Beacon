@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------
-# @file      CMakeLists.txt
 # @project   Beacon
-# @component Beacon Build System [file_generator]
+# @component Build Script [file_generator]
+# @file      CMakeLists.txt
 # @brief     Builds the file_generator component in debug|release configurations.
 #            Debug builds include sanitizers, cppcheck, and debug symbols.
 #            Release builds are fully optimized.

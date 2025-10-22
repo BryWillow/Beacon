@@ -1,5 +1,12 @@
 # ---------------------------------------------------------------------------
-# CMakeLists.txt for nsdq_itch_udp_replayer
+# @project   Beacon
+# @component Build Script [udp_replayer]
+# @file      CMakeLists.txt
+# @brief     Builds the udp_replayer component in debug|release configurations.
+#            Debug builds include sanitizers, cppcheck, and debug symbols.
+#            Release builds are fully optimized.
+#            Output binaries go to bin/<config>/udp_replayer.
+# @author    Bryan Camp
 # ---------------------------------------------------------------------------
 
 cmake_minimum_required(VERSION 3.26)

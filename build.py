@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 """
-@file        build.py
 @project     Beacon
-@component   Build System
+@component   Build System [Top-Level]
+@file        build.py
 @brief       User-facing build script for debug/release/all configurations
 @author      Bryan Camp
-@date        2024
-@copyright   Copyright (c) 2024 Bryan Camp. All rights reserved.
 
 @details
 User-facing build script for the Beacon project.

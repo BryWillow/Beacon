@@ -1,3 +1,10 @@
+# ---------------------------------------------------------------------------
+# @project   Beacon
+# @component Build Script [tests]
+# @file      CMakeLists.txt
+# @author    Bryan Camp
+# ---------------------------------------------------------------------------
+
 cmake_minimum_required(VERSION 3.26)
 project(BeaconTests LANGUAGES CXX)
 
@@ -5,27 +12,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # -----------------------------------------------------------------------------
-# GoogleTest (local copy)
-# -----------------------------------------------------------------------------
-# Adjust path to match your top-level structure
-add_subdirectory(${CMAKE_SOURCE_DIR}/../vendor/googletest googletest_build)
-
-# -----------------------------------------------------------------------------
 # Include Beacon headers
 # -----------------------------------------------------------------------------
 include_directories(${CMAKE_SOURCE_DIR}/../include)
 
 # -----------------------------------------------------------------------------
-# Add test executables
-# -----------------------------------------------------------------------------
-add_executable(itch_file_generator
-    itch_file_generator/itch_file_generator.cpp
-)
-
-target_link_libraries(itch_file_generator PRIVATE gtest gtest_main Threads::Threads)
-
-# -----------------------------------------------------------------------------
 # Enable testing
 # -----------------------------------------------------------------------------
 enable_testing()
-add_test(NAME itch_file_generator COMMAND itch_file_generator)
