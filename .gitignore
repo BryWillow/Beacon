@@ -29,6 +29,11 @@ compile_commands.json
 *.db
 .vscode/browse.vc.db
 .vscode/*.vc.db
+# VS Code cache
+.vscode/
+.vscode/*.db*
+.vscode/*-shm
+.vscode/*-wal
 
 # ------------------------------
 # System files
