@@ -57,5 +57,6 @@ build_beacon.py
 
 # Deprecated build script (use build.py)
 build.sh
+build_beacon.sh
 
 
