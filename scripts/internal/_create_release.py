@@ -85,6 +85,24 @@ def bump_version(cur: str | None, bump: str) -> str:
     raise ValueError(f"Unknown bump: {bump}")
 
 
+def detect_change_type(root: Path) -> str:
+    """
+    Detect change type by diffing staged files vs. previous commit.
+    Returns: 'major', 'minor', or 'patch'
+    """
+    # Get staged diff
+    diff = _run(["git", "diff", "--cached", "--name-status", "HEAD"], root)
+    files = [line.split('\t')[-1] for line in diff.splitlines() if line]
+    # Major: any change in public API headers
+    if any(f.startswith("include/") for f in files):
+        return "major"
+    # Minor: any new feature in src/ (added files)
+    if any(f.startswith("src/") and line.startswith("A") for line in diff.splitlines()):
+        return "minor"
+    # Patch: everything else
+    return "patch"
+
+
 def ensure_tag_available(root: Path, tag: str) -> None:
     try:
         _run(["git", "rev-parse", "-q", "--verify", f"refs/tags/{tag}"], root)
@@ -105,7 +123,7 @@ def create_and_push_tag(root: Path, tag: str, message: str, force: bool) -> None
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Create a release: build → validate → tag → push")
-    g = p.add_mutually_exclusive_group(required=True)
+    g = p.add_mutually_exclusive_group()
     g.add_argument("--patch", action="store_true", help="Bump patch version")
     g.add_argument("--minor", action="store_true", help="Bump minor version")
     g.add_argument("--major", action="store_true", help="Bump major version")
@@ -132,7 +150,16 @@ def main() -> int:
             raise ValueError("Version must be v<major>.<minor>.<patch>")
         next_tag = args.version
     else:
-        bump = "patch" if args.patch else "minor" if args.minor else "major"
+        # If user specified bump, use it; else auto-detect
+        if args.patch:
+            bump = "patch"
+        elif args.minor:
+            bump = "minor"
+        elif args.major:
+            bump = "major"
+        else:
+            bump = detect_change_type(root)
+            print(f"Auto-detected version bump: {bump}")
         latest = get_latest_tag(root)
         next_tag = bump_version(latest, bump)
 
