@@ -18,9 +18,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Compute repo root relative to this CMakeLists.txt
 set(REPO_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../../../../")
 
-message(STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
-message(STATUS "CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_LIST_DIR}")
-message(STATUS "REPO_ROOT: ${REPO_ROOT}")
+# Only print diagnostics when verbose mode is on
+if(BEACON_VERBOSE)
+	message(STATUS "CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}")
+	message(STATUS "REPO_ROOT: ${REPO_ROOT}")
+endif()
 
 # Build executable
 add_executable(file_generator main.cpp)
@@ -32,10 +34,18 @@ target_include_directories(file_generator PRIVATE
 )
 
 # Verify include dirs
-get_target_property(INCDIRS file_generator INCLUDE_DIRECTORIES)
-message(STATUS "file_generator include dirs: ${INCDIRS}")
+get_target_property(INCLUDE_DIRS file_generator INCLUDE_DIRECTORIES)
+if(BEACON_VERBOSE)
+	message(STATUS "file_generator include dirs: ${INCLUDE_DIRS}")
+endif()
 
-# Output binaries to bin/file_generator/<config>
+# Reduce build verbosity
+set(CMAKE_RULE_MESSAGES OFF)
+set(CMAKE_VERBOSE_MAKEFILE OFF)
+
+# Ensure bin layout uses lowercase config names
+# bin/file_generator/{debug,release}/file_generator
 set_target_properties(file_generator PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${REPO_ROOT}/bin/file_generator/${CMAKE_BUILD_TYPE}"
+    RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${REPO_ROOT}/bin/file_generator/debug"
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${REPO_ROOT}/bin/file_generator/release"
 )

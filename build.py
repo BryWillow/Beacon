@@ -27,6 +27,8 @@ Exit codes:
 import sys
 from pathlib import Path
 import subprocess
+import shutil
+import glob
 
 # Ensure internal pipeline is importable
 _pipeline = Path(__file__).parent / "scripts" / "internal" / "cicd_pipeline"
@@ -55,6 +57,52 @@ def get_repo_root() -> Path:
         sys.exit(1)
 
 
+def _remove_path(p: Path) -> None:
+    try:
+        if p.is_dir():
+            shutil.rmtree(p)
+            print(f"Removed: {p}")
+        elif p.exists():
+            p.unlink()
+            print(f"Removed: {p}")
+    except Exception as e:
+        print(f"Warning: failed to remove {p}: {e}", file=sys.stderr)
+
+
+def clean(repo_root: Path, deep: bool = False) -> None:
+    """
+    Clean build artifacts.
+    - Always removes: bin/, build_debug/, build_release/, build_Debug/, build_Release/
+    - Deep clean also removes: any build_* dirs and CMake cache/files under them.
+    """
+    # Known directories (lowercase + legacy uppercase)
+    known_dirs = [
+        repo_root / "bin",
+        repo_root / "build_debug",
+        repo_root / "build_release",
+        repo_root / "build_Debug",
+        repo_root / "build_Release",
+    ]
+    for d in known_dirs:
+        if d.exists():
+            _remove_path(d)
+
+    if deep:
+        # Remove any stray build_* dirs at repo root
+        for path in repo_root.glob("build_*"):
+            if path.is_dir():
+                _remove_path(path)
+
+        # Remove common CMake cache files wherever they might have leaked
+        for pat in [
+            "**/CMakeCache.txt",
+            "**/CMakeFiles",
+            "**/.cmake/api",
+        ]:
+            for match in repo_root.glob(pat):
+                _remove_path(match if match.is_dir() else match)
+
+
 def main():
     """Main entry point."""
     repo_root = get_repo_root()
@@ -62,15 +110,10 @@ def main():
     # Parse arguments
     config = sys.argv[1] if len(sys.argv) > 1 else "debug"
 
-    # Handle clean
-    if config == "clean":
-        print("Cleaning build artifacts...")
-        for d in ["bin", "build_debug", "build_release"]:
-            path = repo_root / d
-            if path.exists():
-                import shutil
-                shutil.rmtree(path)
-                print(f"Removed: {path}")
+    # Handle clean modes
+    if config in {"clean", "deep-clean"}:
+        print("Cleaning build artifacts..." + (" (deep)" if config == "deep-clean" else ""))
+        clean(repo_root, deep=(config == "deep-clean"))
         return
 
     # Validate configuration

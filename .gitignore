@@ -52,4 +52,10 @@ compile_commands.json
 *.log
 core
 
+# Deprecated wrapper (use build.py only)
+build_beacon.py
+
+# Deprecated build script (use build.py)
+build.sh
+
 

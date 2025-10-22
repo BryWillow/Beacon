@@ -20,6 +20,16 @@ endif()
 
 message(STATUS "Top-level CMake build type: ${CMAKE_BUILD_TYPE}")
 
+# Global verbosity control (default: quiet)
+option(BEACON_VERBOSE "Enable verbose CMake output (STATUS messages, rules)" OFF)
+
+if(NOT BEACON_VERBOSE)
+	# Hide STATUS messages and rule chatter
+	set(CMAKE_MESSAGE_LOG_LEVEL WARNING)
+	set(CMAKE_RULE_MESSAGES OFF)
+	set(CMAKE_VERBOSE_MAKEFILE OFF)
+endif()
+
 # ---------------------------------------------------------------------------
 # Include apps
 # ---------------------------------------------------------------------------

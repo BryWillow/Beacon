@@ -24,27 +24,29 @@ def execute_build(mode: str, repo_root: Path) -> None:
         raise ValueError(f"Invalid build mode: {mode}")
 
     build_type = mode.capitalize()  # Debug or Release
+    # Use lowercase build dirs to match repo convention
     build_dir = repo_root / f"build_{mode}"
 
-    # Configure
+    # Quieter configure: suppress dev warnings and rule messages
     configure_cmd = [
         "cmake",
         "-S", str(repo_root),
         "-B", str(build_dir),
-        f"-DCMAKE_BUILD_TYPE={build_type}"
+        f"-DCMAKE_BUILD_TYPE={build_type}",
+        # Quieter configure
+        "-DCMAKE_RULE_MESSAGES=OFF",
+        "-DCMAKE_MESSAGE_LOG_LEVEL=WARNING",
+        "-Wno-dev",
     ]
-
     print(f"Configuring {mode}...")
     subprocess.run(configure_cmd, check=True, cwd=repo_root)
 
-    # Build
+    # Build (keep default non-verbose)
     build_cmd = [
         "cmake",
         "--build", str(build_dir),
-        "-j"
+        "-j",
     ]
-
     print(f"Building {mode}...")
     subprocess.run(build_cmd, check=True, cwd=repo_root)
-
     print(f"✓ {mode} build complete")
