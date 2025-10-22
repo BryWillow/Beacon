@@ -1,14 +1,19 @@
-i# ------------------------------
+# ------------------------------
 # Build directories
 # ------------------------------
 /build/
 /build_Debug/   # artifacts
 /build_Release/ # artifacts
+build_Debug/
+build_Release/
+build_debug/
+build_release/
 
 # ------------------------------
 # Binaries and archives
 # ------------------------------
 /bin/
+bin/
 
 # ------------------------------
 # CMake files
