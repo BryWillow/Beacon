@@ -20,17 +20,25 @@ The Beacon project is an ecosystem of modular C++ applications, each designed wi
 - **utils/**: Utility scripts and tools.
 
 ## Building the Project
-To build the project, use the `build.sh` script located at the top level. This script builds all apps sequentially.
+To build the project, use the `build.py` script located at the top level. This script builds all apps sequentially.
 
 ### Usage
 ```bash
-./build.sh [action]
+build.py [defaults to debug]
+build.py debug|release|all|clean|pipeline
 ```
 - **Actions**:
-  - `debug`: Builds all apps in debug mode.
-  - `release`: Builds all apps in release mode.
-  - `all`: Builds all apps in both debug and release modes.
-  - `clean`: Cleans all build artifacts.
+  - `debug` builds include :
+    - ASan
+    - clang-tidy
+    - cppcheck
+    - runs all googletest unit and integration tests
+  - `release`builds include :
+    - -O3 -march=native -mtune=native -DNDEBUG -std=c++20 -flto -funroll-loops -fno-omit-frame-pointer
+    - runs all googletest unit and integration tests
+  - `all`    : Builds both debug and release.
+  - `clean`  : Cleans all build artifacts.
+  - `pipeline`: Creates a new release using Beacon's CI/CD pipeline**
 
 ### Binary Locations
 - Debug binaries: `bin/<app_name>/debug`
@@ -40,4 +48,4 @@ To build the project, use the `build.sh` script located at the top level. This s
 Please ensure all changes are well-documented and tested. Use the scripts in the `scripts/` directory to streamline your workflow.
 
 ## License
-[Insert license information here]
+Standard MIT License
