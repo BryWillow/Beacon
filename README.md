@@ -9,15 +9,19 @@ The Beacon project is an ecosystem of modular C++ applications, each designed wi
 - Offer a pluggable, highly testable architecture.
 - Provide optimized implementations by default.
 
-## Directory Structure
-- **src/**: The source code for each application.
-- **include/**: The codebase is heavily header-based.
-- **bin/**: The directory where your compiled binaries are placed.
-- **build/**: Contains intermediate build files for each app.
-- **scripts/**: Contains Pipeilne scripts.
-  - **build/**: Build scripts for each separate application.
-  - **release/**: Scripts for release-related tasks, such as generating release notes and managing version control.
-- **utils/**: Utility scripts and tools.
+## Running the Beacon Ecosystem
+- Building Beacon is straight-forward. <a href="docs/wiki/build_process.md">Click here</a> to get started.
+- Running Beacon is straight-forward. <a href="docs/wiki/build_process.md">Click here</a> to get started.
+- Analyzing Beacon stats is straight-forward. <a href="docs/wiki/build_process.md">Click here</a> to get started.
+
+## The Applications
+
+The Beacon project consists of the following core applications:
+- md_creator
+- md_server
+- md_client
+- ex_engine
+- ex_match
 
 ## Building the Project
 To build the project, use the `build.py` script located at the top level. This script builds all apps sequentially.

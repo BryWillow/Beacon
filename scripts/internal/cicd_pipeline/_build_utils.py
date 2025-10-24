@@ -50,3 +50,10 @@ def execute_build(mode: str, repo_root: Path) -> None:
     print(f"Building {mode}...")
     subprocess.run(build_cmd, check=True, cwd=repo_root)
     print(f"✓ {mode} build complete")
+
+# Update any references like:
+# "src/apps/nsdq/itch/file_generator" → "src/apps/md_creator"
+# "src/apps/nsdq/itch/udp_replayer"   → "src/apps/md_server"
+# Also update any logic that generates binary paths, e.g.:
+# bin/file_generator/debug → bin/md_creator/debug
+# bin/udp_replayer/release → bin/md_server/release

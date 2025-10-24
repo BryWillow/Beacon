@@ -46,12 +46,13 @@ endif()
 # ---------------------------------------------------------------------------
 # Include apps
 # ---------------------------------------------------------------------------
-add_subdirectory(src/apps/nsdq/itch/file_generator)
+add_subdirectory(src/apps/md_creator)
+add_subdirectory(src/apps/md_server)
+add_subdirectory(src/apps/ex_match)
+add_subdirectory(src/apps/md_client)
 
 # Add more apps here:
-# add_subdirectory(src/apps/nsdq/itch/matching_engine)
 # add_subdirectory(src/apps/nsdq/itch/strategy_pipeline)
-# add_subdirectory(src/apps/nsdq/itch/udp_replayer)
 
 # ---------------------------------------------------------------------------
 # Optionally: set global output directories
