@@ -9,28 +9,23 @@ The Beacon project is an ecosystem of modular C++ applications, each designed wi
 - Offer a pluggable, highly testable architecture.
 - Provide optimized implementations by default.
 
-## Running the Beacon Ecosystem
-- Building Beacon is straight-forward. <a href="docs/wiki/build_process.md">Click here</a> to get started.
-- Running Beacon is straight-forward. <a href="docs/wiki/build_process.md">Click here</a> to get started.
-- Analyzing Beacon stats is straight-forward. <a href="docs/wiki/build_process.md">Click here</a> to get started.
+## Beacon Core Applications
 
-## The Applications
+| Application  | Purpose
+| -----------: | :------
+| <a href="docs/wiki/apps/md_creator.md">md_creator</a> | Creates files containing binary messages in exchange format.
+| <a href="docs/wiki/apps/md_server.md">md_server</a> | Reads files created by the **md_creator** and broadcasts the messages via UDP.
+| <a href="docs/wiki/apps/md_client.md">md_client</a> | Listens for messages sent by the **md_server**. ***<span style="color:red;">Your algo belongs here.</span>***
+| <a href="docs/wiki/apps/ex_match.md">ex_match</a> | Maintains market depth. Processes orders. Sends execution reports.
 
-The Beacon project consists of the following core applications:
-- md_creator
-- md_server
-- md_client
-- ex_engine
-- ex_match
+## Building Beacon
+To build the project, simply use the `build.py` script located at the top level of the repository. Specifying *all* will build all applications, in both *debug* and *release* mode.
 
-## Building the Project
-To build the project, use the `build.py` script located at the top level. This script builds all apps sequentially.
-
-### Usage
+#### Usage:
 ```bash
-build.py [defaults to debug]
-build.py debug|release|all|clean|pipeline
+./build.py all
 ```
+The build script has several other options, which are outlined <a href="docs/wiki/build/build_process.md">here</a>.
 - **Actions**:
   - `debug` builds include :
     - ASan
@@ -43,6 +38,11 @@ build.py debug|release|all|clean|pipeline
   - `all`    : Builds both debug and release.
   - `clean`  : Cleans all build artifacts.
   - `pipeline`: Creates a new release using Beacon's CI/CD pipeline**
+
+## Running Beacon
+- Building Beacon is straight-forward. <a href="docs/wiki/build_process.md">Click here</a> to get started.
+- Running Beacon is straight-forward. <a href="docs/wiki/build_process.md">Click here</a> to get started.
+- Analyzing Beacon stats is straight-forward. <a href="docs/wiki/build_process.md">Click here</a> to get started.
 
 ### Binary Locations
 - Debug binaries: `bin/<app_name>/debug`
