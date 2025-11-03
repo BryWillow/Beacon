@@ -32,11 +32,12 @@ enum class MessageType : uint8_t {
  * @brief ITCH add order message
  */
 struct AddOrderMessage {
-  uint64_t orderRefNum;  ///< user-assigned reference number
-  char stock[8];         ///< padded stock symbol
-  uint32_t shares;       ///< number of shares
-  uint32_t price;        ///< price in 1/10000 dollars
-  char side;             ///< 'B'=buy, 'S'=sell
+  uint64_t sequenceNumber;   ///< ITCH global sequence number
+  uint64_t orderRefNum;      ///< user-assigned reference number
+  char stock[8];             ///< padded stock symbol
+  uint32_t shares;           ///< number of shares
+  uint32_t price;            ///< price in 1/10000 dollars
+  char side;                 ///< 'B'=buy, 'S'=sell
 };
 
 /**
@@ -44,11 +45,12 @@ struct AddOrderMessage {
  * @brief ITCH trade message
  */
 struct TradeMessage {
-  uint64_t orderRefNum;  ///< user-assigned reference number
-  char side;             ///< 'B'=buy, 'S'=sell
-  uint32_t shares;       ///< number of shares
-  char stock[8];         ///< padded stock symbol
-  uint32_t price;        ///< price in 1/10000 dollars
+  uint64_t sequenceNumber;   ///< ITCH global sequence number
+  uint64_t orderRefNum;      ///< user-assigned reference number
+  char side;                 ///< 'B'=buy, 'S'=sell
+  uint32_t shares;           ///< number of shares
+  char stock[8];             ///< padded stock symbol
+  uint32_t price;            ///< price in 1/10000 dollars
 };
 
 /**
@@ -56,9 +58,10 @@ struct TradeMessage {
  * @brief ITCH order executed message
  */
 struct OrderExecutedMessage {
-  uint32_t orderRefNum;     ///< user-assigned reference number
-  uint32_t executedShares;  ///< shares executed
-  uint64_t matchNumber;     ///< exchange match number
+  uint64_t sequenceNumber;   ///< ITCH global sequence number
+  uint32_t orderRefNum;      ///< user-assigned reference number
+  uint32_t executedShares;   ///< shares executed
+  uint64_t matchNumber;      ///< exchange match number
 };
 
 /**
@@ -66,8 +69,9 @@ struct OrderExecutedMessage {
  * @brief ITCH order cancel message
  */
 struct OrderCancelMessage {
-  uint32_t orderRefNum;     ///< user-assigned reference number
-  uint32_t canceledShares;  ///< shares canceled
+  uint64_t sequenceNumber;   ///< ITCH global sequence number
+  uint32_t orderRefNum;      ///< user-assigned reference number
+  uint32_t canceledShares;   ///< shares canceled
 };
 
 /**
@@ -75,7 +79,8 @@ struct OrderCancelMessage {
  * @brief ITCH order delete message
  */
 struct OrderDeleteMessage {
-  uint32_t orderRefNum;  ///< user-assigned reference number
+  uint64_t sequenceNumber;   ///< ITCH global sequence number
+  uint32_t orderRefNum;      ///< user-assigned reference number
 };
 
 /**
@@ -83,6 +88,8 @@ struct OrderDeleteMessage {
  * @brief ITCH replace order message
  */
 struct ReplaceOrderMessage {
+  uint64_t sequenceNumber;   ///< ITCH global sequence number
+  uint64_t sourceSequenceNumber; ///< Reference to original AddOrder sequence number
   uint32_t originalOrderRefNum;  ///< original order reference
   uint32_t newOrderRefNum;       ///< new order reference
   uint32_t shares;               ///< new share count
@@ -94,6 +101,7 @@ struct ReplaceOrderMessage {
  * @brief ITCH market depth update
  */
 struct MarketDepthMessage {
+  uint64_t sequenceNumber;   ///< ITCH global sequence number
   char stock[8];      ///< padded stock symbol
   char updateAction;  ///< 'A'=add, 'D'=delete, 'M'=modify
   char side;          ///< 'B'=bid, 'S'=ask

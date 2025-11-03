@@ -7,7 +7,6 @@
 # ---------------------------------------------------------------------------
 
 # Find required packages
-find_package(Boost REQUIRED COMPONENTS system filesystem)
 find_package(Threads REQUIRED)
 
 # Include directories
@@ -24,8 +23,6 @@ add_executable(md_server md_server.cpp)
 # Link libraries
 target_link_libraries(md_server
     PRIVATE
-        Boost::system
-        Boost::filesystem
         Threads::Threads
 )
 

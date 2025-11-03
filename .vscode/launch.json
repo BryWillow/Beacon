@@ -1,71 +1,89 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Debug Execution",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/Debug/nsdq_execution",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "MIMode": "lldb",
-            "stopAtEntry": false,
-            "externalConsole": false
-        },
-        {
-            "name": "Debug Generator",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/Debug/nsdq_generator",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "MIMode": "lldb",
-            "stopAtEntry": false,
-            "externalConsole": false
-        },
-        {
-            "name": "Debug Listener",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/Debug/nsdq_listener",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "MIMode": "lldb",
-            "stopAtEntry": false,
-            "externalConsole": false
-        },
-        {
-            "name": "Debug Replayer",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/Debug/nsdq_replayer",
-            "args": ["--file", "data/default.itch"],
-            "cwd": "${workspaceFolder}",
-            "MIMode": "lldb",
-            "stopAtEntry": false,
-            "externalConsole": false
-        },
-        {
-            "name": "Debug Tests",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/Debug/test_runner",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "MIMode": "lldb",
-            "stopAtEntry": false,
-            "externalConsole": false
-        },
-        {
-            "name": "Debug Matching Engine",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/Debug/nsdq_matching_engine",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "MIMode": "lldb",
-            "stopAtEntry": false,
-            "externalConsole": false
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    
+    {
+      "name": "Debug Execution",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/Debug/nsdq_execution",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "MIMode": "lldb",
+      "stopAtEntry": false,
+      "externalConsole": false
+    },
+    {
+      "name": "Debug Generator",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/Debug/nsdq_generator",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "MIMode": "lldb",
+      "stopAtEntry": false,
+      "externalConsole": false
+    },
+    {
+      "name": "Debug Listener",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/Debug/nsdq_listener",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "MIMode": "lldb",
+      "stopAtEntry": false,
+      "externalConsole": false
+    },
+    {
+      "name": "Debug Replayer",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/Debug/nsdq_replayer",
+      "args": [
+        "--file",
+        "data/default.itch"
+      ],
+      "cwd": "${workspaceFolder}",
+      "MIMode": "lldb",
+      "stopAtEntry": false,
+      "externalConsole": false
+    },
+    {
+      "name": "Debug Tests",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/Debug/test_runner",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "MIMode": "lldb",
+      "stopAtEntry": false,
+      "externalConsole": false
+    },
+    {
+      "name": "Debug Matching Engine",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/Debug/nsdq_matching_engine",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "MIMode": "lldb",
+      "stopAtEntry": false,
+      "externalConsole": false
+    },
+    {
+      "name": "Debug MD Generator",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/Debug/md_generator",
+      "args": [
+        "--config",
+        "sample_config.json"
+      ],
+      "cwd": "${workspaceFolder}",
+      "MIMode": "lldb",
+      "stopAtEntry": false,
+      "externalConsole": false
+    }
+  ]
 }

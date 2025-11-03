@@ -1,4 +1,6 @@
 BasedOnStyle: LLVM
+IndentWidth: 2
+TabWidth: 2
 UseTab: Never
 BraceWrapping:
   AfterFunction: false
@@ -6,4 +8,5 @@ BraceWrapping:
   AfterControlStatement: false
   AfterNamespace: false
   BeforeElse: true
-
+  BeforeCatch: true
+  BeforeFinally: true

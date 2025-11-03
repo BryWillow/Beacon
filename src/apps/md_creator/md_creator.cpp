@@ -1,96 +1,134 @@
-# ---------------------------------------------------------------------------
-# @project   Beacon
-# @component Build Script [Top-Level] [CICD Pipeline]
-# @file      CMakeLists.txt
-# @brief     Options: debug(default)|release|all|clean|pipeline
-#            This scripts builds all apps and can start the CICD pipeline.
-#            Note that each app also has its own out-of-source build script.
-# @author    Bryan Camp
-# ---------------------------------------------------------------------------
+/**
+ * @project   Beacon
+ * @file      md_generator.cpp
+ * @brief     Generates Nasdaq TotalView ITCH-5.0 messages for simulation purposes.
+ * @author    Bryan Camp
+ * @component Market Data Generator App
+ * @details   This app generates binary ITCH messages for simulation/testing.
+ *            Options: debug(default)|release|all|clean|pipeline
+ *            Each app also has its own out-of-source build script.
+ */
 
-cmake_minimum_required(VERSION 3.26)
-project(Beacon LANGUAGES CXX)
+#include <filesystem>
+#include <iostream>
+#include <string>
+#include <regex>
+#include "beacon_exchanges/nyse/market_data/pillar_market_data/v1.9/market_data_message_types.h"
+#include "beacon_exchanges/cme/market_data/mdp_mbo/v4.0/market_data_message_types.h"
+#include "message_generator.h"
 
-# Default to C++20
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+namespace fs = std::filesystem;
 
-# Optionally allow build type from command line
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type (Debug/Release)" FORCE)
-endif()
+/**
+ * @brief Print usage information and errors.
+ * @param errors Vector of error strings.
+ */
+void usage(const std::vector<std::string>& errors = {}) {
+  std::cerr << "\n";
+  if (!errors.empty()) {
+    for (const auto& err : errors) {
+      std::cerr << "\033[1;31mError:\033[0m " << err << "\n";
+    }
+    std::cerr << "\n";
+  }
+  std::cerr << "Usage:\n";
+  std::cerr << "  md_generator --config <config.json> [-n <numMessages>] [-o <outputFile>]\n";
+  std::cerr << "\n";
+  std::cerr << "Config file requirements:\n";
+  std::cerr << "  - Must contain 'num_messages' (unsigned integer).\n";
+  std::cerr << "  - Must contain 'symbols' array.\n";
+  std::cerr << "  - Each symbol must specify price and quantity ranges.\n";
+  std::cerr << "  - Optionally, each symbol can specify a 'percent' field.\n";
+  std::cerr << "    If any symbol specifies 'percent', all must, and the sum must be exactly 100.\n";
+  std::cerr << "    Percentages are specified as numbers between 0 and 100 (e.g., 75 for 75%).\n";
+  std::cerr << "\n";
+  std::cerr << "Options:\n";
+  std::cerr << "  --config <file>    Path to config file (.json)\n";
+  std::cerr << "  -n <numMessages>   Number of messages to generate (overrides config)\n";
+  std::cerr << "  -o <outputFile>    Output file name (.dat extension recommended)\n";
+  std::cerr << "  -h, --help         Print this help message and exit\n";
+  std::cerr << "  -q                 Semi-quiet mode: print summary every 500 messages\n";
+  std::cerr << "\n";
+  std::cerr << "All symbol parameters (price/quantity ranges, percent, etc.) are specified in the config file only.\n";
+  std::cerr << "\n";
+  std::cerr << "Example config snippet:\n";
+  std::cerr << R"({
+  "num_messages": 10000,
+  "symbols": [
+    { "symbol": "MSFT", "percent": 75, "price_ranges": [{ "min_price": 100.0, "max_price": 200.0 }], "quantity_ranges": [{ "min_quantity": 1, "max_quantity": 100 }] },
+    { "symbol": "AAPL", "percent": 25, "price_ranges": [{ "min_price": 150.0, "max_price": 250.0 }], "quantity_ranges": [{ "min_quantity": 10, "max_quantity": 200 }] }
+  ]
+})" << "\n";
+  std::cerr << "\n";
+  // -s MSFT -minp 100.0 -maxp 200.0 -minq 1 -maxq 100
 
-message(STATUS "Top-level CMake build type: ${CMAKE_BUILD_TYPE}")
+// This will generate messages for symbol "MSFT" with:
+//   min price: 100.0 (as integer ticks, e.g. 1000000)
+//   max price: 200.0 (as integer ticks, e.g. 2000000)
+//   min quantity: 1
+//   max quantity: 100
 
-# Global verbosity control (default: quiet)
-option(BEACON_VERBOSE "Enable verbose CMake output (STATUS messages, rules)" OFF)
+// You can repeat the -s block for multiple symbols:
+// md_generator -s MSFT -minp 100.0 -maxp 200.0 -minq 1 -maxq 100 -s AAPL -minp 150.0 -maxp 250.0 -minq 10 -maxq 200
+}
 
-if(NOT BEACON_VERBOSE)
-    # Hide STATUS messages and rule chatter
-    set(CMAKE_MESSAGE_LOG_LEVEL WARNING)
-    set(CMAKE_RULE_MESSAGES OFF)
-    set(CMAKE_VERBOSE_MAKEFILE OFF)
-endif()
+// Utility function to convert a price string to uint32_t ticks (1/10000 dollars)
+uint32_t parse_price_to_ticks(const std::string& priceStr) {
+  // Accepts "3", "3.1", "3.12", "3.123", "3.1234"
+  double price = std::stod(priceStr);
+  // Multiply by 10,000 and round to nearest integer
+  return static_cast<uint32_t>(std::round(price * 10000.0));
+}
 
-# Make project headers available to all targets
-include_directories(${PROJECT_SOURCE_DIR}/include)
+/**
+ * @brief Main entry point for md_generator.
+ * Parses command-line arguments, validates input, and generates ITCH messages.
+ */
+int main(int argc, char* argv[]) {
+  try {
+    std::string configPath;
+    std::string outputFile;
+    size_t numMessages = 10000;
 
-# On macOS with Apple Clang, enforce libc++ for compile/link consistency
-if(APPLE)
-    message(STATUS "Applying macOS libc++ flags for consistency with vendor libs")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -stdlib=libc++")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++")
-endif()
+    // TODO: Parse configPath and outputFile from argv or environment if needed
+    // For now, assume configPath and outputFile are set appropriately
 
-# ---------------------------------------------------------------------------
-# Include apps
-# ---------------------------------------------------------------------------
-add_subdirectory(src/apps/md_creator)
-add_subdirectory(src/apps/md_server)
-add_subdirectory(src/apps/ex_match)
-add_subdirectory(src/apps/md_client)
+    if (configPath.empty()) {
+      std::cerr << "[md_generator] Error: Config file path must be specified.\n";
+      return 1;
+    }
 
-# Add more apps here:
-# add_subdirectory(src/apps/nsdq/itch/strategy_pipeline)
+    // Add config base name to output file if not already present
+    std::string configBase;
+    {
+      // Extract base filename without extension
+      std::filesystem::path cfgPath(configPath);
+      configBase = cfgPath.stem().string();
+      // If outputFile is empty, use default
+      if (outputFile.empty()) {
+        outputFile = configBase + ".dat";
+      } else {
+        // Insert configBase before extension if not already present
+        std::filesystem::path outPath(outputFile);
+        std::string outStem = outPath.stem().string();
+        std::string outExt = outPath.extension().string();
+        // Remove ".json" from configBase if present (shouldn't be, but just in case)
+        configBase = std::regex_replace(configBase, std::regex("\\.json$"), "");
+        // If configBase not in outStem, prepend it
+        if (outStem.find(configBase) == std::string::npos) {
+          outputFile = outPath.parent_path().string() + "/" + configBase + "_" + outStem + outExt;
+        }
+      }
+    }
 
-# ---------------------------------------------------------------------------
-# Optionally: set global output directories
-# ---------------------------------------------------------------------------
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../../bin)
+    MessageGenerator generator(configPath);
+    numMessages = generator.getMessageCount();
+    generator.generateMessages(outputFile, numMessages);
+    generator.printStats();
 
-# Tests: make tests optional and robust if vendor/googletest is missing
-option(BEACON_BUILD_TESTS "Enable building tests" ON)
-
-if(BEACON_BUILD_TESTS)
-    # Prefer vendored googletest if present
-    if(EXISTS "${CMAKE_SOURCE_DIR}/vendor/googletest/CMakeLists.txt")
-        message(STATUS "Using vendored googletest (vendor/googletest)")
-        # Add vendored googletest so tests can link to GTest::gtest_main.
-        # Assumes vendor/googletest is present and contains a CMake project.
-        add_subdirectory(vendor/googletest EXCLUDE_FROM_ALL)
-        set(HAVE_GTEST TRUE)
-    else()
-        # Try to find a system-installed GTest
-        find_package(GTest QUIET)
-        if(GTest_FOUND)
-            message(STATUS "Found system GTest")
-            set(HAVE_GTEST TRUE)
-        else()
-            message(WARNING "googletest not found in vendor/ and no system GTest found. Tests will be disabled.")
-            message(WARNING "To enable tests: (1) add vendor/googletest (git submodule or copy) OR (2) install system GTest and re-run CMake.")
-            set(BEACON_BUILD_TESTS OFF)
-        endif()
-    endif()
-endif()
-
-if(BEACON_BUILD_TESTS AND HAVE_GTEST)
-    enable_testing()
-    add_subdirectory(tests)
-else()
-    message(STATUS "Tests disabled (BEACON_BUILD_TESTS=${BEACON_BUILD_TESTS})")
-endif()
-
-# Update any old references:
-# #include "file_generator.hpp" -> #include "md_creator.hpp"
-# namespace file_generator { ... } -> namespace md_creator { ... }
+  } catch (const std::exception& e) {
+    std::cerr << "[md_generator] Exception: " << e.what() << "\n";
+    return 1;
+  }
+  return 0;
+}

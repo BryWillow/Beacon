@@ -11,6 +11,8 @@
 cmake_minimum_required(VERSION 3.26)
 project(Beacon LANGUAGES CXX)
 
+set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
+
 # Default to C++20
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -44,15 +46,29 @@ if(APPLE)
 endif()
 
 # ---------------------------------------------------------------------------
+# Include libs
+# ---------------------------------------------------------------------------
+add_subdirectory(src/libs/exchanges)
+add_subdirectory(src/libs/utils)
+
+# ---------------------------------------------------------------------------
 # Include apps
 # ---------------------------------------------------------------------------
-add_subdirectory(src/apps/md_creator)
-add_subdirectory(src/apps/md_server)
+add_subdirectory(src/apps/md_generator)
+add_subdirectory(src/apps/md_playback)
+add_subdirectory(src/apps/md_handler)
 add_subdirectory(src/apps/ex_match)
-add_subdirectory(src/apps/md_client)
 
 # Add more apps here:
 # add_subdirectory(src/apps/nsdq/itch/strategy_pipeline)
+
+# ---------------------------------------------------------------------------
+# Experimental apps
+# ---------------------------------------------------------------------------
+add_subdirectory(experimental/apps/md_generator)
+add_subdirectory(experimental/apps/md_playback)
+add_subdirectory(experimental/apps/md_handler)
+add_subdirectory(experimental/apps/ex_match)
 
 # ---------------------------------------------------------------------------
 # Optionally: set global output directories
@@ -90,3 +106,10 @@ if(BEACON_BUILD_TESTS AND HAVE_GTEST)
 else()
     message(STATUS "Tests disabled (BEACON_BUILD_TESTS=${BEACON_BUILD_TESTS})")
 endif()
+
+add_executable(md_generator
+    apps/md_generator/main.cpp
+    apps/md_generator/message_generator.cpp
+    apps/md_generator/stats_manager.cpp
+    apps/md_generator/config_validator.cpp # Updated from message_config_validator.cpp
+)

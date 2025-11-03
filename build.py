@@ -22,11 +22,12 @@ Exit codes:
   2 = interrupted by user (Ctrl+C)
 """
 
+import os
 import sys
-from pathlib import Path
-import subprocess
 import shutil
+import subprocess
 import glob
+from pathlib import Path
 
 # Ensure internal pipeline is importable
 _pipeline = Path(__file__).parent / "scripts" / "internal" / "cicd_pipeline"
@@ -38,6 +39,10 @@ except Exception as e:
     print(f"ERROR: Failed to import build utilities: {e}", file=sys.stderr)
     print(f"Searched in: {_pipeline}", file=sys.stderr)
     sys.exit(1)
+
+PROJECT_ROOT = "/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon"
+BUILD_DIR = os.path.join(PROJECT_ROOT, "build/debug")
+GENERATOR_DIR = os.path.join(PROJECT_ROOT, "src/apps/md_generator")
 
 
 def get_repo_root() -> Path:
@@ -101,44 +106,56 @@ def clean(repo_root: Path, deep: bool = False) -> None:
                 _remove_path(match if match.is_dir() else match)
 
 
+def run(cmd, cwd=None, check=True):
+    print(f"> {' '.join(cmd)}")
+    result = subprocess.run(cmd, cwd=cwd)
+    if check and result.returncode != 0:
+        sys.exit(result.returncode)
+
+
 def main():
-    """Main entry point."""
-    repo_root = get_repo_root()
+    os.makedirs(BUILD_DIR, exist_ok=True)
 
-    # Parse arguments
-    config = sys.argv[1] if len(sys.argv) > 1 else "debug"
+    # Configure CMake for debug build
+    run([
+        "cmake",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        PROJECT_ROOT
+    ], cwd=BUILD_DIR)
 
-    # Handle clean modes
-    if config in {"clean", "deep-clean"}:
-        print("Cleaning build artifacts..." + (" (deep)" if config == "deep-clean" else ""))
-        clean(repo_root, deep=(config == "deep-clean"))
-        return
-
-    # Validate configuration
-    valid = {"debug", "release", "all"}
-    if config not in valid:
-        print(f"ERROR: Invalid config '{config}'. Must be: {', '.join(valid)}", file=sys.stderr)
+    # Lint check with clang-format (does not modify files, just checks)
+    lint_failed = False
+    for ext in ("*.cpp", "*.h"):
+        for f in glob.glob(os.path.join(GENERATOR_DIR, ext)):
+            print(f"Linting {f} ...")
+            result = subprocess.run(["clang-format", "--dry-run", "--Werror", f])
+            if result.returncode != 0:
+                print(f"clang-format failed for {f}")
+                lint_failed = True
+    if lint_failed:
+        print("Lint check failed. Please fix formatting issues before building.")
         sys.exit(1)
 
-    # Build
-    if config == "all":
-        build_modes = ["debug", "release"]
-    else:
-        build_modes = [config]
+    # Static analysis with clang-tidy
+    tidy_failed = False
+    for f in glob.glob(os.path.join(GENERATOR_DIR, "*.cpp")):
+        print(f"Running clang-tidy on {f} ...")
+        result = subprocess.run([
+            "clang-tidy", f, "--", "-std=c++20"
+        ])
+        if result.returncode != 0:
+            print(f"clang-tidy failed for {f}")
+            tidy_failed = True
+    if tidy_failed:
+        print("clang-tidy check failed. Please fix issues before building.")
+        sys.exit(1)
 
-    for mode in build_modes:
-        try:
-            execute_build(mode, repo_root)
-        except subprocess.CalledProcessError:
-            print(f"ERROR: {mode} build failed.", file=sys.stderr)
-            sys.exit(1)
-
-    print("✓ Build complete")
-
+    # Build only md_generator
+    run(["cmake", "--build", ".", "--target", "md_generator"], cwd=BUILD_DIR)
 
 if __name__ == "__main__":
     try:
         main()
-    except KeyboardInterrupt:
-        print("Interrupted by user.", file=sys.stderr)
-        sys.exit(2)
+    except subprocess.CalledProcessError as e:
+        print(f"Build failed: {e}", file=sys.stderr)
+        sys.exit(1)
