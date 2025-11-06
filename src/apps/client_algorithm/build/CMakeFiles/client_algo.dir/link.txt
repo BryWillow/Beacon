@@ -1,1 +1,0 @@
-/usr/bin/c++  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/client_algo.dir/main_algo.cpp.o CMakeFiles/client_algo.dir/config_provider.cpp.o -o client_algo

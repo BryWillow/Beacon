@@ -1,1 +1,0 @@
-/usr/bin/c++  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/client_algo_hft.dir/main_algo_threaded.cpp.o -o client_algo_hft

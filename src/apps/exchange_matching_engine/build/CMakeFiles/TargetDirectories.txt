@@ -1,3 +1,0 @@
-/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/experimental/src/apps/exchange_matching_engine/build/CMakeFiles/exchange_matching_engine.dir
-/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/experimental/src/apps/exchange_matching_engine/build/CMakeFiles/edit_cache.dir
-/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/experimental/src/apps/exchange_matching_engine/build/CMakeFiles/rebuild_cache.dir
