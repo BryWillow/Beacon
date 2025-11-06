@@ -1,0 +1,63 @@
+# Build directories
+build/
+*/build/
+**/build/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+*.cmake
+!CMakeLists.txt
+Makefile
+CTestTestfile.cmake
+
+# Compiled binaries
+*.out
+*.o
+*.a
+*.so
+*.dylib
+*.exe
+client_algorithm
+client_algo
+client_algo_hft
+algo_twap
+algo_template
+exchange_matching_engine
+exchange_market_data_generator
+exchange_market_data_playback
+
+# Generated market data
+*.bin
+*.itch
+*.mdp
+*.pillar
+output.*
+test.dat
+price_ranges.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+
+# Backup files
+*_backup_*
+*.bak
