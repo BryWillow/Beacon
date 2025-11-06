@@ -1,0 +1,54 @@
+{
+  "exchange": "nyse",
+  "num_messages": 10000,
+  "trade_probability": 0.1,
+  "flush_interval": 1000,
+  "spread_percentage": 0.5,
+  "symbols": [
+    {
+      "symbol": "MSFT",
+      "percent": 60,
+      "spread_percentage": 0.8,
+      "price_range": {
+        "min_price": 400.0,
+        "max_price": 450.0,
+        "weight": 1.0
+      },
+      "quantity_range": {
+        "min_quantity": 100,
+        "max_quantity": 1000,
+        "weight": 1.0
+      }
+    },
+    {
+      "symbol": "AAPL",
+      "percent": 30,
+      "spread_percentage": 0.6,
+      "price_range": {
+        "min_price": 170.0,
+        "max_price": 200.0,
+        "weight": 1.0
+      },
+      "quantity_range": {
+        "min_quantity": 100,
+        "max_quantity": 1000,
+        "weight": 1.0
+      }
+    },
+    {
+      "symbol": "GOOG",
+      "percent": 10,
+      "spread_percentage": 0.3,
+      "price_range": {
+        "min_price": 140.0,
+        "max_price": 160.0,
+        "weight": 1.0
+      },
+      "quantity_range": {
+        "min_quantity": 100,
+        "max_quantity": 1000,
+        "weight": 1.0
+      }
+    }
+  ]
+}

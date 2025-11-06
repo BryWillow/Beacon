@@ -1,0 +1,84 @@
+{
+  "num_messages": 10000,
+  "exchange": "nsdq",
+  "trade_probability": 0.1,
+  "flush_interval": 1000,
+  "spread_percentage": 0.5,
+  "symbols": [
+    {
+      "symbol": "MSFT",
+      "percent": 60,
+      "spread_percentage": 0.8,
+      "price_range": {
+        "min_price": 100.0,
+        "max_price": 200.0,
+        "weight": 1.0
+      },
+      "quantity_range": {
+        "min_quantity": 10,
+        "max_quantity": 100,
+        "weight": 1.0
+      },
+      "min_price": 506.5799865722656,
+      "max_price": 514.8300170898438,
+      "reference_price": 497.1
+    },
+    {
+      "symbol": "AAPL",
+      "percent": 30,
+      "spread_percentage": 0.6,
+      "price_range": {
+        "min_price": 150.0,
+        "max_price": 250.0,
+        "weight": 1.0
+      },
+      "quantity_range": {
+        "min_quantity": 5,
+        "max_quantity": 50,
+        "weight": 1.0
+      },
+      "min_price": 266.92999267578125,
+      "max_price": 271.70001220703125,
+      "reference_price": 269.77
+    },
+    {
+      "symbol": "GOOG",
+      "percent": 10,
+      "spread_percentage": 0.3,
+      "price_range": {
+        "min_price": 1200.0,
+        "max_price": 1300.0,
+        "weight": 1.0
+      },
+      "quantity_range": {
+        "min_quantity": 1,
+        "max_quantity": 10,
+        "weight": 1.0
+      }
+    },
+    {
+      "symbol": "TSLA",
+      "min_price": 440.7099914550781,
+      "max_price": 466.3299865722656,
+      "reference_price": 445.91,
+      "tick_frequency": 1.0,
+      "volatility": 0.02
+    },
+    {
+      "symbol": "GOOGL",
+      "min_price": 277.3399963378906,
+      "max_price": 286.4200134277344,
+      "reference_price": 284.75,
+      "tick_frequency": 1.0,
+      "volatility": 0.02
+    },
+    {
+      "symbol": "AMZN",
+      "min_price": 175.0,
+      "max_price": 181.0,
+      "reference_price": 178.0,
+      "tick_frequency": 1.0,
+      "volatility": 0.02
+    }
+  ]
+}

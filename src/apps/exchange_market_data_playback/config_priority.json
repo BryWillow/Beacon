@@ -1,0 +1,34 @@
+{
+  "mode": "priority_burst",
+  "burst_size": 5000,
+  "burst_interval_ms": 100,
+  "speed_factor": 1.0,
+  
+  "priority_config": {
+    "enabled": true,
+    "classifier_type": "burst_detection",
+    "burst_threshold": 2.0,
+    
+    "critical_symbols": ["SPY", "QQQ", "VIX"],
+    
+    "critical_time_windows": [
+      {
+        "description": "Market open",
+        "start_ms": 0,
+        "end_ms": 60000,
+        "priority": "critical"
+      },
+      {
+        "description": "Market close",
+        "start_ms": 300000,
+        "end_ms": 360000,
+        "priority": "elevated"
+      }
+    ]
+  },
+  
+  "rate_limit": {
+    "max_rate": 50000,
+    "apply_to_priority": "normal_only"
+  }
+}

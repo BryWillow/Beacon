@@ -1,55 +1,144 @@
-# The Beacon Project
+# Beacon Trading System
 
-## Why Beacon?
-The word "Beacon" represents a guiding light—a source of hope for solving tough challenges. This project serves as a platform to explore, innovate, and measure progress in the HFT landscape.
+**A high-performance algorithmic trading system with ~4 microsecond tick-to-trade latency.**
 
-## Project Overview
-The Beacon project is an ecosystem of modular C++ applications, each designed with a single purpose but working seamlessly together. From ingesting market data at bursty, configurable rates to strategy testing, risk management, order execution, and reporting, the system is built to:
-- Efficiently measure latency at every stage.
-- Offer a pluggable, highly testable architecture.
-- Provide optimized implementations by default.
+## 🚀 Quick Start
 
-## Beacon Core Applications
-
-| Application  | Purpose
-| -----------: | :------
-| <a href="docs/wiki/apps/md_creator.md">md_creator</a> | Creates files containing binary messages in exchange format.
-| <a href="docs/wiki/apps/md_server.md">md_server</a> | Reads files created by the **md_creator** and broadcasts the messages via UDP.
-| <a href="docs/wiki/apps/md_client.md">md_client</a> | Listens for messages sent by the **md_server**. ***<span style="color:red;">Your algo belongs here.</span>***
-| <a href="docs/wiki/apps/ex_match.md">ex_match</a> | Maintains market depth. Processes orders. Sends execution reports.
-
-## Building Beacon
-To build the project, simply use the `build.py` script located at the top level of the repository. Specifying *all* will build all applications, in both *debug* and *release* mode.
-
-#### Usage:
 ```bash
-./build.py all
+# Run the complete system
+python3 scripts/beacon-run.py 30
 ```
-The build script has several other options, which are outlined <a href="docs/wiki/build/build_process.md">here</a>.
-- **Actions**:
-  - `debug` builds include :
-    - ASan
-    - clang-tidy
-    - cppcheck
-    - runs all googletest unit and integration tests
-  - `release`builds include :
-    - -O3 -march=native -mtune=native -DNDEBUG -std=c++20 -flto -funroll-loops -fno-omit-frame-pointer
-    - runs all googletest unit and integration tests
-  - `all`    : Builds both debug and release.
-  - `clean`  : Cleans all build artifacts.
-  - `pipeline`: Creates a new release using Beacon's CI/CD pipeline**
 
-## Running Beacon
-- Building Beacon is straight-forward. <a href="docs/wiki/build_process.md">Click here</a> to get started.
-- Running Beacon is straight-forward. <a href="docs/wiki/build_process.md">Click here</a> to get started.
-- Analyzing Beacon stats is straight-forward. <a href="docs/wiki/build_process.md">Click here</a> to get started.
+That's it! The system will start the matching engine, your algorithm, and market data playback.
 
-### Binary Locations
-- Debug binaries: `bin/<app_name>/debug`
-- Release binaries: `bin/<app_name>/release`
+**→ [Full Getting Started Guide](docs/beacon/getting-started.md)**
 
-## Contributing
-Please ensure all changes are well-documented and tested. Use the scripts in the `scripts/` directory to streamline your workflow.
+---
 
-## License
-Standard MIT License
+## 📖 Documentation
+
+**All documentation is organized in [`docs/beacon/`](docs/beacon/)**
+
+- **[Getting Started](docs/beacon/getting-started.md)** - Quick start guide
+- **[Architecture](docs/beacon/architecture.md)** - System design and components
+- **[Quick Reference](docs/beacon/quick-reference.md)** - Command cheatsheet
+- **[Testing Market Data](docs/beacon/testing-market-data.md)** - Debug guide
+- **[Scripts](scripts/README.md)** - All `beacon-*` script documentation
+
+**→ [Documentation Index](docs/beacon/README.md)**
+
+---
+
+## 🏗️ Architecture
+
+**Beacon is a modular HFT trading system with:**
+
+- **Matching Engine** - OUCH protocol order matching
+- **Market Data Generator** - Creates realistic ITCH market data
+- **Market Data Playback** - UDP multicast streaming
+- **Algorithm Framework** - Low-latency trading strategies
+
+**Key Technologies:**
+- Lock-free ring buffers (SPSC)
+- Thread pinning for deterministic performance
+- UDP multicast for market data
+- TCP for order entry
+- Professional Python orchestration
+
+---
+
+## 🎯 Key Features
+
+✅ **~4-5 μs mean latency** (tick-to-trade on MacBook)  
+✅ **Professional Python scripts** with `beacon-` prefix  
+✅ **One command to run** the entire system  
+✅ **Real market data** from previous day's prices  
+✅ **Comprehensive statistics** with latency histograms  
+✅ **Clean architecture** with clear separation of concerns  
+
+---
+
+## 📊 Performance
+
+**Last Run (MacBook Air):**
+```
+Market Data Received:  97,252
+Orders Sent:           972
+Fills Received:        1,586
+
+Tick-to-Trade Latency:
+  Mean:     4.621 μs
+  Median:   4.000 μs
+  p95:      7.709 μs
+  p99:      21.500 μs
+  Max:      56.541 μs
+```
+
+**Competitive HFT performance on a laptop!**
+
+---
+
+## 🔧 Scripts
+
+All system scripts are in the `scripts/` directory with consistent `beacon-` naming:
+
+```bash
+beacon-run.py              # Run the trading system
+beacon-build.py            # Build all components
+beacon-kill.py             # Stop all processes
+beacon-previous-prices.py  # Fetch yesterday's market prices
+beacon-test-udp.py         # Test UDP multicast
+```
+
+**→ [Full Scripts Documentation](scripts/README.md)**
+
+---
+
+## 📂 Project Structure
+
+```
+experimental/
+├── scripts/                   # All beacon-* scripts
+├── docs/beacon/              # All documentation
+├── src/apps/                 # Application code
+│   ├── exchange_matching_engine/
+│   ├── exchange_market_data_generator/
+│   ├── exchange_market_data_playback/
+│   └── client_algorithm/     # Your trading algorithms
+├── include/hft/              # Core HFT libraries
+│   ├── networking/           # UDP/TCP networking
+│   ├── ringbuffer/          # Lock-free data structures
+│   └── concurrency/         # Thread pinning, etc.
+└── tests/                    # Unit tests
+```
+
+---
+
+## 🎓 Why Beacon?
+
+The word "Beacon" represents a **guiding light** - a source of clarity for solving complex challenges. This project demonstrates:
+
+- **Low-latency C++ design patterns**
+- **Lock-free concurrent programming**
+- **High-frequency trading architecture**
+- **Professional software engineering practices**
+
+Built as both a **learning platform** and a **portfolio showcase** of production-quality HFT systems.
+
+---
+
+## 🤝 Getting Help
+
+- **Documentation:** Check [`docs/beacon/`](docs/beacon/)
+- **Scripts:** See [`scripts/README.md`](scripts/README.md)
+- **App-specific:** Each app has its own README in `src/apps/*/`
+
+---
+
+## 📝 License
+
+This is a personal portfolio project.
+
+---
+
+**Built with ❤️ for high-frequency trading**

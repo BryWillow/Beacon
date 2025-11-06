@@ -14,10 +14,8 @@
 #include <utility>
 
 #include "spsc_ringbuffer.h"
-#include "core/cpu_pause.h"
-#include "thread_utils.h"
-
-namespace beaconcore = beacon::hft::core;
+#include "../core/cpu_pause.h"
+#include "../concurrency/thread_utils.h"
 
 namespace beacon::hft::ringbuffer
 {
@@ -27,14 +25,14 @@ namespace beacon::hft::ringbuffer
    *
    * Hot-path optimizations:
    * - Only the consumer modifies `_tail`; only the producer modifies `_head`.
-   * - _mm_pause()` reduces CPU pressure while spinning.
+   * - cpu_pause() reduces CPU pressure while spinning.
    * - Relaxed atomics for stop flag; memory_order_relaxed is sufficient.
    * - Optional CPU pinning for cache locality.
    * @tparam MsgType Type stored in the ring buffer (e.g., ItchMessage)
    * @tparam Callback Callable invoked for each popped message
    * @tparam N Compile-time capacity of the ring buffer
    */
-  template <typename MsgType, typename Callback, size_t N = beacon::hft::DEFAULT_RING_BUFFER_CAPACITY>
+  template <typename MsgType, typename Callback, size_t N = DEFAULT_RING_BUFFER_CAPACITY>
   class SpScRingBufferConsumer
   {
     public:
@@ -50,11 +48,11 @@ namespace beacon::hft::ringbuffer
      * @brief Start the consumer thread, optionally pinned to a CPU core.
      * @param core CPU core index to pin thread to (-1 for no pinning)
      */
-      void start(int core = beacon::constants::NO_CPU_PINNING)
+      void start(int core = beacon::hft::concurrency::ThreadUtils::NO_CPU_PINNING)
       {
         _thread = std::thread([this] { consumeLoop(); });
         if (core >= 0) {
-          ThreadUtils::pinThreadToCore(_thread, core);
+          beacon::hft::concurrency::ThreadUtils::pinThreadToCore(_thread, core);
         }
       }
 
@@ -86,7 +84,7 @@ namespace beacon::hft::ringbuffer
           }
           else
           {
-            _mm_pause(); // reduces busy-wait pressure
+            beacon::hft::core::cpu_pause(); // reduces busy-wait pressure
           }
         }
       }

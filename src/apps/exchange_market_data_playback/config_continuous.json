@@ -1,0 +1,5 @@
+{
+  "mode": "continuous",
+  "rate_msgs_per_sec": 10000,
+  "speed_factor": 1.0
+}

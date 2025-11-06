@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beacon - Simple, Powerful, Insightful</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 60px 20px 80px 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-beacon {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 40px;
+        }
+        
+        .beacon-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.8),
+                        0 0 80px rgba(255, 215, 0, 0.4),
+                        inset 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: glow 2s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            z-index: 10;
+        }
+        
+        @keyframes glow {
+            0%, 100% { 
+                box-shadow: 0 0 40px rgba(255, 215, 0, 0.8),
+                           0 0 80px rgba(255, 215, 0, 0.4),
+                           inset 0 0 20px rgba(255, 255, 255, 0.5);
+            }
+            50% { 
+                box-shadow: 0 0 60px rgba(255, 215, 0, 1),
+                           0 0 120px rgba(255, 215, 0, 0.6),
+                           inset 0 0 30px rgba(255, 255, 255, 0.7);
+            }
+        }
+        
+        .beacon-ray {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0 0;
+            white-space: nowrap;
+        }
+        
+        .ray-content {
+            background: rgba(255, 255, 255, 0.95);
+            color: #667eea;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .ray-1 { transform: translate(-50%, -50%) rotate(-90deg) translateX(150px) rotate(90deg); }
+        .ray-2 { transform: translate(-50%, -50%) rotate(-45deg) translateX(150px) rotate(45deg); }
+        .ray-3 { transform: translate(-50%, -50%) rotate(0deg) translateX(150px); }
+        .ray-4 { transform: translate(-50%, -50%) rotate(45deg) translateX(150px) rotate(-45deg); }
+        .ray-5 { transform: translate(-50%, -50%) rotate(90deg) translateX(150px) rotate(-90deg); }
+        .ray-6 { transform: translate(-50%, -50%) rotate(135deg) translateX(150px) rotate(-135deg); }
+        .ray-7 { transform: translate(-50%, -50%) rotate(180deg) translateX(150px) rotate(-180deg); }
+        .ray-8 { transform: translate(-50%, -50%) rotate(225deg) translateX(150px) rotate(-225deg); }
+        
+        .logo {
+            margin-bottom: 20px;
+        }
+        
+        .logo svg {
+            width: 120px;
+            height: 120px;
+            filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.3));
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        header h1 {
+            font-size: 4.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+            letter-spacing: -1px;
+        }
+        
+        header .tagline {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+        }
+        
+        header .cta {
+            display: inline-block;
+            padding: 18px 45px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        header .cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+        }
+        
+        .exchanges {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0 40px 0;
+            flex-wrap: wrap;
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+        
+        .exchanges span {
+            font-weight: 600;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .hero-stats {
+            display: none;
+        }
+        
+        .content {
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            margin-top: -20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .section {
+            margin-bottom: 80px;
+        }
+        
+        .section h2 {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .section p {
+            font-size: 1.2rem;
+            color: #555;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.8;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 40px;
+            border-radius: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .feature-card .icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .feature-card p {
+            font-size: 1rem;
+            color: #555;
+            text-align: left;
+            line-height: 1.6;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 60px 0;
+        }
+        
+        .highlight-box h2 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .highlight-box p {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.95);
+        }
+        
+        .code-example {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 30px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            overflow-x: auto;
+            margin: 30px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .code-example .comment {
+            color: #6a9955;
+        }
+        
+        .code-example .command {
+            color: #9cdcfe;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5rem;
+            }
+            
+            header .tagline {
+                font-size: 1.3rem;
+            }
+            
+            .content {
+                padding: 30px;
+            }
+            
+            .section h2 {
+                font-size: 2rem;
+            }
+            
+            .hero-stats {
+                gap: 30px;
+            }
+            
+            .stat .number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <!-- Hero Beacon with radiating features -->
+            <div class="hero-beacon">
+                <!-- Center glowing beacon -->
+                <div class="beacon-center">💡</div>
+                
+                <!-- Feature rays radiating outward -->
+                <div class="beacon-ray ray-1">
+                    <div class="ray-content">~4μs Latency</div>
+                </div>
+                <div class="beacon-ray ray-2">
+                    <div class="ray-content">Live Backtesting</div>
+                </div>
+                <div class="beacon-ray ray-3">
+                    <div class="ray-content">NYSE/NASDAQ/CME</div>
+                </div>
+                <div class="beacon-ray ray-4">
+                    <div class="ray-content">Full Statistics</div>
+                </div>
+                <div class="beacon-ray ray-5">
+                    <div class="ray-content">1 Command</div>
+                </div>
+                <div class="beacon-ray ray-6">
+                    <div class="ray-content">Real Protocols</div>
+                </div>
+                <div class="beacon-ray ray-7">
+                    <div class="ray-content">Infinite Flexibility</div>
+                </div>
+                <div class="beacon-ray ray-8">
+                    <div class="ray-content">Production Grade</div>
+                </div>
+            </div>
+            
+            <h1>Beacon</h1>
+            <p class="tagline">Simple to Use. Insanely Powerful. Brutally Insightful.</p>
+            
+            <a href="getting-started.md" class="cta">Get Started →</a>
+            
+            <div class="exchanges">
+                <span>📈 NYSE</span>
+                <span>📊 NASDAQ</span>
+                <span>💹 CME</span>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="content">
+            <div class="section">
+                <h2>One Command. Production-Grade Results.</h2>
+                <p>
+                    <strong>It's almost ridiculously simple:</strong> Run one Python script, and you've got a complete live backtesting environment with a matching engine, market data streaming, and full latency analytics. No complex setup. No configuration hell. Just results.
+                </p>
+                <p>
+                    <strong>But don't mistake simple for basic.</strong> Under the hood, you're running production-grade HFT infrastructure: lock-free ring buffers, thread-pinned execution, UDP multicast, real exchange protocols. The simplicity is the achievement—making sophisticated trading infrastructure accessible.
+                </p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="icon">🎯</div>
+                    <h3>Simple to Use</h3>
+                    <p>One command to run everything. Fetch yesterday's prices, start the system, watch the stats roll in. No PhDs required.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon">⚡</div>
+                    <h3>Insanely Powerful</h3>
+                    <p>Real matching engine. Live protocols (OUCH/ITCH). Support for NYSE, NASDAQ, and CME. Infinite data flexibility. Professional-grade infrastructure.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon">📊</div>
+                    <h3>Brutally Insightful</h3>
+                    <p>Full latency histograms. Every tick measured. p50/p95/p99/p99.9 breakdowns. See exactly where time goes, down to the microsecond.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon">🔄</div>
+                    <h3>Live Backtesting</h3>
+                    <p>Not a simulation. A real environment. Your backtest IS your live test. When you deploy, nothing changes—you've been running production all along.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon">🔁</div>
+                    <h3>Loop & Replay Forever</h3>
+                    <p>Stream the same market data endlessly. Perfect for long training sessions, stability tests, and finding edge cases in extended runs.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon">🏛️</div>
+                    <h3>3 Major Exchanges</h3>
+                    <p>NYSE ITCH, NASDAQ ITCH, CME MDP—the three most heavily traded exchanges. Test on the protocols you'll actually trade on. Switch exchanges without rewriting code.</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h2>Simple. Powerful. Insightful.</h2>
+                <p><strong>One command</strong> gets you a complete live backtesting environment.<br>
+                <strong>Full control</strong> over every aspect of your market data.<br>
+                <strong>Complete visibility</strong> into every microsecond of latency.</p>
+                <div class="code-example">
+<span class="comment"># Fetch yesterday's real prices</span>
+python3 scripts/<span class="command">beacon-previous-prices.py</span>
+
+<span class="comment"># Run your system for 30 seconds</span>
+python3 scripts/<span class="command">beacon-run.py</span> 30
+
+<span class="comment"># Watch your insights roll in</span>
+<span style="color: #4ec9b0;">Market Data Received:  97,252</span>
+<span style="color: #4ec9b0;">Orders Sent:           972</span>
+<span style="color: #4ec9b0;">Fills Received:        1,586</span>
+
+<span style="color: #ce9178;">Tick-to-Trade Latency:</span>
+  <span style="color: #b5cea8;">Mean:     4.621 μs</span>
+  <span style="color: #b5cea8;">p95:      7.709 μs</span>
+  <span style="color: #b5cea8;">p99:      21.500 μs</span>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>Why This Matters</h2>
+                <p>
+                    Traditional backtesting uses CSV files and simulated fills. <strong>That's not reality.</strong>
+                    Real trading involves network protocols, queue depths, partial fills, and microsecond timing.
+                </p>
+                <p>
+                    <strong>Beacon gives you reality without the risk.</strong> Your strategy runs against a real matching engine 
+                    with real OUCH order entry and ITCH market data. When you flip the switch to production, 
+                    your code doesn't change—because you've been running production all along.
+                </p>
+                <p>
+                    <strong>Plus, you control everything.</strong> Want to stress-test with 10,000 ticks/second? Do it. 
+                    Want to replay Black Monday at half speed? Easy. Want synthetic scenarios that haven't happened yet? 
+                    You're in control. And every microsecond is measured, tracked, and reported.
+                </p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="icon">🧪</div>
+                    <h3>Test in Reality</h3>
+                    <p>No simulations. No approximations. Real matching engine, real protocols, real latency measurements. Your backtest IS your live test.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon">🎓</div>
+                    <h3>Full Control, Full Visibility</h3>
+                    <p>Configure every parameter. See every metric. Complete statistics from every run. Understand exactly what's happening at every microsecond.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon">💪</div>
+                    <h3>Production-Grade Infrastructure</h3>
+                    <p>Lock-free data structures. Thread pinning. UDP multicast. This isn't toy code—it's real HFT infrastructure you can learn from and extend.</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h2>Ready for Reality?</h2>
+                <p>Simple to use. Insanely powerful. Brutally insightful.</p>
+                <a href="getting-started.md" class="cta" style="margin-top: 20px;">Start Testing →</a>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Beacon Trading System | For traders who refuse to settle for approximations</p>
+            <p style="margin-top: 10px; opacity: 0.8;">📚 <a href="README.md" style="color: white;">Documentation</a> | 🚀 <a href="getting-started.md" style="color: white;">Get Started</a> | 📊 <a href="quick-reference.md" style="color: white;">Quick Reference</a></p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,2 @@
+/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/libs/exchanges/build/CMakeFiles/edit_cache.dir
+/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/libs/exchanges/build/CMakeFiles/rebuild_cache.dir

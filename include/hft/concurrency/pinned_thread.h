@@ -21,10 +21,10 @@ namespace beacon::hft::concurrency
       template <typename Fn>
       PinnedThread(Fn&& fn, int core) {
         auto fnLocal = std::forward<Fn>(fn);  // take ownership of the user-provided function
-        auto threadFn = [&fnLocal, this]() {  // capture by reference so we have access to _stopFlag
+        auto threadFn = [fnLocal = std::move(fnLocal), this]() mutable {  // capture by value (move), mutable so we can call it
           fnLocal(_stopFlag);                 // invoke the user's function with atomic _stopFlag
         };
-        _thread = std::thread(threadFn);      // start the thread which now has _stopFlag
+        _thread = std::thread(std::move(threadFn));      // start the thread which now has _stopFlag
         ThreadUtils::pinThreadToCore(_thread, core); // pin the thread to the specified core
       }
 

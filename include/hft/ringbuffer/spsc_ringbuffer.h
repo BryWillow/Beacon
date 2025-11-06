@@ -12,6 +12,8 @@
 #include <cstddef>
 #include <array>
 #include <algorithm>
+#include <chrono>
+#include "../core/cpu_pause.h"
 
 namespace beacon::hft::ringbuffer
 {
@@ -70,6 +72,57 @@ namespace beacon::hft::ringbuffer
         updateHighWaterMark(next);
 
         return true;
+      }
+
+      /**
+       * @brief Blocking push with timeout to detect hung consumers.
+       * @param item The item to push onto the ring buffer.
+       * @param timeoutMs Maximum time to wait in milliseconds (default 5000ms = 5 seconds).
+       * @return True if item was successfully pushed, false if timeout occurred.
+       * @note  Use this for critical data that CANNOT be dropped (e.g., execution reports).
+       *        This will spin (busy-wait) if the buffer is full until the consumer catches up.
+       *        Returns false after timeout to detect consumer hangs/deadlocks.
+       */
+      bool push(const T& item, uint32_t timeoutMs = 5000) {
+        auto startTime = std::chrono::steady_clock::now();
+        auto timeoutDuration = std::chrono::milliseconds(timeoutMs);
+        uint64_t spinCount = 0;
+        
+        while (true) {
+          const size_t head = _head.load(std::memory_order_relaxed);
+          const size_t next = increment(head);
+
+          // Check if space is available
+          if (next != _tail.load(std::memory_order_acquire)) {
+            // Space available, insert item
+            _buffer[head] = item;
+            _head.store(next, std::memory_order_release);
+            updateHighWaterMark(next);
+            return true;
+          }
+
+          // Buffer is full, check timeout every 1000 spins to minimize overhead
+          if (spinCount++ % 1000 == 0) {
+            auto elapsed = std::chrono::steady_clock::now() - startTime;
+            if (elapsed >= timeoutDuration) {
+              // Timeout - consumer is hung or deadlocked
+              return false;
+            }
+          }
+
+          // Buffer is full, spin
+          beacon::hft::core::cpu_pause();
+        }
+      }
+      
+      /**
+       * @brief Blocking push with custom timeout (for critical paths needing explicit control).
+       * @param item The item to push onto the ring buffer.
+       * @param timeoutMs Maximum time to wait in milliseconds.
+       * @return True if item was successfully pushed, false if timeout occurred.
+       */
+      bool pushWithTimeout(const T& item, uint32_t timeoutMs) {
+        return push(item, timeoutMs);
       }
 
       /**

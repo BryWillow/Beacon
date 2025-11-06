@@ -1,0 +1,9 @@
+{
+  "mode": "burst",
+  "burst_size": 10000,
+  "burst_interval_ms": 50,
+  "speed_factor": 10.0,
+  "max_rate_limit": 1000000,
+  "packet_loss_rate": 0.01,
+  "max_jitter_us": 1000
+}

@@ -1,0 +1,54 @@
+{
+  "exchange": "cme",
+  "num_messages": 10000,
+  "trade_probability": 0.1,
+  "flush_interval": 1000,
+  "spread_percentage": 0.5,
+  "symbols": [
+    {
+      "symbol": "ESZ4",
+      "percent": 60,
+      "spread_percentage": 0.2,
+      "price_range": {
+        "min_price": 4500.0,
+        "max_price": 4600.0,
+        "weight": 1.0
+      },
+      "quantity_range": {
+        "min_quantity": 1,
+        "max_quantity": 50,
+        "weight": 1.0
+      }
+    },
+    {
+      "symbol": "NQZ4",
+      "percent": 30,
+      "spread_percentage": 0.3,
+      "price_range": {
+        "min_price": 16000.0,
+        "max_price": 16500.0,
+        "weight": 1.0
+      },
+      "quantity_range": {
+        "min_quantity": 1,
+        "max_quantity": 25,
+        "weight": 1.0
+      }
+    },
+    {
+      "symbol": "YMZ4",
+      "percent": 10,
+      "spread_percentage": 0.4,
+      "price_range": {
+        "min_price": 38000.0,
+        "max_price": 39000.0,
+        "weight": 1.0
+      },
+      "quantity_range": {
+        "min_quantity": 1,
+        "max_quantity": 20,
+        "weight": 1.0
+      }
+    }
+  ]
+}

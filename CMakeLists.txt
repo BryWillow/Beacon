@@ -1,115 +1,34 @@
-# ---------------------------------------------------------------------------
-# @project   Beacon
-# @component Build Script [Top-Level] [CICD Pipeline]
-# @file      CMakeLists.txt
-# @brief     Options: debug(default)|release|all|clean|pipeline
-#            This scripts builds all apps and can start the CICD pipeline.
-#            Note that each app also has its own out-of-source build script.
-# @author    Bryan Camp
-# ---------------------------------------------------------------------------
+# =============================================================================
+# Project:      Beacon
+# Purpose:      Root build configuration for the Beacon project
+# Author:       Bryan Camp
+# =============================================================================
 
 cmake_minimum_required(VERSION 3.26)
 project(Beacon LANGUAGES CXX)
 
-set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
-
-# Default to C++20
+# Set C++ standard for the entire project
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Optionally allow build type from command line
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type (Debug/Release)" FORCE)
-endif()
+# Add vendor directory to include paths for the entire project
+include_directories(${CMAKE_SOURCE_DIR}/vendor)
 
-message(STATUS "Top-level CMake build type: ${CMAKE_BUILD_TYPE}")
+# Add subdirectories for libraries
+add_subdirectory(src/libs/exchange_protocols)
 
-# Global verbosity control (default: quiet)
-option(BEACON_VERBOSE "Enable verbose CMake output (STATUS messages, rules)" OFF)
+# Add subdirectories for applications
+add_subdirectory(src/apps/exchange_market_data_generator)
+add_subdirectory(src/apps/exchange_market_data_playback)
+add_subdirectory(src/apps/exchange_matching_engine)
+add_subdirectory(src/apps/client_algorithm)
 
-if(NOT BEACON_VERBOSE)
-    # Hide STATUS messages and rule chatter
-    set(CMAKE_MESSAGE_LOG_LEVEL WARNING)
-    set(CMAKE_RULE_MESSAGES OFF)
-    set(CMAKE_VERBOSE_MAKEFILE OFF)
-endif()
+# Enable testing
+enable_testing()
 
-# Make project headers available to all targets
-include_directories(${PROJECT_SOURCE_DIR}/include)
-
-# On macOS with Apple Clang, enforce libc++ for compile/link consistency
-if(APPLE)
-    message(STATUS "Applying macOS libc++ flags for consistency with vendor libs")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -stdlib=libc++")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++")
-endif()
-
-# ---------------------------------------------------------------------------
-# Include libs
-# ---------------------------------------------------------------------------
-add_subdirectory(src/libs/exchanges)
-add_subdirectory(src/libs/utils)
-
-# ---------------------------------------------------------------------------
-# Include apps
-# ---------------------------------------------------------------------------
-add_subdirectory(src/apps/md_generator)
-add_subdirectory(src/apps/md_playback)
-add_subdirectory(src/apps/md_handler)
-add_subdirectory(src/apps/ex_match)
-
-# Add more apps here:
-# add_subdirectory(src/apps/nsdq/itch/strategy_pipeline)
-
-# ---------------------------------------------------------------------------
-# Experimental apps
-# ---------------------------------------------------------------------------
-add_subdirectory(experimental/apps/md_generator)
-add_subdirectory(experimental/apps/md_playback)
-add_subdirectory(experimental/apps/md_handler)
-add_subdirectory(experimental/apps/ex_match)
-
-# ---------------------------------------------------------------------------
-# Optionally: set global output directories
-# ---------------------------------------------------------------------------
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../../bin)
-
-# Tests: make tests optional and robust if vendor/googletest is missing
-option(BEACON_BUILD_TESTS "Enable building tests" ON)
-
-if(BEACON_BUILD_TESTS)
-    # Prefer vendored googletest if present
-    if(EXISTS "${CMAKE_SOURCE_DIR}/vendor/googletest/CMakeLists.txt")
-        message(STATUS "Using vendored googletest (vendor/googletest)")
-        # Add vendored googletest so tests can link to GTest::gtest_main.
-        # Assumes vendor/googletest is present and contains a CMake project.
-        add_subdirectory(vendor/googletest EXCLUDE_FROM_ALL)
-        set(HAVE_GTEST TRUE)
-    else()
-        # Try to find a system-installed GTest
-        find_package(GTest QUIET)
-        if(GTest_FOUND)
-            message(STATUS "Found system GTest")
-            set(HAVE_GTEST TRUE)
-        else()
-            message(WARNING "googletest not found in vendor/ and no system GTest found. Tests will be disabled.")
-            message(WARNING "To enable tests: (1) add vendor/googletest (git submodule or copy) OR (2) install system GTest and re-run CMake.")
-            set(BEACON_BUILD_TESTS OFF)
-        endif()
-    endif()
-endif()
-
-if(BEACON_BUILD_TESTS AND HAVE_GTEST)
-    enable_testing()
+# Optional: Add GoogleTest if tests directory exists and has CMakeLists.txt
+if(EXISTS "${CMAKE_SOURCE_DIR}/tests/CMakeLists.txt")
+    add_subdirectory(vendor/googletest)
     add_subdirectory(tests)
-else()
-    message(STATUS "Tests disabled (BEACON_BUILD_TESTS=${BEACON_BUILD_TESTS})")
 endif()
-
-add_executable(md_generator
-    apps/md_generator/main.cpp
-    apps/md_generator/message_generator.cpp
-    apps/md_generator/stats_manager.cpp
-    apps/md_generator/config_validator.cpp # Updated from message_config_validator.cpp
-)

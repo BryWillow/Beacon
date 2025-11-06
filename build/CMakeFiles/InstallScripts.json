@@ -1,0 +1,10 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/experimental/build/cmake_install.cmake",
+		"/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/experimental/build/src/libs/exchange_protocols/cmake_install.cmake",
+		"/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/experimental/build/src/apps/exchange_market_data_generator/cmake_install.cmake",
+		"/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/experimental/build/src/apps/exchange_market_data_playback/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
