@@ -9,16 +9,17 @@
 #include "hft/concurrency/pinned_thread.h"
 #include <atomic>
 
-using namespace hft::concurrency;
+using namespace beacon::hft::concurrency;
 
 TEST(PinnedThreadTest, BasicExecution) {
     std::atomic<int> counter{0};
     
-    PinnedThread thread(0, [&]() {
-        counter++;
-    });
-    
-    thread.join();
+    {
+        PinnedThread thread([&](std::atomic<bool>& stop) {
+            counter++;
+        }, 0);
+        // Destructor will join automatically when scope closes
+    }
     
     EXPECT_EQ(counter, 1);
 }
@@ -26,11 +27,17 @@ TEST(PinnedThreadTest, BasicExecution) {
 TEST(PinnedThreadTest, MultipleThreadsOnDifferentCores) {
     std::atomic<int> sum{0};
     
-    PinnedThread t1(0, [&]() { sum += 10; });
-    PinnedThread t2(1, [&]() { sum += 20; });
-    
-    t1.join();
-    t2.join();
+    {
+        PinnedThread t1([&](std::atomic<bool>& stop) { 
+            sum += 10; 
+        }, 0);
+        
+        PinnedThread t2([&](std::atomic<bool>& stop) { 
+            sum += 20; 
+        }, 1);
+        
+        // Destructors will join automatically
+    }
     
     EXPECT_EQ(sum, 30);
 }

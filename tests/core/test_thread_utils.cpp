@@ -8,27 +8,62 @@
 #include <gtest/gtest.h>
 #include "hft/concurrency/thread_utils.h"
 #include <thread>
+#include <atomic>
+#include <chrono>
 
-using namespace hft::concurrency;
+using namespace beacon::hft::concurrency;
 
-TEST(ThreadUtilsTest, SetThreadAffinity) {
-    std::thread t([&]() {
-        EXPECT_TRUE(set_thread_affinity(0));
-    });
-    t.join();
+// Test that NO_CPU_PINNING constant exists
+TEST(ThreadUtilsTest, NoCpuPinningConstant) {
+    EXPECT_EQ(ThreadUtils::NO_CPU_PINNING, -1);
 }
 
-TEST(ThreadUtilsTest, InvalidCoreAffinity) {
-    std::thread t([&]() {
-        // Core 999 doesn't exist
-        EXPECT_FALSE(set_thread_affinity(999));
+// Test basic pinThreadToCore functionality
+// Note: On macOS this is a no-op, but we verify it doesn't crash
+TEST(ThreadUtilsTest, PinThreadToCore) {
+    std::atomic<bool> threadRan{false};
+    
+    std::thread t([&threadRan]() {
+        threadRan = true;
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     });
+    
+    // Should not throw or crash (even if it's a no-op on macOS)
+    EXPECT_NO_THROW(ThreadUtils::pinThreadToCore(t, 0));
+    
     t.join();
+    EXPECT_TRUE(threadRan);
 }
 
-TEST(ThreadUtilsTest, SetThreadPriority) {
-    std::thread t([&]() {
-        EXPECT_TRUE(set_realtime_priority());
+// Test with multiple cores
+TEST(ThreadUtilsTest, PinToMultipleCores) {
+    for (int core = 0; core < 4; ++core) {
+        std::atomic<bool> threadRan{false};
+        
+        std::thread t([&threadRan]() {
+            threadRan = true;
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        });
+        
+        EXPECT_NO_THROW(ThreadUtils::pinThreadToCore(t, core));
+        
+        t.join();
+        EXPECT_TRUE(threadRan);
+    }
+}
+
+// Test with NO_CPU_PINNING value
+TEST(ThreadUtilsTest, NoCpuPinningValue) {
+    std::atomic<bool> threadRan{false};
+    
+    std::thread t([&threadRan]() {
+        threadRan = true;
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     });
+    
+    // Using NO_CPU_PINNING should also not crash
+    EXPECT_NO_THROW(ThreadUtils::pinThreadToCore(t, ThreadUtils::NO_CPU_PINNING));
+    
     t.join();
+    EXPECT_TRUE(threadRan);
 }
