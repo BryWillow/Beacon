@@ -14,6 +14,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Add vendor directory to include paths for the entire project
 include_directories(${CMAKE_SOURCE_DIR}/vendor)
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
 
 # Add subdirectories for libraries
 add_subdirectory(src/libs/exchange_protocols)
