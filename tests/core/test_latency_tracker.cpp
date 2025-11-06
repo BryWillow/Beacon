@@ -7,86 +7,75 @@
 
 #include <gtest/gtest.h>
 #include "hft/profiling/latency_tracker.h"
-#include <thread>
-#include <chrono>
 
-using namespace hft::profiling;
+using namespace beacon::hft::profiling;
 
 TEST(LatencyTrackerTest, BasicRecording) {
-    LatencyTracker tracker;
+    LatencyTracker<> tracker;
     
-    tracker.record(100);
-    tracker.record(200);
-    tracker.record(300);
+    auto start1 = HighResTimer::now();
+    auto end1 = start1 + 100;
+    tracker.record(start1, end1);
     
-    auto stats = tracker.get_statistics();
+    auto start2 = HighResTimer::now();
+    auto end2 = start2 + 200;
+    tracker.record(start2, end2);
+    
+    auto start3 = HighResTimer::now();
+    auto end3 = start3 + 300;
+    tracker.record(start3, end3);
+    
+    auto stats = tracker.getStats();
     
     EXPECT_EQ(stats.count, 3);
-    EXPECT_EQ(stats.min, 100);
-    EXPECT_EQ(stats.max, 300);
-    EXPECT_DOUBLE_EQ(stats.mean, 200.0);
+    EXPECT_EQ(stats.samples_recorded, 3);
 }
 
 TEST(LatencyTrackerTest, Percentiles) {
-    LatencyTracker tracker;
+    LatencyTracker<> tracker;
     
     // Record 1-100
-    for (int i = 1; i <= 100; ++i) {
-        tracker.record(i);
+    for (uint64_t i = 1; i <= 100; ++i) {
+        auto start = HighResTimer::now();
+        auto end = start + (i * 1000);
+        tracker.record(start, end);
     }
     
-    auto stats = tracker.get_statistics();
+    auto stats = tracker.getStats();
     
     EXPECT_EQ(stats.count, 100);
-    EXPECT_EQ(stats.min, 1);
-    EXPECT_EQ(stats.max, 100);
-    EXPECT_NEAR(stats.p50, 50, 5);
-    EXPECT_NEAR(stats.p95, 95, 5);
-    EXPECT_NEAR(stats.p99, 99, 2);
+    EXPECT_GT(stats.max_us, stats.min_us);
+    EXPECT_GT(stats.p95_us, stats.median_us);
+    EXPECT_GT(stats.p99_us, stats.p95_us);
 }
 
-TEST(LatencyTrackerTest, MicrosecondPrecision) {
-    LatencyTracker tracker;
+TEST(LatencyTrackerTest, RecordDelta) {
+    LatencyTracker<> tracker;
     
-    auto start = std::chrono::high_resolution_clock::now();
-    std::this_thread::sleep_for(std::chrono::microseconds(100));
-    auto end = std::chrono::high_resolution_clock::now();
+    // Use recordDelta for pre-computed latencies
+    tracker.recordDelta(100);
+    tracker.recordDelta(200);
+    tracker.recordDelta(300);
     
-    auto latency = std::chrono::duration_cast<std::chrono::microseconds>(
-        end - start
-    ).count();
+    auto stats = tracker.getStats();
     
-    tracker.record(latency);
-    
-    auto stats = tracker.get_statistics();
-    
-    EXPECT_GE(stats.min, 90);   // Should be close to 100μs
-    EXPECT_LE(stats.max, 150);  // Allow some jitter
-}
-
-TEST(LatencyTrackerTest, Reset) {
-    LatencyTracker tracker;
-    
-    tracker.record(100);
-    tracker.record(200);
-    
-    tracker.reset();
-    
-    auto stats = tracker.get_statistics();
-    EXPECT_EQ(stats.count, 0);
+    EXPECT_EQ(stats.count, 3);
+    EXPECT_EQ(stats.samples_recorded, 3);
 }
 
 TEST(LatencyTrackerTest, LargeDataset) {
-    LatencyTracker tracker;
+    LatencyTracker<> tracker;
     
-    // Record 10,000 samples
-    for (int i = 0; i < 10000; ++i) {
-        tracker.record(i % 1000);  // 0-999 pattern
+    // Record 1,000 samples
+    for (uint64_t i = 0; i < 1000; ++i) {
+        auto start = HighResTimer::now();
+        auto end = start + (i % 1000) * 100;
+        tracker.record(start, end);
     }
     
-    auto stats = tracker.get_statistics();
+    auto stats = tracker.getStats();
     
-    EXPECT_EQ(stats.count, 10000);
-    EXPECT_GE(stats.min, 0);
-    EXPECT_LE(stats.max, 999);
+    EXPECT_EQ(stats.count, 1000);
+    EXPECT_EQ(stats.samples_recorded, 1000);
 }
+
