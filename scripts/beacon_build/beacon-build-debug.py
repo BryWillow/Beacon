@@ -50,8 +50,7 @@ def main():
     log_file = logs_dir / "beacon-build-debug.log"
     setup_logging(log_file)
 
-    project_root = script_dir.parent.parent  # <-- Only go up two levels to Beacon/
-
+    project_root = script_dir.parent.parent
     apps = [
         project_root / "src/apps/exchange_matching_engine",
         project_root / "src/apps/exchange_market_data_generator",
