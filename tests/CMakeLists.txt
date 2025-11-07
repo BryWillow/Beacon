@@ -9,6 +9,8 @@ cmake_minimum_required(VERSION 3.26)
 # Include GoogleTest
 include_directories(${CMAKE_SOURCE_DIR}/vendor/googletest/googletest/include)
 include_directories(${CMAKE_SOURCE_DIR}/vendor/googletest/googlemock/include)
+include_directories(${CMAKE_SOURCE_DIR}/src)  # Add src for protocol headers
+include_directories(${CMAKE_SOURCE_DIR}/src/libs/exchange_protocols)  # Add protocol root for includes
 
 # Test executable macro
 macro(beacon_test test_name)
