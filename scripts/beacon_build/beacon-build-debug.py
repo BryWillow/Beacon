@@ -45,9 +45,12 @@ def build_app(app_dir: Path):
 
 def main():
     script_dir = Path(__file__).resolve().parent
-    project_root = script_dir.parent.parent  # <-- Only go up two levels to Beacon/
-    log_file = script_dir / "../logs/beacon-build-debug.log"
+    logs_dir = script_dir / "../logs"
+    logs_dir.mkdir(parents=True, exist_ok=True)  # Ensure logs directory exists
+    log_file = logs_dir / "beacon-build-debug.log"
     setup_logging(log_file)
+
+    project_root = script_dir.parent.parent  # <-- Only go up two levels to Beacon/
 
     apps = [
         project_root / "src/apps/exchange_matching_engine",
