@@ -150,4 +150,27 @@ This is a personal portfolio project.
 
 ---
 
+## Build Scripts
+- Debug build: `beacon_build/beacon-build-debug.py`
+- Release build: `beacon_build/beacon-build-release.py`
+
+## Release Scripts
+- Create release: `beacon_release_version/beacon-create-release.py`
+- Package release: `beacon_release_version/beacon-package-release.py`
+- Release notes: `beacon_release_version/beacon-release-notes.py`
+
+## Run Scripts
+- Run system: `beacon_run/run_system.py`
+- Beacon run: `beacon_run/beacon-run.py`
+
+## Utility Scripts
+- Kill: `beacon_utils/beacon-kill.py`
+- Previous prices: `beacon_utils/beacon-previous-prices.py`
+- Test UDP: `beacon_utils/beacon-test-udp.py`
+
+## Logs
+- All build logs: `logs/`
+
+---
+
 **Built with ❤️ for high-frequency trading**

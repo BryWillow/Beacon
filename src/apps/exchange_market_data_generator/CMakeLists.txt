@@ -46,3 +46,17 @@ target_include_directories(exchange_market_data_generator PRIVATE
 
 # Link any required libraries (if applicable)
 # Example: target_link_libraries(exchange_market_data_generator <library_name>)
+
+# Debug build options
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    # Extra warnings
+    add_compile_options(-Wall -Wextra -Wpedantic)
+    # Disable optimizations
+    add_compile_options(-O0)
+    # Enable sanitizers (address and undefined)
+    add_compile_options(-fsanitize=address,undefined)
+    # Enable static analysis (clang-tidy if available)
+    set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-quiet")
+    # Generate compile_commands.json for IDEs and external tools
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+endif()
