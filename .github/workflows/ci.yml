@@ -20,16 +20,16 @@ jobs:
         run: |
           pwd
           ls -al
-          ls -al Beacon/scripts/beacon_build
+          ls -al scripts/beacon_build
 
       - name: Build All Apps (Debug)
-        run: python3 Beacon/scripts/beacon_build/beacon-build-debug.py
+        run: python3 scripts/beacon_build/beacon-build-debug.py
 
       - name: Build All Apps (Release)
-        run: python3 Beacon/scripts/beacon_build/beacon-build-release.py
+        run: python3 scripts/beacon_build/beacon-build-release.py
 
       - name: Run Unit Tests
-        run: python3 Beacon/scripts/beacon_test/beacon-run-unit-tests.py
+        run: python3 scripts/beacon_test/beacon-run-unit-tests.py
               
       - name: Upload build logs
         uses: actions/upload-artifact@v4
