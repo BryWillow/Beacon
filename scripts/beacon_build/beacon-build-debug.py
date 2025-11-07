@@ -49,8 +49,8 @@ def main():
     logs_dir = project_root / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
     log_file = logs_dir / "beacon-build-debug.log"
-    print(f"Log file path: {log_file}")
-    print(f"Log dir exists: {log_file.parent.exists()}")
+    print(f"Log file path: {log_file}")  # Print absolute log file path for debugging
+    print(f"Log dir exists: {log_file.parent.exists()}")  # Confirm logs directory exists
     setup_logging(log_file)
 
     apps = [
