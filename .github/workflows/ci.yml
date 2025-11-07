@@ -16,6 +16,12 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y build-essential cmake
 
+      - name: List files for debugging
+        run: |
+          pwd
+          ls -al
+          ls -al scripts/beacon_build
+
       - name: Build All Apps (Debug)
         run: python3 scripts/beacon_build/beacon-build-debug.py
 
