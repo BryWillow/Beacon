@@ -35,7 +35,7 @@ TEST(LatencyTrackerTest, Percentiles) {
     LatencyTracker<> tracker;
     
     // Record 1-100
-    for (uint64_t i = 1; i <= 100; ++i) {
+    for (uint64_t i = 1; i <= 100; i++) {
         auto start = HighResTimer::now();
         auto end = start + (i * 1000);
         tracker.record(start, end);
@@ -67,7 +67,7 @@ TEST(LatencyTrackerTest, LargeDataset) {
     LatencyTracker<> tracker;
     
     // Record 1,000 samples
-    for (uint64_t i = 0; i < 1000; ++i) {
+    for (uint64_t i = 0; i < 1000; i++) {
         auto start = HighResTimer::now();
         auto end = start + (i % 1000) * 100;
         tracker.record(start, end);

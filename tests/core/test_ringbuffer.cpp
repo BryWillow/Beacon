@@ -49,7 +49,7 @@ TEST(RingbufferTest, FillCapacity) {
     SpScRingBuffer<int, 8> rb;
     
     // Fill to capacity (size - 1 due to implementation)
-    for (int i = 0; i < 7; ++i) {
+    for (int i = 0; i < 7; i++) {
         EXPECT_TRUE(rb.tryPush(i)) << "Failed at index " << i;
     }
     
@@ -69,12 +69,12 @@ TEST(RingbufferTest, WrapAround) {
     SpScRingBuffer<int, 8> rb;
     
     // Fill and drain multiple times to test wrap-around
-    for (int cycle = 0; cycle < 10; ++cycle) {
-        for (int i = 0; i < 5; ++i) {
+    for (int cycle = 0; cycle < 10; cycle++) {
+        for (int i = 0; i < 5; i++) {
             EXPECT_TRUE(rb.tryPush(cycle * 100 + i));
         }
         
-        for (int i = 0; i < 5; ++i) {
+        for (int i = 0; i < 5; i++) {
             int val;
             EXPECT_TRUE(rb.tryPop(val));
             EXPECT_EQ(val, cycle * 100 + i);
@@ -94,7 +94,7 @@ TEST(RingbufferTest, ConcurrentProducerConsumer) {
     
     // Producer thread
     std::thread producer([&]() {
-        for (int i = 0; i < NUM_MESSAGES; ++i) {
+        for (int i = 0; i < NUM_MESSAGES; i++) {
             while (!rb.tryPush(i)) {
                 // Spin until space available
                 std::this_thread::yield();
@@ -133,7 +133,7 @@ TEST(RingbufferTest, HighThroughput) {
     auto start = std::chrono::high_resolution_clock::now();
     
     std::thread producer([&]() {
-        for (uint64_t i = 0; i < NUM_MESSAGES; ++i) {
+        for (uint64_t i = 0; i < NUM_MESSAGES; i++) {
             while (!rb.tryPush(i)) {
                 // Spin
             }
@@ -192,7 +192,7 @@ TEST(RingbufferTest, PushToFull) {
 TEST(RingbufferTest, AlternatingPushPop) {
     SpScRingBuffer<int, 8> rb;
     
-    for (int i = 0; i < 100; ++i) {
+    for (int i = 0; i < 100; i++) {
         EXPECT_TRUE(rb.tryPush(i));
         
         int val;
