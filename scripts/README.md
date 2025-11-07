@@ -21,11 +21,12 @@ python3 beacon-run.py 300   # 5 minutes
 ```
 
 **What it does:**
-1. Starts OUCH matching engine
-2. Starts your trading algorithm
-3. Starts market data playback
-4. Shows progress bar
-5. Displays final statistics with tick-to-trade latency
+1. **Auto-cleanup** - Kills any existing Beacon processes
+2. Starts OUCH matching engine
+3. Starts your trading algorithm
+4. Starts market data playback
+5. Shows progress bar
+6. Displays final statistics with tick-to-trade latency
 
 **Output:**
 - Market Data Received
@@ -84,7 +85,39 @@ Kill all Beacon processes (matching engine, playback, algorithms).
 python3 beacon-kill.py
 ```
 
+**Features:**
+- Finds and displays all Beacon processes
+- Tries graceful SIGTERM first, then SIGKILL if needed
+- Verifies cleanup was successful
+- Checks for lingering sockets on ports 9000 and 12345
+- Offers to clean up temporary log files
+- Professional status reporting with detailed output
+
 Use this to clean up after crashes or to stop a running system.
+
+---
+
+### `beacon-run-tests.py` - Run All Tests
+Build and run the complete GoogleTest suite.
+
+```bash
+python3 beacon-run-tests.py
+```
+
+**What it tests:**
+- Core components (ringbuffer, threading, latency tracking)
+- Protocol implementations (ITCH, Pillar, MDP, OUCH)
+- Matching engine
+- Market data generation
+- Client algorithms
+- Integration tests
+
+**Output:**
+- Step-by-step progress (Configure → Build → Test)
+- Detailed test results from ctest
+- Professional formatting with summary
+
+**Currently:** 37 tests passing (20 core + 17 protocols)
 
 ---
 
