@@ -45,7 +45,7 @@ def build_app(app_dir: Path):
 
 def main():
     script_dir = Path(__file__).resolve().parent
-    logs_dir = script_dir / "../logs"
+    logs_dir = (script_dir / "../logs").resolve()
     logs_dir.mkdir(parents=True, exist_ok=True)  # Ensure logs directory exists
     log_file = logs_dir / "beacon-build-debug.log"
     setup_logging(log_file)
