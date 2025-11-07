@@ -11,21 +11,20 @@ python3 scripts/beacon-run.py 30
 
 That's it! The system will start the matching engine, your algorithm, and market data playback.
 
-**→ [Full Getting Started Guide](docs/beacon/getting-started.md)**
+**→ [Full Getting Started Guide](docs/getting-started.md)** *(if available)*
 
 ---
 
 ## 📖 Documentation
 
-**All documentation is organized in [`docs/beacon/`](docs/beacon/)**
+**Documentation is organized in the [`docs/`](docs/) directory**
 
-- **[Getting Started](docs/beacon/getting-started.md)** - Quick start guide
-- **[Architecture](docs/beacon/architecture.md)** - System design and components
-- **[Quick Reference](docs/beacon/quick-reference.md)** - Command cheatsheet
-- **[Testing Market Data](docs/beacon/testing-market-data.md)** - Debug guide
-- **[Scripts](scripts/README.md)** - All `beacon-*` script documentation
+- **[Getting Started](docs/getting-started.md)** - Quick start guide *(if available)*
+- **[Architecture](docs/architecture.md)** - System design and components *(if available)*
+- **[Scripts](scripts/README.md)** - All `beacon-*` script documentation *(if available)*
+- **[Testing](tests/README.md)** - GoogleTest suite documentation *(if available)*
 
-**→ [Documentation Index](docs/beacon/README.md)**
+**→ [Documentation Index](docs/README.md)** *(if available)*
 
 ---
 
@@ -97,19 +96,29 @@ beacon-test-udp.py         # Test UDP multicast
 ## 📂 Project Structure
 
 ```
-experimental/
+Beacon/
 ├── scripts/                   # All beacon-* scripts
-├── docs/beacon/              # All documentation
-├── src/apps/                 # Application code
-│   ├── exchange_matching_engine/
-│   ├── exchange_market_data_generator/
-│   ├── exchange_market_data_playback/
-│   └── client_algorithm/     # Your trading algorithms
-├── include/hft/              # Core HFT libraries
-│   ├── networking/           # UDP/TCP networking
+├── docs/                     # Documentation
+├── src/                      # Source code
+│   ├── apps/                # Applications
+│   │   ├── exchange_matching_engine/
+│   │   ├── exchange_market_data_generator/
+│   │   ├── exchange_market_data_playback/
+│   │   └── client_algorithm/     # Your trading algorithms
+│   └── libs/                # Protocol libraries
+│       └── exchange_protocols/   # ITCH, Pillar, MDP, etc.
+├── include/                  # Core HFT libraries
+│   ├── networking/          # UDP/TCP networking
 │   ├── ringbuffer/          # Lock-free data structures
 │   └── concurrency/         # Thread pinning, etc.
-└── tests/                    # Unit tests
+├── tests/                    # GoogleTest suite
+│   ├── core/                # Core component tests
+│   ├── protocols/           # Protocol validation tests
+│   ├── matching_engine/     # Order matching tests
+│   └── integration/         # End-to-end tests
+└── vendor/                   # Third-party dependencies
+    ├── googletest/          # Testing framework
+    └── nlohmann/            # JSON library
 ```
 
 ---
