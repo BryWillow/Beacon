@@ -385,6 +385,21 @@ class BeaconOrchestrator:
         self.print_banner()
         self.print_config(duration)
         
+        # Clean up any existing processes
+        print("Cleaning up any existing processes...")
+        kill_script = self.base_dir / "scripts" / "beacon-kill.py"
+        if kill_script.exists():
+            try:
+                subprocess.run(
+                    ["python3", str(kill_script)],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    timeout=10
+                )
+            except Exception:
+                pass  # Continue even if cleanup fails
+        print()
+        
         # Verify binaries
         if not self.verify_binaries():
             return 1
