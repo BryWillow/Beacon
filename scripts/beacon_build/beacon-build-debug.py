@@ -32,7 +32,7 @@ def build_app(app_dir: Path):
         str(app_dir),
         "-DCMAKE_BUILD_TYPE=Debug",
         '-DCMAKE_CXX_FLAGS=-fsanitize=address,undefined -Wall -Wextra -Wpedantic -O0'
-    ]
+    ] 
     try:
         # Configure
         subprocess.run(["cmake"] + cmake_args, cwd=str(build_dir), check=True)
