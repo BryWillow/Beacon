@@ -50,14 +50,3 @@ ENV/
 # IDE
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
-.DS_Store
-
-# Logs
-*.log
-
-# Backup files
-*_backup_*
-*.bak
