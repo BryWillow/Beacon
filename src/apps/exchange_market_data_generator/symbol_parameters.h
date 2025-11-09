@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include <cstdint>
 #include <string>
 
 // Each symbol must generate messages within this min/max quantity.
