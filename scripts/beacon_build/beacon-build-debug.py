@@ -45,22 +45,16 @@ def build_app(app_dir: Path):
 
 def main():
     script_dir = Path(__file__).resolve().parent
-    # Find repo root by walking up until you find .git
-    repo_root = script_dir
-    while not (repo_root / ".git").exists() and repo_root != repo_root.parent:
-        repo_root = repo_root.parent
-    logs_dir = repo_root / "logs"
-    logs_dir.mkdir(parents=True, exist_ok=True)
-    log_file = logs_dir / "beacon-build-debug.log"
-    print(f"Log file path: {log_file}")
-    print(f"Log dir exists: {log_file.parent.exists()}")
+    repo_root = script_dir.parent.parent
+    log_file = (repo_root / "logs/beacon-build-debug.log").resolve()
+    log_file.parent.mkdir(parents=True, exist_ok=True)
     setup_logging(log_file)
 
     apps = [
-        project_root / "src/apps/exchange_matching_engine",
-        project_root / "src/apps/exchange_market_data_generator",
-        project_root / "src/apps/exchange_market_data_playback",
-        project_root / "src/apps/client_algorithm",
+        repo_root / "src/apps/exchange_matching_engine",
+        repo_root / "src/apps/exchange_market_data_generator",
+        repo_root / "src/apps/exchange_market_data_playback",
+        repo_root / "src/apps/client_algorithm",
     ]
     all_success = True
     for app in apps:
