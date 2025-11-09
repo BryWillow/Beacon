@@ -24,20 +24,12 @@ def setup_logging(log_file):
     )
 
 def build_app(app_dir: Path):
-    build_dir = app_dir / "build-debug"
-    if build_dir.exists():
-        shutil.rmtree(build_dir)
-    build_dir.mkdir(parents=True, exist_ok=True)
-    cmake_args = [
-        str(app_dir),
-        "-DCMAKE_BUILD_TYPE=Debug",
-        '-DCMAKE_CXX_FLAGS=-fsanitize=address,undefined -Wall -Wextra -Wpedantic -O0'
-    ] 
+    script_path = app_dir / "beacon-build-debug.sh"
+    if not script_path.exists():
+        logging.error(f"Build script not found: {script_path}")
+        return False
     try:
-        # Configure
-        subprocess.run(["cmake"] + cmake_args, cwd=str(build_dir), check=True)
-        # Build
-        subprocess.run(["cmake", "--build", "."], cwd=str(build_dir), check=True)
+        subprocess.run(["bash", str(script_path)], check=True)
     except subprocess.CalledProcessError as e:
         logging.error(f"Build failed for {app_dir.name}: {e}")
         return False
