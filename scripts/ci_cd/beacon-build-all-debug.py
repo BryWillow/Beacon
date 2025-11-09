@@ -7,6 +7,7 @@ def build_app(app_name):
     print(f"[DEBUG] Building {app_name} using {script_path}")
     if not script_path.exists():
         print(f"[ERROR] Build script not found: {script_path}")
+        print(f"[DEBUG] Files in {script_path.parent}: {list(script_path.parent.glob('*'))}")
         return False
     try:
         subprocess.run(["bash", str(script_path)], check=True)
