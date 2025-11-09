@@ -16,6 +16,19 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y build-essential cmake
 
+      - name: Print working directory
+        run: pwd
+
+      - name: List repo root files
+        run: ls -al
+
+      - name: List app build scripts
+        run: |
+          ls -al src/apps/exchange_matching_engine/
+          ls -al src/apps/exchange_market_data_generator/
+          ls -al src/apps/exchange_market_data_playback/
+          ls -al src/apps/client_algorithm/
+
       - name: Clean All
         run: python3 scripts/ci_cd/beacon-clean-all.py
 

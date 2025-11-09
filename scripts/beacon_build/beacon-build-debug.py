@@ -27,6 +27,8 @@ def build_app(app_dir: Path):
     script_path = app_dir / "beacon-build-debug.sh"
     if not script_path.exists():
         logging.error(f"Build script not found: {script_path}")
+        # Print files in the app directory for debugging
+        logging.error(f"Files in {app_dir}: {list(app_dir.glob('*'))}")
         return False
     try:
         subprocess.run(["bash", str(script_path)], check=True)
