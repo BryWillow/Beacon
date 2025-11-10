@@ -1,0 +1,7 @@
+2025-11-09 23:21:56,720 ERROR: Build failed for client_algorithm: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/beacon-build-debug.sh']' returned non-zero exit status 1.
+2025-11-09 23:21:56,721 ERROR: Some debug builds failed.
+2025-11-09 23:26:28,726 ERROR: Build failed for client_algorithm: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/beacon-build-debug.sh']' returned non-zero exit status 1.
+2025-11-09 23:26:28,727 ERROR: Some debug builds failed.
+2025-11-09 23:29:05,483 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-09 23:29:12,576 ERROR: Some debug builds failed.
+2025-11-09 23:30:14,236 INFO: All debug builds succeeded.

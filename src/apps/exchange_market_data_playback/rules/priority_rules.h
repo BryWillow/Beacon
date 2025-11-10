@@ -10,11 +10,12 @@
 
 #pragma once
 
-#include "playback_rule.h"
-#include "playback_state.h"
-
 #include <cstring>
 #include <unordered_set>
+
+#include "../playback_rule.h"
+#include "../playback_state.h"
+
 
 /**
  * @brief Message priority levels - higher priority messages can bypass rules

@@ -38,7 +38,7 @@ void StatsManager::updateStats(const std::string& symbol, bool isBid, size_t qua
     }
 }
 
-void StatsManager::updateTradeStats(const std::string& symbol, size_t quantity, double price) {
+void StatsManager::updateTradeStats(const std::string& symbol, size_t quantity [[maybe_unused]], double price) {
     auto& stats = _symbolStats[symbol];
     stats.trades++;
     
@@ -52,7 +52,7 @@ void StatsManager::updateTradeStats(const std::string& symbol, size_t quantity, 
     }
 }
 
-void StatsManager::printStats(size_t totalMessages, double elapsedSeconds) const {
+void StatsManager::printStats(size_t totalMessages [[maybe_unused]], double elapsedSeconds [[maybe_unused]]) const {
     std::cout << "\n";
     std::cout << "═══════════════════════════════════════════════════════════════════════════════════════════════════════\n";
     std::cout << "                              MARKET DATA GENERATION SUMMARY                                           \n";

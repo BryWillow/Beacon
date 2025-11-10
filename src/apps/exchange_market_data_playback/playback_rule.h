@@ -14,7 +14,7 @@
 #include <cstddef>
 
 // Forward declaration
-struct PlaybackState;
+class PlaybackState;
 
 class PlaybackRule {
 public:

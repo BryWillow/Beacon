@@ -9,10 +9,13 @@
  * =============================================================================
  */
 
-#include "config_provider.h"
+#include <cmath>
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+#include <nlohmann/json.hpp>
+#include "config_provider.h"
 
 namespace beacon::client_algorithm {
 

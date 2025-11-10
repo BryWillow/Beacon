@@ -10,12 +10,12 @@
 
 #pragma once
 
-#include "playback_rule.h"
-#include "playback_state.h"
-
 #include <chrono>
 #include <cmath>
 #include <random>
+
+#include "../playback_rule.h"
+#include "../playback_state.h"
 
 // =============================================================================
 // CONTROL RULES (Priority::CONTROL)
@@ -36,8 +36,8 @@ public:
         _messagesInCurrentBurst = 0;
     }
     
-    Decision apply(size_t idx, const char* msg,
-                  const PlaybackState& state, Decision current) override {
+    Decision apply(size_t idx [[maybe_unused]], const char* msg [[maybe_unused]],
+                  const PlaybackState& state [[maybe_unused]], Decision current) override {
         if (_messagesInCurrentBurst < _burstSize) {
             // Within burst window - send immediately
             _messagesInCurrentBurst++;
@@ -86,8 +86,8 @@ public:
     
     Priority getPriority() const override { return Priority::CONTROL; }
     
-    Decision apply(size_t idx, const char* msg,
-                  const PlaybackState& state, Decision current) override {
+    Decision apply(size_t idx [[maybe_unused]], const char* msg [[maybe_unused]],
+                  const PlaybackState& state [[maybe_unused]], Decision current) override {
         current.accumulatedDelay += _delayBetweenMessages;
         current.outcome = Outcome::MODIFIED;
         return current;
@@ -111,8 +111,8 @@ public:
     
     Priority getPriority() const override { return Priority::TIMING; }
     
-    Decision apply(size_t idx, const char* msg,
-                  const PlaybackState& state, Decision current) override {
+    Decision apply(size_t idx [[maybe_unused]], const char* msg [[maybe_unused]],
+                  const PlaybackState& state [[maybe_unused]], Decision current) override {
         // Scale any accumulated delay by speed factor
         if (current.accumulatedDelay.count() > 0) {
             current.accumulatedDelay = std::chrono::duration_cast<std::chrono::microseconds>(
@@ -136,8 +136,8 @@ public:
     
     Priority getPriority() const override { return Priority::TIMING; }
     
-    Decision apply(size_t idx, const char* msg,
-                  const PlaybackState& state, Decision current) override {
+    Decision apply(size_t idx [[maybe_unused]], const char* msg [[maybe_unused]],
+                  const PlaybackState& state [[maybe_unused]], Decision current) override {
         // Calculate current rate based on sine wave
         double elapsed = state.elapsedMilliseconds();
         double phase = (elapsed / _period.count()) * 2.0 * M_PI;
@@ -169,8 +169,8 @@ public:
     
     Priority getPriority() const override { return Priority::SAFETY; }
     
-    Decision apply(size_t idx, const char* msg,
-                  const PlaybackState& state, Decision current) override {
+    Decision apply(size_t idx [[maybe_unused]], const char* msg [[maybe_unused]],
+                  const PlaybackState& state [[maybe_unused]], Decision current) override {
         size_t currentRate = state.getCurrentRate();
         
         if (currentRate >= _maxRate) {
@@ -203,8 +203,8 @@ public:
     
     Priority getPriority() const override { return Priority::CHAOS; }
     
-    Decision apply(size_t idx, const char* msg,
-                  const PlaybackState& state, Decision current) override {
+    Decision apply(size_t idx [[maybe_unused]], const char* msg [[maybe_unused]],
+                  const PlaybackState& state [[maybe_unused]], Decision current) override {
         // Don't drop if already vetoed by higher priority rule
         if (current.outcome == Outcome::VETO) {
             return current;
@@ -234,8 +234,8 @@ public:
     
     Priority getPriority() const override { return Priority::CHAOS; }
     
-    Decision apply(size_t idx, const char* msg,
-                  const PlaybackState& state, Decision current) override {
+    Decision apply(size_t idx [[maybe_unused]], const char* msg [[maybe_unused]],
+                  const PlaybackState& state [[maybe_unused]], Decision current) override {
         auto jitter = std::chrono::microseconds(_dist(_rng));
         current.accumulatedDelay += jitter;
         current.outcome = Outcome::MODIFIED;
@@ -243,7 +243,7 @@ public:
     }
     
 private:
-    std::chrono::microseconds _maxJitter;
+    // std::chrono::microseconds _maxJitter; // Unused, can be removed or commented out
     mutable std::mt19937 _rng;
     mutable std::uniform_int_distribution<long> _dist;
 };

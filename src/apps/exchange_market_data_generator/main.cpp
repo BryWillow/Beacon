@@ -21,7 +21,7 @@
 
 namespace beaconconfig = beacon::market_data_generator::config;
 
-const std::string JSON_EXTENSION = ".json"; // Changed from constexpr std::string_view to std::string
+const std::string JSON_EXTENSION [[maybe_unused]] = ".json"; // Changed from constexpr std::string_view to std::string
 const std::string ILLEGAL_CHARS = "<>:\"|?*"; // Changed from constexpr std::string_view to std::string
 
 std::string toLower(const std::string& inString) {

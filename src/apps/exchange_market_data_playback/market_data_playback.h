@@ -10,16 +10,16 @@
 
 #pragma once
 
-#include "message_buffer.h"
-#include "message_sender.h"
-#include "playback_state.h"
-#include "rules_engine.h"
-
 #include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <memory>
 #include <thread>
+
+#include "message_buffer.h"
+#include "message_sender.h"
+#include "playback_state.h"
+#include "rules_engine.h"
 
 class MarketDataPlayback {
 public:

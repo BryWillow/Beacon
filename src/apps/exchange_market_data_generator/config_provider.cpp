@@ -9,14 +9,14 @@
  * =============================================================================
  */
 
+#include <algorithm>
+#include <fstream>
+#include <stdexcept>
+#include <nlohmann/json.hpp>
 #include "config_provider.h"
 #include "serializers/nsdq_serializer.h"
 #include "serializers/cme_serializer.h"
 #include "serializers/nyse_serializer.h"
-
-#include <algorithm>
-#include <fstream>
-#include <stdexcept>
 
 using json = nlohmann::json;
 
@@ -28,7 +28,9 @@ ConfigProvider::ConfigProvider(const std::string& exchangeType, const std::strin
     std::transform(_exchange.begin(), _exchange.end(), _exchange.begin(), ::tolower);
 }
 
-bool ConfigProvider::loadConfig(const std::string& configPath) {
+bool ConfigProvider::loadConfig(const std::string& configName) {
+    // Build the path to the new root config directory
+    std::string configPath = "../../../config/playback/" + configName;
     std::ifstream configFile(configPath);
     if (!configFile.is_open()) {
         throw std::runtime_error("Failed to open config file: " + configPath);
