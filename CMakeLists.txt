@@ -27,33 +27,6 @@ add_library(beacon_utils STATIC
 
 target_include_directories(beacon_utils PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
-# Link beacon_utils to your apps
-# Example for exchange_matching_engine:
-add_executable(exchange_matching_engine
-    src/apps/exchange_matching_engine/main.cpp
-    # ...other sources...
-)
-target_link_libraries(exchange_matching_engine beacon_utils)
-
-# Repeat target_link_libraries for other apps:
-add_executable(exchange_market_data_generator
-    src/apps/exchange_market_data_generator/main.cpp
-    # ...other sources...
-)
-target_link_libraries(exchange_market_data_generator beacon_utils)
-
-add_executable(exchange_market_data_playback
-    src/apps/exchange_market_data_playback/main.cpp
-    # ...other sources...
-)
-target_link_libraries(exchange_market_data_playback beacon_utils)
-
-add_executable(client_algorithm
-    src/apps/client_algorithm/main_algo.cpp
-    # ...other sources...
-)
-target_link_libraries(client_algorithm beacon_utils)
-
 # Add subdirectories for libraries
 add_subdirectory(src/libs/exchange_protocols)
 
