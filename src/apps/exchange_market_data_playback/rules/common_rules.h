@@ -243,7 +243,7 @@ public:
     }
     
 private:
-    // std::chrono::microseconds _maxJitter; // Unused, can be removed or commented out
+    std::chrono::microseconds _maxJitter;
     mutable std::mt19937 _rng;
     mutable std::uniform_int_distribution<long> _dist;
 };
