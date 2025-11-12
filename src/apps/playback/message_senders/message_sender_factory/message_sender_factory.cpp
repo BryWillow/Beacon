@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "message_sender_interface.h"
+#include "../message_sender_types/message_sender_interface.h"
 #include <memory>
 #include <string>
 

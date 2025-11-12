@@ -196,5 +196,4 @@ namespace beacon::hft::networking
         std::string _host;
         uint16_t _port;
     };
-
 } // namespace beacon::hft::networking

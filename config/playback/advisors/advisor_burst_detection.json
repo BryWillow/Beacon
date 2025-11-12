@@ -1,0 +1,4 @@
+{
+  "type": "burst_detection_classifier",
+  "burst_threshold": 2.0
+}

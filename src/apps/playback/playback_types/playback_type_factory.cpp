@@ -1,7 +1,4 @@
-#include "playback_types/playback_type_udp.h"
-#include "playback_types/playback_type_file.h"
-#include "playback_types/playback_type_tcp.h"
-#include "playback_types/playback_type_console.h"
-#include "playback_types/playback_type_null.h"
-
-// ...existing code...
+#include "../message_senders/message_sender_types/udp_message_sender.h"
+#include "../message_senders/message_sender_types/tcp_message_sender.h"
+#include "../message_senders/message_sender_types/console_message_sender.h"
+#include "../message_senders/message_sender_types/null_message_sender.h"

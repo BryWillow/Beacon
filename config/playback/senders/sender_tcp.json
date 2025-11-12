@@ -1,6 +1,7 @@
 {
-  "output": "tcp",
-  "tcp_port": 12345,
+  "type": "tcp",
+  "address": "127.0.0.1",
+  "port": 12345,
   
   "mode": "continuous",
   "rate_msgs_per_sec": 10000,

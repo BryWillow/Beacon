@@ -20,6 +20,16 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 # Add shared include directory for all targets
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
+include_directories(
+  ${CMAKE_SOURCE_DIR}/src
+  ${CMAKE_SOURCE_DIR}/config/playback
+  ${CMAKE_SOURCE_DIR}/src/apps/playback
+  ${CMAKE_SOURCE_DIR}/src/apps/playback/message_senders
+  ${CMAKE_SOURCE_DIR}/src/apps/playback/playback_advisors
+  ${CMAKE_SOURCE_DIR}/src/apps/playback/playback_authorities,
+  ${CMAKE_SOURCE_DIR}/src/apps/playback/playback_types
+)
+
 # Create a static library for shared utilities
 add_library(beacon_utils STATIC
     include/utils/string_utils.cpp
@@ -31,9 +41,9 @@ target_include_directories(beacon_utils PUBLIC ${PROJECT_SOURCE_DIR}/include)
 add_subdirectory(src/libs/exchange_protocols)
 
 # Add subdirectories for applications
-add_subdirectory(src/apps/exchange_market_data_generator)
-add_subdirectory(src/apps/exchange_market_data_playback)
-add_subdirectory(src/apps/exchange_matching_engine)
+add_subdirectory(src/apps/generator)
+add_subdirectory(src/apps/playback)
+add_subdirectory(src/apps/matching_engine)
 add_subdirectory(src/apps/client_algorithm)
 
 # Enable testing

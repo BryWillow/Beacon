@@ -67,6 +67,7 @@ void processMarketData_WithMDTimestamp(const MarketDataMessage& md) {
 // ============================================================================
 
 void processMarketData_Scoped(const MarketDataMessage& md) {
+    (void)md;
     // Automatically measures from construction to destruction
     ScopedLatency measure(g_tickToTradeLatency);
     
@@ -144,7 +145,7 @@ int main() {
         processMarketData_Manual(md);
         
         // Simulate some work between messages (a few microseconds)
-        for (volatile int j = 0; j < 1000; ++j) {}
+        for (int j = 0; j < 1000; ++j) {}
     }
     
     // Get and print statistics (OFFLINE)

@@ -5,3 +5,433 @@
 2025-11-09 23:29:05,483 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
 2025-11-09 23:29:12,576 ERROR: Some debug builds failed.
 2025-11-09 23:30:14,236 INFO: All debug builds succeeded.
+2025-11-09 23:39:10,674 INFO: All debug builds succeeded.
+2025-11-09 23:40:25,029 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-09 23:40:32,262 ERROR: Some debug builds failed.
+2025-11-09 23:41:27,796 INFO: All debug builds succeeded.
+2025-11-09 23:42:14,511 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-09 23:42:21,820 ERROR: Some debug builds failed.
+2025-11-09 23:44:17,344 INFO: All debug builds succeeded.
+2025-11-09 23:48:00,365 ERROR: Build failed for exchange_market_data_generator: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_generator/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-09 23:48:09,678 ERROR: Some debug builds failed.
+2025-11-09 23:49:31,087 INFO: All debug builds succeeded.
+2025-11-09 23:50:35,285 INFO: All debug builds succeeded.
+2025-11-09 23:51:50,976 INFO: All debug builds succeeded.
+2025-11-09 23:52:39,356 INFO: All debug builds succeeded.
+2025-11-09 23:53:26,682 INFO: All debug builds succeeded.
+2025-11-10 08:31:09,509 INFO: All debug builds succeeded.
+2025-11-10 19:11:26,253 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-10 19:11:32,855 ERROR: Some debug builds failed.
+2025-11-10 19:12:05,370 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-10 19:12:12,197 ERROR: Some debug builds failed.
+2025-11-10 19:13:35,289 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-10 19:13:41,847 ERROR: Some debug builds failed.
+2025-11-10 19:14:19,657 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-10 19:14:26,228 ERROR: Some debug builds failed.
+2025-11-10 19:15:37,266 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-10 19:15:43,952 ERROR: Some debug builds failed.
+2025-11-10 19:16:31,470 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-10 19:16:38,181 ERROR: Some debug builds failed.
+2025-11-10 19:17:27,771 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-10 19:17:34,338 ERROR: Some debug builds failed.
+2025-11-10 19:20:06,286 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-10 19:20:13,061 ERROR: Some debug builds failed.
+2025-11-10 19:21:12,965 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-10 19:21:19,669 ERROR: Some debug builds failed.
+2025-11-10 19:22:42,306 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-10 19:22:48,760 ERROR: Some debug builds failed.
+2025-11-10 19:23:39,127 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-10 19:23:45,547 ERROR: Some debug builds failed.
+2025-11-10 19:24:45,681 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-10 19:24:52,376 ERROR: Some debug builds failed.
+2025-11-10 19:25:57,005 INFO: All debug builds succeeded.
+2025-11-10 20:06:13,783 INFO: All debug builds succeeded.
+2025-11-10 20:07:58,284 INFO: All debug builds succeeded.
+2025-11-10 20:08:49,213 INFO: All debug builds succeeded.
+2025-11-10 20:09:43,294 INFO: All debug builds succeeded.
+2025-11-10 20:10:36,166 INFO: All debug builds succeeded.
+2025-11-10 20:11:31,836 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-10 20:11:38,298 ERROR: Some debug builds failed.
+2025-11-10 20:12:29,399 INFO: All debug builds succeeded.
+2025-11-10 20:12:51,130 ERROR: Build failed for exchange_market_data_playback: Command '['bash', '/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/beacon-build-debug.sh']' returned non-zero exit status 2.
+2025-11-10 20:12:57,862 ERROR: Some debug builds failed.
+2025-11-10 20:13:31,615 INFO: All debug builds succeeded.
+2025-11-10 20:14:10,446 INFO: All debug builds succeeded.
+2025-11-11 12:57:37,875 INFO: Build succeeded for exchange_matching_engine: [exchange_matching_engine] Cleaning debug build directory...
+[exchange_matching_engine] Configuring CMake (Debug)...
+-- The C compiler identification is AppleClang 17.0.0.17000404
+-- The CXX compiler identification is AppleClang 17.0.0.17000404
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (1.2s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_matching_engine/build-debug
+[exchange_matching_engine] Building (Debug)...
+[ 50%] Building CXX object CMakeFiles/exchange_matching_engine.dir/main.cpp.o
+[100%] Linking CXX executable exchange_matching_engine
+[100%] Built target exchange_matching_engine
+[exchange_matching_engine] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_matching_engine/bin/debug/exchange_matching_engine
+[exchange_matching_engine] Debug build complete!
+2025-11-11 12:57:40,424 INFO: Build succeeded for exchange_market_data_generator: [exchange_market_data_generator] Cleaning debug build directory...
+[exchange_market_data_generator] Configuring CMake (Debug)...
+-- The C compiler identification is AppleClang 17.0.0.17000404
+-- The CXX compiler identification is AppleClang 17.0.0.17000404
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (0.5s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_generator/build-debug
+[exchange_market_data_generator] Building (Debug)...
+[ 33%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/serializers/itch_serializer.cpp.o
+[ 33%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/main.cpp.o
+[ 44%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/serializers/nsdq_serializer.cpp.o
+[ 44%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/serializers/nyse_serializer.cpp.o
+[ 55%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/config_provider.cpp.o
+[ 77%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/serializers/cme_serializer.cpp.o
+[ 77%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/stats_manager.cpp.o
+[ 88%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/message_generator.cpp.o
+[100%] Linking CXX executable exchange_market_data_generator
+[100%] Built target exchange_market_data_generator
+[exchange_market_data_generator] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_generator/bin/debug/exchange_market_data_generator
+[exchange_market_data_generator] Debug build complete!
+2025-11-11 12:57:41,598 ERROR: Build failed for exchange_market_data_playback: In file included from /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/main.cpp:12:
+In file included from /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/market_data_playback.h:20:
+/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/message_sender.h:307:27: warning: unused parameter 'message' [-Wunused-parameter]
+  307 |     bool send(const char* message, size_t length) override {
+      |                           ^
+In file included from /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/main.cpp:12:
+In file included from /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/market_data_playback.h:22:
+/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/rules_engine.h:13:10: fatal error: 'playback_rule.h' file not found
+   13 | #include "playback_rule.h"
+      |          ^~~~~~~~~~~~~~~~~
+1 warning and 1 error generated.
+make[2]: *** [CMakeFiles/exchange_market_data_playback.dir/main.cpp.o] Error 1
+make[1]: *** [CMakeFiles/exchange_market_data_playback.dir/all] Error 2
+make: *** [all] Error 2
+2025-11-11 12:57:48,203 INFO: Build succeeded for client_algorithm: Cleaning debug build directory...
+Configuring CMake (Debug)...
+-- The C compiler identification is AppleClang 17.0.0.17000404
+-- The CXX compiler identification is AppleClang 17.0.0.17000404
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (0.7s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/build-debug
+Building (Debug)...
+[  5%] Building CXX object CMakeFiles/client_algorithm.dir/main.cpp.o
+[ 11%] Linking CXX executable client_algorithm
+[ 11%] Built target client_algorithm
+[ 17%] Building CXX object CMakeFiles/client_algo.dir/main_algo.cpp.o
+[ 23%] Building CXX object CMakeFiles/client_algo.dir/config_provider.cpp.o
+[ 29%] Linking CXX executable client_algo
+[ 29%] Built target client_algo
+[ 35%] Building CXX object CMakeFiles/client_algo_hft.dir/main_algo_threaded.cpp.o
+[ 41%] Linking CXX executable client_algo_hft
+[ 41%] Built target client_algo_hft
+[ 47%] Building CXX object CMakeFiles/algo_twap.dir/algo_twap.cpp.o
+[ 52%] Linking CXX executable algo_twap
+[ 52%] Built target algo_twap
+[ 58%] Building CXX object CMakeFiles/algo_template.dir/algo_template.cpp.o
+[ 64%] Linking CXX executable algo_template
+[ 64%] Built target algo_template
+[ 70%] Building CXX object CMakeFiles/example_latency_tracking.dir/example_latency_tracking.cpp.o
+[ 76%] Linking CXX executable example_latency_tracking
+[ 76%] Built target example_latency_tracking
+[ 82%] Building CXX object CMakeFiles/test_pillar.dir/test_pillar.cpp.o
+[ 88%] Linking CXX executable test_pillar
+[ 88%] Built target test_pillar
+[ 94%] Building CXX object CMakeFiles/test_cme.dir/test_cme.cpp.o
+[100%] Linking CXX executable test_cme
+[100%] Built target test_cme
+[client_algorithm] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/client_algorithm
+[client_algo] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/client_algo
+[client_algo_hft] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/client_algo_hft
+[algo_twap] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/algo_twap
+[algo_template] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/algo_template
+[example_latency_tracking] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/example_latency_tracking
+[test_pillar] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/test_pillar
+[test_cme] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/test_cme
+Debug build complete!
+2025-11-11 12:57:48,204 ERROR: Some debug builds failed.
+2025-11-11 12:58:38,951 INFO: Build succeeded for exchange_matching_engine: [exchange_matching_engine] Cleaning debug build directory...
+[exchange_matching_engine] Configuring CMake (Debug)...
+-- The C compiler identification is AppleClang 17.0.0.17000404
+-- The CXX compiler identification is AppleClang 17.0.0.17000404
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (1.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_matching_engine/build-debug
+[exchange_matching_engine] Building (Debug)...
+[ 50%] Building CXX object CMakeFiles/exchange_matching_engine.dir/main.cpp.o
+[100%] Linking CXX executable exchange_matching_engine
+[100%] Built target exchange_matching_engine
+[exchange_matching_engine] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_matching_engine/bin/debug/exchange_matching_engine
+[exchange_matching_engine] Debug build complete!
+2025-11-11 12:58:41,485 INFO: Build succeeded for exchange_market_data_generator: [exchange_market_data_generator] Cleaning debug build directory...
+[exchange_market_data_generator] Configuring CMake (Debug)...
+-- The C compiler identification is AppleClang 17.0.0.17000404
+-- The CXX compiler identification is AppleClang 17.0.0.17000404
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (0.6s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_generator/build-debug
+[exchange_market_data_generator] Building (Debug)...
+[ 11%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/stats_manager.cpp.o
+[ 22%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/main.cpp.o
+[ 33%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/config_provider.cpp.o
+[ 44%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/serializers/nyse_serializer.cpp.o
+[ 55%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/serializers/cme_serializer.cpp.o
+[ 66%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/serializers/nsdq_serializer.cpp.o
+[ 77%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/message_generator.cpp.o
+[ 88%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/serializers/itch_serializer.cpp.o
+[100%] Linking CXX executable exchange_market_data_generator
+[100%] Built target exchange_market_data_generator
+[exchange_market_data_generator] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_generator/bin/debug/exchange_market_data_generator
+[exchange_market_data_generator] Debug build complete!
+2025-11-11 12:58:42,653 ERROR: Build failed for exchange_market_data_playback: In file included from /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/main.cpp:12:
+In file included from /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/market_data_playback.h:20:
+/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/message_sender.h:307:27: warning: unused parameter 'message' [-Wunused-parameter]
+  307 |     bool send(const char* message, size_t length) override {
+      |                           ^
+In file included from /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/main.cpp:12:
+In file included from /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/market_data_playback.h:22:
+/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/rules_engine.h:13:10: fatal error: 'playback_rules/playback_rule.h' file not found
+   13 | #include "playback_rules/playback_rule.h"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning and 1 error generated.
+make[2]: *** [CMakeFiles/exchange_market_data_playback.dir/main.cpp.o] Error 1
+make[1]: *** [CMakeFiles/exchange_market_data_playback.dir/all] Error 2
+make: *** [all] Error 2
+2025-11-11 12:58:49,271 INFO: Build succeeded for client_algorithm: Cleaning debug build directory...
+Configuring CMake (Debug)...
+-- The C compiler identification is AppleClang 17.0.0.17000404
+-- The CXX compiler identification is AppleClang 17.0.0.17000404
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (0.7s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/build-debug
+Building (Debug)...
+[  5%] Building CXX object CMakeFiles/client_algorithm.dir/main.cpp.o
+[ 11%] Linking CXX executable client_algorithm
+[ 11%] Built target client_algorithm
+[ 17%] Building CXX object CMakeFiles/client_algo.dir/main_algo.cpp.o
+[ 23%] Building CXX object CMakeFiles/client_algo.dir/config_provider.cpp.o
+[ 29%] Linking CXX executable client_algo
+[ 29%] Built target client_algo
+[ 35%] Building CXX object CMakeFiles/client_algo_hft.dir/main_algo_threaded.cpp.o
+[ 41%] Linking CXX executable client_algo_hft
+[ 41%] Built target client_algo_hft
+[ 47%] Building CXX object CMakeFiles/algo_twap.dir/algo_twap.cpp.o
+[ 52%] Linking CXX executable algo_twap
+[ 52%] Built target algo_twap
+[ 58%] Building CXX object CMakeFiles/algo_template.dir/algo_template.cpp.o
+[ 64%] Linking CXX executable algo_template
+[ 64%] Built target algo_template
+[ 70%] Building CXX object CMakeFiles/example_latency_tracking.dir/example_latency_tracking.cpp.o
+[ 76%] Linking CXX executable example_latency_tracking
+[ 76%] Built target example_latency_tracking
+[ 82%] Building CXX object CMakeFiles/test_pillar.dir/test_pillar.cpp.o
+[ 88%] Linking CXX executable test_pillar
+[ 88%] Built target test_pillar
+[ 94%] Building CXX object CMakeFiles/test_cme.dir/test_cme.cpp.o
+[100%] Linking CXX executable test_cme
+[100%] Built target test_cme
+[client_algorithm] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/client_algorithm
+[client_algo] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/client_algo
+[client_algo_hft] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/client_algo_hft
+[algo_twap] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/algo_twap
+[algo_template] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/algo_template
+[example_latency_tracking] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/example_latency_tracking
+[test_pillar] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/test_pillar
+[test_cme] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/test_cme
+Debug build complete!
+2025-11-11 12:58:49,271 ERROR: Some debug builds failed.
+2025-11-11 12:59:20,425 INFO: Build succeeded for exchange_matching_engine: [exchange_matching_engine] Cleaning debug build directory...
+[exchange_matching_engine] Configuring CMake (Debug)...
+-- The C compiler identification is AppleClang 17.0.0.17000404
+-- The CXX compiler identification is AppleClang 17.0.0.17000404
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (1.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_matching_engine/build-debug
+[exchange_matching_engine] Building (Debug)...
+[ 50%] Building CXX object CMakeFiles/exchange_matching_engine.dir/main.cpp.o
+[100%] Linking CXX executable exchange_matching_engine
+[100%] Built target exchange_matching_engine
+[exchange_matching_engine] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_matching_engine/bin/debug/exchange_matching_engine
+[exchange_matching_engine] Debug build complete!
+2025-11-11 12:59:22,958 INFO: Build succeeded for exchange_market_data_generator: [exchange_market_data_generator] Cleaning debug build directory...
+[exchange_market_data_generator] Configuring CMake (Debug)...
+-- The C compiler identification is AppleClang 17.0.0.17000404
+-- The CXX compiler identification is AppleClang 17.0.0.17000404
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (0.6s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_generator/build-debug
+[exchange_market_data_generator] Building (Debug)...
+[ 11%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/config_provider.cpp.o
+[ 22%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/stats_manager.cpp.o
+[ 33%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/main.cpp.o
+[ 44%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/serializers/nyse_serializer.cpp.o
+[ 55%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/serializers/cme_serializer.cpp.o
+[ 77%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/serializers/itch_serializer.cpp.o
+[ 77%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/serializers/nsdq_serializer.cpp.o
+[ 88%] Building CXX object CMakeFiles/exchange_market_data_generator.dir/message_generator.cpp.o
+[100%] Linking CXX executable exchange_market_data_generator
+[100%] Built target exchange_market_data_generator
+[exchange_market_data_generator] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_generator/bin/debug/exchange_market_data_generator
+[exchange_market_data_generator] Debug build complete!
+2025-11-11 12:59:24,083 ERROR: Build failed for exchange_market_data_playback: In file included from /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/main.cpp:12:
+In file included from /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/market_data_playback.h:20:
+/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/message_sender.h:307:27: warning: unused parameter 'message' [-Wunused-parameter]
+  307 |     bool send(const char* message, size_t length) override {
+      |                           ^
+In file included from /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/main.cpp:12:
+In file included from /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/market_data_playback.h:22:
+/Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/exchange_market_data_playback/rules_engine.h:13:10: fatal error: 'playback_rules/playback_rule.h' file not found
+   13 | #include "playback_rules/playback_rule.h"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning and 1 error generated.
+make[2]: *** [CMakeFiles/exchange_market_data_playback.dir/main.cpp.o] Error 1
+make[1]: *** [CMakeFiles/exchange_market_data_playback.dir/all] Error 2
+make: *** [all] Error 2
+2025-11-11 12:59:30,603 INFO: Build succeeded for client_algorithm: Cleaning debug build directory...
+Configuring CMake (Debug)...
+-- The C compiler identification is AppleClang 17.0.0.17000404
+-- The CXX compiler identification is AppleClang 17.0.0.17000404
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (0.7s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/build-debug
+Building (Debug)...
+[  5%] Building CXX object CMakeFiles/client_algorithm.dir/main.cpp.o
+[ 11%] Linking CXX executable client_algorithm
+[ 11%] Built target client_algorithm
+[ 17%] Building CXX object CMakeFiles/client_algo.dir/main_algo.cpp.o
+[ 23%] Building CXX object CMakeFiles/client_algo.dir/config_provider.cpp.o
+[ 29%] Linking CXX executable client_algo
+[ 29%] Built target client_algo
+[ 35%] Building CXX object CMakeFiles/client_algo_hft.dir/main_algo_threaded.cpp.o
+[ 41%] Linking CXX executable client_algo_hft
+[ 41%] Built target client_algo_hft
+[ 47%] Building CXX object CMakeFiles/algo_twap.dir/algo_twap.cpp.o
+[ 52%] Linking CXX executable algo_twap
+[ 52%] Built target algo_twap
+[ 58%] Building CXX object CMakeFiles/algo_template.dir/algo_template.cpp.o
+[ 64%] Linking CXX executable algo_template
+[ 64%] Built target algo_template
+[ 70%] Building CXX object CMakeFiles/example_latency_tracking.dir/example_latency_tracking.cpp.o
+[ 76%] Linking CXX executable example_latency_tracking
+[ 76%] Built target example_latency_tracking
+[ 82%] Building CXX object CMakeFiles/test_pillar.dir/test_pillar.cpp.o
+[ 88%] Linking CXX executable test_pillar
+[ 88%] Built target test_pillar
+[ 94%] Building CXX object CMakeFiles/test_cme.dir/test_cme.cpp.o
+[100%] Linking CXX executable test_cme
+[100%] Built target test_cme
+[client_algorithm] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/client_algorithm
+[client_algo] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/client_algo
+[client_algo_hft] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/client_algo_hft
+[algo_twap] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/algo_twap
+[algo_template] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/algo_template
+[example_latency_tracking] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/example_latency_tracking
+[test_pillar] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/test_pillar
+[test_cme] Debug binary copied to /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon/src/apps/client_algorithm/bin/debug/test_cme
+Debug build complete!
+2025-11-11 12:59:30,604 ERROR: Some debug builds failed.

@@ -1,0 +1,14 @@
+{
+  "sender_config": "senders/sender_udp.json",
+  "advisors": [
+    "advisors/advisor_symbol_priority.json",
+    "advisors/advisor_burst_detection.json"
+  ],
+  "authorities": [
+    "authorities/authority_burst.json",
+    "authorities/authority_chaos.json",
+    "authorities/authority_continuous.json",
+    "authorities/authority_null.json",
+    "authorities/authority_wave.json"
+  ]
+}

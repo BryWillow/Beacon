@@ -1,0 +1,10 @@
+{
+  "type": "udp",
+  "address": "239.255.0.1",
+  "port": 12345,
+  "ttl": 1,
+  "mode": "continuous",
+  "rate_msgs_per_sec": 10000,
+  "speed_factor": 1.0,
+  "max_rate_limit": 50000
+}

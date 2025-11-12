@@ -1,7 +1,7 @@
 # =============================================================================
 # Project:      Beacon
-# Application:  exchange_market_data_generator
-# Purpose:      Build configuration for the market data generator application.
+# Application:  generator
+# Purpose:      Build configuration for the generator application.
 # Author:       Bryan Camp
 # =============================================================================
 
@@ -9,7 +9,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 # Project name
-project(exchange_market_data_generator)
+project(generator)
 
 # Set the C++ standard
 set(CMAKE_CXX_STANDARD 20)
@@ -26,19 +26,19 @@ else()
 endif()
 
 # Add the executable target
-add_executable(exchange_market_data_generator
+add_executable(generator
     main.cpp
     config_provider.cpp
     message_generator.cpp
     stats_manager.cpp
-    serializers/nyse_serializer.cpp
-    serializers/cme_serializer.cpp
-    serializers/nsdq_serializer.cpp
+    serializers/cme_serializer.cpp    
     serializers/itch_serializer.cpp
+    serializers/nsdq_serializer.cpp
+    serializers/nyse_serializer.cpp
 )
 
 # Include directories relative to the Beacon root
-target_include_directories(exchange_market_data_generator PRIVATE
+target_include_directories(generator PRIVATE
     ${BEACON_ROOT}/vendor
     ${BEACON_ROOT}/src/libs/exchange_protocols
     ${CMAKE_CURRENT_SOURCE_DIR}

@@ -1,6 +1,6 @@
 # =============================================================================
 # Project:      Beacon
-# Application:  exchange_market_data_playback
+# Application:  playback
 # Purpose:      Build configuration for the market data playback application.
 # Author:       Bryan Camp
 # =============================================================================
@@ -9,7 +9,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 # Project name
-project(exchange_market_data_playback)
+project(playback)
 
 # Set the C++ standard
 set(CMAKE_CXX_STANDARD 20)
@@ -26,16 +26,22 @@ else()
 endif()
 
 # Add the executable target
-add_executable(exchange_market_data_playback
+add_executable(playback
     main.cpp
+    message_senders/message_sender_factory/message_sender_factory.cpp
+    playback_types/playback_type_factory.cpp
 )
 
 # Include directories relative to the Beacon root
-target_include_directories(exchange_market_data_playback
+target_include_directories(playback
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${BEACON_ROOT}/hft
-        ${BEACON_ROOT}/src/apps/exchange_market_data_playback/playback_types
+        ${BEACON_ROOT}/src/apps/playback/message_senders
+        ${BEACON_ROOT}/src/apps/playback/message_senders/message_sender_factory
+        ${BEACON_ROOT}/src/apps/playback/playback_advisors
+        ${BEACON_ROOT}/src/apps/playback/playback_authorities
+        ${BEACON_ROOT}/src/apps/playback/playback_types
         ${BEACON_ROOT}/vendor/nlohmann
         ${BEACON_ROOT}/vendor
 )

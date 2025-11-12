@@ -9,6 +9,7 @@
  * =============================================================================
  */
 
+#include <iostream>
 #include <algorithm>
 #include <fstream>
 #include <stdexcept>
@@ -29,8 +30,16 @@ ConfigProvider::ConfigProvider(const std::string& exchangeType, const std::strin
 }
 
 bool ConfigProvider::loadConfig(const std::string& configName) {
-    // Build the path to the new root config directory
-    std::string configPath = "../../../config/playback/" + configName;
+    // Use an environment variable or fallback to relative path for config directory
+    std::string configRoot;
+    const char* envConfigRoot = std::getenv("BEACON_CONFIG_ROOT");
+    if (envConfigRoot) {
+        configRoot = envConfigRoot;
+    } else {
+        configRoot = "config/playback/";
+    }
+    std::string configPath = configRoot + configName;
+    std::cout << "[ConfigProvider] Attempting to load config file: " << configPath << std::endl;
     std::ifstream configFile(configPath);
     if (!configFile.is_open()) {
         throw std::runtime_error("Failed to open config file: " + configPath);

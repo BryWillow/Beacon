@@ -173,4 +173,49 @@ This is a personal portfolio project.
 
 ---
 
+# Beacon Exchange Market Data Playback
+
+## Overview
+Beacon is a market data playback tool for NSDQ, NYSE, CME binary files. It supports configurable timing, burst, wave, chaos, and safety rules, with modular configuration via JSON.
+
+## Configuration
+- All configs are in `config/playback/`
+- `default.json` references sender, advisor, and authority configs.
+- **Senders:** UDP/TCP/Console, located in `senders/`
+- **Advisors:** Classifiers (priority, burst), located in `advisors/`
+- **Authorities:** Rules (burst, chaos, wave, safety), located in `authorities/`
+
+## Modes
+- **Continuous:** Normal rate playback
+- **Burst:** Bursts of messages at intervals
+- **Wave:** Variable rate playback
+- **Chaos:** Packet loss, jitter, etc.
+
+## Authorities (Rules)
+- BurstRule, ContinuousRule, WaveRule, RateLimitRule, PacketLossRule, JitterRule, etc.
+
+## Advisors (Classifiers)
+- SymbolPriorityClassifier, BurstDetectionClassifier, etc.
+
+## Usage
+```
+./exchange_market_data_playback --config config/playback/default.json <input_file>
+./exchange_market_data_playback --summary <input_file>
+```
+
+## Test Cases
+- Valid/invalid binary file parsing
+- Config file existence and parsing
+- UDP packet sending (rate, format, modes)
+- Console output
+- Placeholder for TCP
+
+## Extending
+Add new sender, advisor, or authority configs and update `default.json` to reference them.
+
+## License
+MIT
+
+---
+
 **Built with ❤️ for high-frequency trading**

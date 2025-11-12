@@ -1,0 +1,4 @@
+{
+  "type": "symbol_priority_classifier",
+  "critical_symbols": ["SPY", "QQQ"]
+}

@@ -28,12 +28,23 @@ def build_app(app_dir: Path):
     if not script_path.exists():
         logging.error(f"Build script not found: {script_path}")
         # Print files in the app directory for debugging
-        logging.error(f"Files in {app_dir}: {list(app_dir.glob('*'))}")
+        logging.error(f"Files in {app_dir}: {[str(f) for f in app_dir.glob('*')]}")
         return False
     try:
-        subprocess.run(["bash", str(script_path)], check=True)
-    except subprocess.CalledProcessError as e:
-        logging.error(f"Build failed for {app_dir.name}: {e}")
+        result = subprocess.run(
+            ["bash", str(script_path)],
+            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        if result.returncode != 0:
+            logging.error(f"Build failed for {app_dir.name}: {result.stderr.strip()}")
+            return False
+        else:
+            logging.info(f"Build succeeded for {app_dir.name}: {result.stdout.strip()}")
+    except Exception as e:
+        logging.error(f"Exception during build for {app_dir.name}: {e}")
         return False
     return True
 
