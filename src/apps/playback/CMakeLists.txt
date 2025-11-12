@@ -6,42 +6,54 @@
 # =============================================================================
 
 # Minimum CMake version
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 3.16)
 
 # Project name
-project(playback)
+project(playback LANGUAGES CXX)
 
 # Set the C++ standard
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Determine the Beacon root directory
-# If this is a standalone build, we need to go up 3 levels: app -> apps -> src -> experimental
-if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-    # Standalone build
-    set(BEACON_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../..")
-else()
-    # Part of larger build
-    set(BEACON_ROOT "${CMAKE_SOURCE_DIR}")
-endif()
-
-# Add the executable target
+# Collect sources
 add_executable(playback
     main.cpp
-    message_senders/message_sender_factory/message_sender_factory.cpp
-    playback_types/playback_type_factory.cpp
+    market_data_playback.cpp
+    message_buffer.cpp
+    playback_state.cpp
+    advisors/message_priority_classifier.cpp
+    authorities/playback_rule_interface.cpp
+    authorities/rules_engine.cpp
+    replayers/replayer_factory/message_sender_factory.cpp
+    replayers/replayer_type.cpp
+    replayers/replayer_types/console_replayer.cpp
+    replayers/replayer_types/null_replayer.cpp
+    replayers/replayer_types/tcp_replayer.cpp
+    replayers/replayer_types/udp_replayer.cpp
 )
 
-# Include directories relative to the Beacon root
-target_include_directories(playback
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ${BEACON_ROOT}/hft
-        ${BEACON_ROOT}/src/apps/playback/message_senders
-        ${BEACON_ROOT}/src/apps/playback/message_senders/message_sender_factory
-        ${BEACON_ROOT}/src/apps/playback/playback_advisors
-        ${BEACON_ROOT}/src/apps/playback/playback_authorities
-        ${BEACON_ROOT}/src/apps/playback/playback_types
-        ${BEACON_ROOT}/vendor/nlohmann
-        ${BEACON_ROOT}/vendor
+# Include directories
+target_include_directories(playback PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/advisors
+    ${CMAKE_CURRENT_SOURCE_DIR}/authorities
+    ${CMAKE_CURRENT_SOURCE_DIR}/replayers
+    ${CMAKE_CURRENT_SOURCE_DIR}/replayers/replayer_factory
+    ${CMAKE_CURRENT_SOURCE_DIR}/replayers/replayer_types
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils
 )
+
+# Link nlohmann_json if available
+find_package(nlohmann_json QUIET)
+if (nlohmann_json_FOUND)
+    target_link_libraries(playback PRIVATE nlohmann_json::nlohmann_json)
+endif()
+
+# Enable warnings
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+    target_compile_options(playback PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+
+# Optionally add tests here
+# add_subdirectory(tests)
