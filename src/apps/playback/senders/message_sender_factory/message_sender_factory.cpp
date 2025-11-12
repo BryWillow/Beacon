@@ -8,11 +8,10 @@
  * =============================================================================
  */
 
-#pragma once
-
-#include "../message_sender_types/message_sender_interface.h"
 #include <memory>
 #include <string>
+
+#include "../message_sender_types/message_sender_interface.h"
 
 namespace market_data_playback {
 
