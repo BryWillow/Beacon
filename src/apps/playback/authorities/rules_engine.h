@@ -11,14 +11,14 @@
 
 #include <vector>
 #include <memory>
-#include "../interfaces/IPlaybackRules.h"
-#include "playback_state.h"
+#include "../interfaces/IPlaybackRules.h" // CMake
+#include "../playback_state.h"            // CMake
 
-namespace playback::playback_authorities {
+namespace playback::rules {
 
 // Use IPlaybackRule::Priority, IPlaybackRule::Outcome, IPlaybackRule::Decision directly
 using Priority = IPlaybackRule::Priority;
-using Outcome = IPlaybackRule::Outcome;
+using Outcome  = IPlaybackRule::Outcome;
 using Decision = IPlaybackRule::Decision;
 
 class RulesEngine {

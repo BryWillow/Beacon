@@ -1,11 +1,12 @@
 #pragma once
+
 #include <iostream>
-#include "message_sender_interface.h"
+#include "../../interfaces/IPlaybackMarketData.h" // CMake
 
 /**
  * @brief Console sender - prints messages to stdout (for debugging)
  */
-namespace market_data_playback {
+namespace playback::replayer {
   class ConsoleMessageSender : public IPlaybackMarketData {
   public:
     bool send(const char* message, size_t length) override {

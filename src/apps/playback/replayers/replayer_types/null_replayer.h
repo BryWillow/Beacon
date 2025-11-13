@@ -1,7 +1,8 @@
 #pragma once
-#include "message_sender_interface.h"
 
-namespace market_data_playback {
+#include "../../interfaces/IPlaybackMarketData.h" // CMake
+
+namespace playback::replayer {
   class NullMessageSender : public IPlaybackMarketData {
   public:
     NullMessageSender() = default;

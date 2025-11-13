@@ -4,9 +4,9 @@
 #include <stdexcept>
 #include <string>
 #include <hft/networking/tcp_client.h>
-#include "message_sender_interface.h"
+#include "../../interfaces/IPlaybackMarketData.h" // CMake
 
-namespace market_data_playback {
+namespace playback::replayer {
   class TcpMessageSender : public IPlaybackMarketData {
   public:
     TcpMessageSender(const std::string& host, uint16_t port)

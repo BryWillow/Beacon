@@ -13,7 +13,7 @@
 #include <chrono>
 #include <cstddef>
 
-namespace playback::authorities {
+namespace playback::rules {
 
 class PlaybackState; // Forward declaration
 
