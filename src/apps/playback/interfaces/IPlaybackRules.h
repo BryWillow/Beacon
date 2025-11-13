@@ -1,7 +1,7 @@
 /*
  * =============================================================================
  * Project:      Beacon
- * Application:  exchange_market_data_playback
+ * Application:  playback
  * Purpose:      Abstract interface for playback rules (e.g., time-based,
  *               sequence-based) used during market data playback.
  * Author:       Bryan Camp
@@ -13,32 +13,32 @@
 #include <chrono>
 #include <cstddef>
 
-namespace market_data_playback::playback_authorities {
+namespace playback::authorities {
 
 class PlaybackState; // Forward declaration
 
 class IPlaybackRule {
-public:
-  enum class Priority {
-    SAFETY = 0,
-    CONTROL = 1,
-    TIMING = 2,
-    CHAOS = 3
-  };
+  public:
+    enum class Priority {
+      SAFETY = 0,
+      CONTROL = 1,
+      TIMING = 2,
+      CHAOS = 3
+    };
 
-  enum class Outcome {
-    CONTINUE,
-    SEND_NOW,
-    DROP,
-    VETO,
-    MODIFIED
-  };
+    enum class Outcome {
+      CONTINUE,
+      SEND_NOW,
+      DROP,
+      VETO,
+      MODIFIED
+    };
 
-  struct Decision {
-    Outcome outcome = Outcome::CONTINUE;
-    std::chrono::microseconds accumulatedDelay{0};
-    void* metadata = nullptr;
-  };
+    struct Decision {
+      Outcome outcome = Outcome::CONTINUE;
+      std::chrono::microseconds accumulatedDelay{0};
+      void* metadata = nullptr;
+    };
 
   virtual ~IPlaybackRule() = default;
   virtual Priority getPriority() const = 0;
@@ -51,4 +51,4 @@ public:
   virtual void onPlaybackEnd() {}
 };
 
-} // namespace market_data_playback::playback_authorities
+} // namespace playback::authorities

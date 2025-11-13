@@ -20,7 +20,7 @@
 #include "message_buffer.h"
 #include "message_sender.h"
 #include "playback_state.h"
-#include "rules_engine.h"
+#include "authorities/rules_engine.h"
 #include <nlohmann/json.hpp>
 
 struct PlaybackConfig {

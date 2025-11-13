@@ -15,16 +15,19 @@
 /**
  * @brief Abstract interface for sending messages during playback
  */
-class IPlaybackMarketData {
-public:
-    virtual ~IPlaybackMarketData() = default;
 
-    // Send a message (returns true on success)
-    virtual bool send(const char* message, size_t length) = 0;
+namespace market_data_playback {
+    class IPlaybackMarketData {
+    public:
+        virtual ~IPlaybackMarketData() = default;
 
-    // Flush any buffered messages
-    virtual void flush() = 0;
+        // Send a message (returns true on success)
+        virtual bool send(const char* message, size_t length) = 0;
 
-    // Get statistics about messages sent
-    virtual size_t getMessagesSent() const = 0;
-};
+        // Flush any buffered messages
+        virtual void flush() = 0;
+
+        // Get statistics about messages sent
+        virtual size_t getMessagesSent() const = 0;
+    };
+} // namespace market_data_playback

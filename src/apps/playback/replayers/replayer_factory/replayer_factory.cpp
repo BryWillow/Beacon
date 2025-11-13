@@ -10,8 +10,7 @@
 
 #include <memory>
 #include <string>
-
-#include "../message_sender_types/message_sender_interface.h"
+#include <IMessageSender.h>
 
 namespace market_data_playback {
 
@@ -21,8 +20,6 @@ std::unique_ptr<IMessageSender> createSender(const std::string& type,
                                              uint8_t ttl);
 
 } // namespace market_data_playback
-
-#include "message_sender_factory.h"
 
 namespace market_data_playback {
 

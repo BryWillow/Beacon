@@ -12,7 +12,7 @@
 #include <iostream>
 #include <fstream>
 #include <nlohmann/json.hpp>
-#include <market_data_playback.h>
+#include "market_data_playback.h"
 #include <message_senders/message_sender_factory.h>
 #include <playback_authorities/rules_engine.h>
 #include <atomic>

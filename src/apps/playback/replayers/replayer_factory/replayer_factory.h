@@ -4,10 +4,10 @@
 #include <string>
 
 #include "../message_sender.h"
-#include "../message_sender_types/udp_message_sender.h"
-#include "../message_sender_types/tcp_message_sender.h"
-#include "../message_sender_types/null_message_sender.h"
-#include "../message_sender_types/console_message_sender.h"
+#include <udp_replayer>
+#include <tcp_replayer>
+#include <null_replayer>
+#include <console_replayer>
 
 namespace market_data_playback {
 

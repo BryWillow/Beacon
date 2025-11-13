@@ -3,15 +3,20 @@
 import subprocess
 import sys
 import os
+import shutil
 
 def main():
     # Set the playback app root directory
     app_root = os.path.dirname(os.path.abspath(__file__))
     build_dir = os.path.join(app_root, "build")
 
-    # Create build directory if it doesn't exist
-    if not os.path.exists(build_dir):
-        os.makedirs(build_dir)
+    # Remove build directory for a clean build
+    if os.path.exists(build_dir):
+        print("Cleaning build directory...")
+        shutil.rmtree(build_dir)
+
+    # Create build directory
+    os.makedirs(build_dir)
 
     # Run CMake (assumes CMakeLists.txt is in playback app root)
     print("Configuring with CMake...")
