@@ -11,76 +11,122 @@
 
 #include <vector>
 #include <memory>
-#include "../interfaces/IPlaybackRules.h" // CMake
-#include "../playback_state.h"            // CMake
+#include "../interfaces/IPlaybackRules.h"
+#include "../playback_state.h"
+#include "../advisors/message_priority_classifier.cpp"
 
 namespace playback::rules {
 
-// Use IPlaybackRule::Priority, IPlaybackRule::Outcome, IPlaybackRule::Decision directly
 using Priority = IPlaybackRule::Priority;
 using Outcome  = IPlaybackRule::Outcome;
 using Decision = IPlaybackRule::Decision;
 
 class RulesEngine {
 public:
-    RulesEngine() = default;
-    
-    // Add a rule to the engine (will be sorted by priority)
-    void addRule(std::unique_ptr<IPlaybackRule> rule) {
-        rule->initialize();
-        _rules.push_back(std::move(rule));
-        sortRules();
+  RulesEngine() = default;
+
+  // Add a rule to the engine (will be sorted by priority)
+  void addRule(std::unique_ptr<IPlaybackRule> rule) {
+    rule->initialize();
+    _rules.push_back(std::move(rule));
+    sortRules();
+  }
+
+  // Add an advisor (classifier) to the engine
+  void addAdvisor(std::unique_ptr<playback::advisors::IClassifyMessagePriority> advisor) {
+    _advisors.push_back(std::move(advisor));
+  }
+
+  // Access advisors (for rules that need them)
+  const std::vector<std::unique_ptr<playback::advisors::IClassifyMessagePriority>>& getAdvisors() const {
+    return _advisors;
+  }
+
+  // Evaluate all rules for a message
+  Decision evaluate(size_t messageIndex,
+                    const char* message,
+                    const PlaybackState& state) {
+    Decision decision;
+    decision.outcome = Outcome::CONTINUE;
+    decision.accumulatedDelay = std::chrono::microseconds(0);
+
+    // Apply rules in priority order (SAFETY first, CHAOS last)
+    for (auto& rule : _rules) {
+      decision = rule->apply(messageIndex, message, state, decision);
+
+      // Terminal outcomes short-circuit remaining rules
+      if (decision.outcome == Outcome::VETO ||
+          decision.outcome == Outcome::DROP) {
+        break;  // Higher priority rule blocked sending
+      }
     }
-    
-    // Evaluate all rules for a message
-    Decision evaluate(size_t messageIndex,
-                      const char* message,
-                      const PlaybackState& state) {
-        Decision decision;
-        decision.outcome = Outcome::CONTINUE;
-        decision.accumulatedDelay = std::chrono::microseconds(0);
-        
-        // Apply rules in priority order (SAFETY first, CHAOS last)
-        for (auto& rule : _rules) {
-            decision = rule->apply(messageIndex, message, state, decision);
-            
-            // Terminal outcomes short-circuit remaining rules
-            if (decision.outcome == Outcome::VETO ||
-                decision.outcome == Outcome::DROP) {
-                break;  // Higher priority rule blocked sending
-            }
-        }
-        
-        return decision;
+
+    return decision;
+  }
+
+  // Notify all rules that playback is starting
+  void notifyPlaybackStart() {
+    for (auto& rule : _rules) {
+      rule->onPlaybackStart();
     }
-    
-    // Notify all rules that playback is starting
-    void notifyPlaybackStart() {
-        for (auto& rule : _rules) {
-            rule->onPlaybackStart();
-        }
+  }
+
+  // Notify all rules that playback has ended
+  void notifyPlaybackEnd() {
+    for (auto& rule : _rules) {
+      rule->onPlaybackEnd();
     }
-    
-    // Notify all rules that playback has ended
-    void notifyPlaybackEnd() {
-        for (auto& rule : _rules) {
-            rule->onPlaybackEnd();
-        }
-    }
-    
-    // Get count of registered rules
-    size_t getRuleCount() const { return _rules.size(); }
-    
+  }
+
+  // Get count of registered rules
+  size_t getRuleCount() const { return _rules.size(); }
+
 private:
-    void sortRules() {
-        std::sort(_rules.begin(), _rules.end(),
-            [](const std::unique_ptr<IPlaybackRule>& a,
-               const std::unique_ptr<IPlaybackRule>& b) {
-                return a->getPriority() < b->getPriority();
-            });
-    }
-    
-    std::vector<std::unique_ptr<IPlaybackRule>> _rules;
+  void sortRules() {
+    std::sort(_rules.begin(), _rules.end(),
+      [](const std::unique_ptr<IPlaybackRule>& a,
+         const std::unique_ptr<IPlaybackRule>& b) {
+        return a->getPriority() < b->getPriority();
+      });
+  }
+
+  std::vector<std::unique_ptr<IPlaybackRule>> _rules;
+  std::vector<std::unique_ptr<playback::advisors::IClassifyMessagePriority>> _advisors;
 };
 
-} // namespace playback::playback_authorities
+// Example rule that uses the advisor to drop low-priority messages
+class PriorityDropRule : public IPlaybackRule {
+public:
+  PriorityDropRule(playback::advisors::IClassifyMessagePriority* advisor)
+    : _advisor(advisor) {}
+
+  Priority getPriority() const override { return Priority::CONTROL; }
+
+  Decision apply(size_t messageIndex,
+                 const char* message,
+                 const PlaybackState& state,
+                 Decision currentDecision) override {
+    auto priority = _advisor->classify(messageIndex, message, state);
+    Decision decision = currentDecision;
+    if (priority == playback::advisors::MessagePriority::NORMAL) {
+      decision.outcome = Outcome::DROP;
+    }
+    return decision;
+  }
+
+private:
+  playback::advisors::IClassifyMessagePriority* _advisor;
+};
+
+// Example usage in playback setup (e.g., main.cpp):
+/*
+#include "authorities/rules_engine.h"
+#include "advisors/message_priority_classifier.cpp"
+
+playback::advisors::PriceBasedMessagePriorityClassifier priorityClassifier;
+auto priorityDropRule = std::make_unique<playback::rules::PriorityDropRule>(&priorityClassifier);
+
+RulesEngine rulesEngine;
+rulesEngine.addRule(std::move(priorityDropRule));
+*/
+} // namespace playback::rules

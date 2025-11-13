@@ -1,7 +1,7 @@
 /*
  * =============================================================================
  * Project:      Beacon
- * Application:  exchange_market_data_playback
+ * Application:  playback
  * Purpose:      Main playback orchestrator that coordinates message buffer,
  *               rules engine, and message sender for market data replay.
  * Author:       Bryan Camp
@@ -16,11 +16,13 @@
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "interfaces/IMessageSender.h" // CMake
+#include "interfaces/IPlaybackMarketData.h" // CMake
 #include "authorities/rules_engine.h"  // CMake
 #include "message_buffer.h"
 #include "playback_state.h"
 #include <nlohmann/json.hpp>
+
+namespace payback::replayer {
 
 struct PlaybackConfig {
   std::string sender_type;
@@ -28,7 +30,6 @@ struct PlaybackConfig {
   uint16_t port;
   uint8_t ttl;
   std::string file_path;
-  // Add other config fields as needed
 };
 
 inline PlaybackConfig loadPlaybackConfig(const std::string& jsonPath) {
@@ -47,17 +48,17 @@ inline PlaybackConfig loadPlaybackConfig(const std::string& jsonPath) {
 
 class MarketDataPlayback {
   private:
-    std::unique_ptr<MessageSender> _sender;  
+    std::unique_ptr<IPlaybackMarketData> _sender;  
     MessageBuffer _buffer;
     RulesEngine _rulesEngine;
     PlaybackState _state;
     bool _loopForever = false;private:
 
 public:
-  MarketDataPlayback(std::unique_ptr<MessageSender> sender)
+  MarketDataPlayback(std::unique_ptr<IPlaybackMarketData> sender)
     : _sender(std::move(sender)) {}
 
-  MarketDataPlayback(IMessageSender* sender)
+  MarketDataPlayback(IPlaybackMarketData* sender)
     : _sender(sender) {}
 
   // Load the binary market data file: NSDQ, NYSE, or CME.
@@ -183,3 +184,4 @@ private:
     std::cout << "═══════════════════════════════════════════════════════════════════════════════\n\n";
   }
 };
+}

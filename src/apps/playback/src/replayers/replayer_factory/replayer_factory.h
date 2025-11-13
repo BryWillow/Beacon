@@ -3,14 +3,12 @@
 #include <memory>
 #include <string>
 
-#include "../message_sender.h"
-#include <udp_replayer>
-#include <tcp_replayer>
-#include <null_replayer>
-#include <console_replayer>
+#include "../../interfaces/IPlaybackMarketData.h"    // CMake 
+#include "../replayer_types/udp_replayer.h"
+#include "../replayer_types/tcp_replayer.h"
+#include "../replayer_types/null_replayer.h"
+#include "../replayer_types/console_replayer.h"
 
-namespace market_data_playback {
-
-  std::unique_ptr<IMessageSender> createSender(const std::string& type, const std::string& address, uint16_t port, uint8_t ttl = 1);
-
+namespace playback::replayer {
+  std::unique_ptr<IPlaybackMarketData> createSender(const std::string& type, const std::string& address, uint16_t port, uint8_t ttl = 1);
 }

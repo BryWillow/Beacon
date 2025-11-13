@@ -23,9 +23,9 @@ namespace playback::advisors {
     EMERGENCY = 3
   };
 
-  class IMessagePriorityClassifier {
+  class IClassifyMessagePriority {
     public:
-      virtual ~IMessagePriorityClassifier() = default;
+      virtual ~IClassifyMessagePriority() = default;
       virtual MessagePriority classify(size_t messageIndex,
                                       const char* message,
                                       const PlaybackState& state) = 0;

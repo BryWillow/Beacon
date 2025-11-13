@@ -35,7 +35,8 @@ bool ConfigProvider::loadConfig(const std::string& configName) {
   const char* envConfigRoot = std::getenv("BEACON_CONFIG_ROOT");
   if (envConfigRoot) {
     configRoot = envConfigRoot;
-  } else {
+  } 
+  else {
     configRoot = "config/playback/";
   }
   std::string configPath = configRoot + configName;
@@ -54,7 +55,8 @@ bool ConfigProvider::loadConfig(const std::string& configName) {
     if (_messageCount == 0) {
       throw std::runtime_error("'num_messages' must be greater than 0.");
     }
-  } else {
+  } 
+  else {
     throw std::runtime_error("Missing 'num_messages' field in config file.");
   }
 
@@ -93,7 +95,8 @@ bool ConfigProvider::loadConfig(const std::string& configName) {
         "'. Valid exchanges are: 'nsdq', 'cme', 'nyse'."
       );
     }
-  } else {
+  } 
+  else {
     throw std::runtime_error("Missing 'exchange' field in config file.");
   }
 
@@ -115,7 +118,8 @@ bool ConfigProvider::loadConfig(const std::string& configName) {
       
       _symbols.push_back(symbolData);
     }
-  } else {
+  } 
+  else {
     throw std::runtime_error("Missing 'symbols' field in config file.");
   }
 
@@ -126,13 +130,16 @@ std::unique_ptr<serializers::IMarketDataSerializer> ConfigProvider::createSerial
   if (_exchange == "nsdq") {
     // Create serializer for NASDAQ with flush interval
     return std::make_unique<serializers::NsdqMarketDataSerializer>(_outputFilePath, _flushInterval);
-  } else if (_exchange == "cme") {
+  } 
+  else if (_exchange == "cme") {
     // Create serializer for CME
     return std::make_unique<serializers::CmeMarketDataSerializer>(_outputFilePath);
-  } else if (_exchange == "nyse") {
+  } 
+  else if (_exchange == "nyse") {
     // Create serializer for NYSE
     return std::make_unique<serializers::NyseMarketDataSerializer>(_outputFilePath);
-  } else {
+  } 
+  else {
     throw std::runtime_error(
       "Unsupported exchange: '" + _exchange +
       "'. Valid exchanges are: 'nsdq', 'cme', 'nyse'. Ensure the exchange is correctly specified in the configuration file."

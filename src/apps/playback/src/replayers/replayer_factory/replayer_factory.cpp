@@ -10,7 +10,7 @@
 
 #include <memory>
 #include <string>
-#include "../../interfaces/IMessageSender.h"    // CMake
+#include "../../interfaces/IPlaybackMarketData.h"    // CMake
 #include "../replayer_types/tcp_replayer.h"     // CMake
 #include "../replayer_types/udp_replayer.h"     // CMake
 #include "../replayer_types/console_replayer.h" // CMake
@@ -18,12 +18,12 @@
 
 namespace playback::replayer {
 
-std::unique_ptr<IMessageSender> createSender(const std::string& type,
+std::unique_ptr<IPlaybackMarketData> createSender(const std::string& type,
                                              const std::string& address,
                                              uint16_t port,
                                              uint8_t ttl);
 
-std::unique_ptr<IMessageSender> createSender(const std::string& type, const std::string& address, uint16_t port, uint8_t ttl) {
+std::unique_ptr<IPlaybackMarketData> createSender(const std::string& type, const std::string& address, uint16_t port, uint8_t ttl) {
   if (type == "udp") {
     return std::make_unique<UdpMulticastMessageSender>(address, port, ttl);
   } 

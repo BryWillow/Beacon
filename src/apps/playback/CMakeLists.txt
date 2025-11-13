@@ -6,7 +6,7 @@
 # =============================================================================
 
 # Minimum CMake version
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.26)
 
 # Project name
 project(playback LANGUAGES CXX)
@@ -23,6 +23,8 @@ add_executable(playback
 )
 
 # Include directories
+set(SERIALIZERS_PATH /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon)
+
 target_include_directories(playback PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/advisors
@@ -34,6 +36,15 @@ target_include_directories(playback PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/utils
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor
 )
+
+# Add exchanges as an INTERFACE library for header-only usage
+add_library(exchanges INTERFACE)
+target_include_directories(exchanges INTERFACE
+  ${CMAKE_SOURCE_DIR}/libs/exchanges
+)
+
+# Link exchanges to playback
+target_link_libraries(playback PRIVATE exchanges)
 
 # Enable warnings
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
