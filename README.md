@@ -1,17 +1,49 @@
 # Beacon Trading System
 
-**A high-performance algorithmic trading system with ~4 microsecond tick-to-trade latency.**
+
+**A high-performance algorithmic trading system built in modern C++20, with ~4 microsecond tick-to-trade latency.**
+
+---
+
+## ⚡ Technical Highlights
+
+- **Languages:** C++20, Python (for scripting)
+- **Build System:** CMake - **entire repo and invididual applications**
+- **CI/CD:** GitHub Actions
+- **Testing:** [GoogleTest](https://google.github.io/googletest/)
+- **Networking:** UDP/TCP for all communication
+- **Testing:** Unit tests written using Google Test framework
+- **Configuration:** Intelligent defaults, easily overridden via `.json` config files
+- **Protocol Rollbacks:** Supports protocol version rollbacks (price/orders independently) via simple config changes
+
+---
+
+## ⚡ System Requirements
+
+- [Linux](https://www.linux.org/pages/download/) or MacOS
+- C++ 20 Compiler
+- [CMake](https://cmake.org/download/)
+- [Python](https://www.python.org/downloads/) 
+
+---
 
 ## 🚀 Quick Start
 
+
+
+
+
+Setting up Beacon is ***super simple!*** Just do the following from a terminal:
+
 ```bash
-# Run the complete system
-python3 scripts/beacon-run.py 30
+git clone https://github.com/bryanlcamp/beacon.git
+python3 beacon-build.py
+python3 beacon-run.py
 ```
 
-That's it! The system will start the matching engine, your algorithm, and market data playback.
+That's it! This downloads and builds the codebase, and runs Beacon with system defaults. Now you can see Beacon in action!
 
-**→ [Full Getting Started Guide](docs/getting-started.md)** *(if available)*
+**→ [Customizing Beacon](docs/getting-started.md)**
 
 ---
 
@@ -30,30 +62,57 @@ That's it! The system will start the matching engine, your algorithm, and market
 
 ## 🏗️ Architecture
 
-**Beacon is a modular HFT trading system with:**
 
-- **Matching Engine** - OUCH protocol order matching
-- **Market Data Generator** - Creates realistic ITCH market data
-- **Market Data Playback** - UDP multicast streaming
-- **Algorithm Framework** - Low-latency trading strategies
+**Beacon is a modular HFT trading system with four distinct executable parts, each of which can be run independently:**
 
-**Key Technologies:**
-- Lock-free ring buffers (SPSC)
-- Thread pinning for deterministic performance
-- UDP multicast for market data
-- TCP for order entry
-- Professional Python orchestration
+### 1. Generator
+- Creates binary data files containing exchange-formatted messages
+- Control over total messages, symbols, exchanges, open (seed) price, bid-ask spread range, and trading frequency per symbol
+- Downloads previous day’s close price and trading data for intelligent suggestions
+- Generate unlimited datasets (binary files)
+
+### 2. Playback
+- Reads generator-created files into memory at startup
+- Broadcasts real exchange packets via UDP, simulating a real exchange
+- Flexible playback controls: burst frequency, circuit breakers, trading halts, message throttles, price overrides
+- Pluggable rule system—implement your own interface
+- Supports repeated playback of the same file
+
+### 3. Client Algorithm
+- Receives raw packets from playback via UDP
+- Ultra-fast market-data handler: lock-free data structures, cache-aware padded structs, thread affinity, SPSC queue
+- Hot path constantly polls SPSC queue (mm_pause), pinned to a core, no threading
+- Built-in 3-tier risk checking (warning, alert, hard-stop): per-product position, messaging frequency, PnL
+- Simple TWAP and VWAP algos provided; pluggable algo system—implement your own
+- Sends order messages to matching engine via TCP using proper exchange protocol
+- Handles execution reports; test your algorithm under diverse market conditions
+
+### 4. Matching Engine
+- Receives raw exchange-protocol order instructions from client_algo via TCP
+- Simple FIFO matching engine, extensible for future enhancements
+- Sends execution reports using proper exchange protocol back to client_algo via TCP
+
+---
 
 ---
 
 ## 🎯 Key Features
 
-✅ **~4-5 μs mean latency** (tick-to-trade on MacBook)  
-✅ **Professional Python scripts** with `beacon-` prefix  
-✅ **One command to run** the entire system  
-✅ **Real market data** from previous day's prices  
-✅ **Comprehensive statistics** with latency histograms  
-✅ **Clean architecture** with clear separation of concerns  
+
+✅ **Built in C++20 for modern performance and safety**
+✅ **Proper exchange protocol support for NSDQ (ITCH/OUCH), NYSE (Pillar), CME (TotalView)**
+✅ **UDP/TCP networking for all components**
+✅ **Straightforward CMake build system**
+✅ **Google Test framework for unit tests**
+✅ **Intelligent defaults, easily overridden in .json config files**
+✅ **Protocol version rollbacks via config**
+✅ **Modular executables—run independently or together**
+✅ **Pluggable rule and algo systems—extend via simple interfaces**
+✅ **Ultra-fast market data handling: lock-free, cache-aware, thread affinity**
+✅ **3-tier risk management built-in**
+✅ **TWAP/VWAP sample algos included**
+✅ **Comprehensive statistics and latency histograms**
+✅ **Competitive HFT performance on a laptop!**
 
 ---
 
