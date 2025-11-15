@@ -1,7 +1,7 @@
 /*
  * =============================================================================
  * Project:      Beacon
- * Application:  exchange_market_data_playback
+ * Application:  playback
  * Purpose:      Tracks the current state of playback including timing,
  *               message counts, and rates for use by playback rules.
  * Author:       Bryan Camp

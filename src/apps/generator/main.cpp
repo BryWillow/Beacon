@@ -1,7 +1,7 @@
 /*
  * =============================================================================
  * Project:      Beacon
- * Application:  exchange_market_data_generator
+ * Application:  playback
  * Purpose:      Main entry point for the exchange market data generator.
  *               Parses command-line arguments, loads configuration, and
  *               orchestrates message generation with proper error handling.
@@ -9,15 +9,14 @@
  * =============================================================================
  */
 
-#include "config_provider.h"
-#include "message_generator.h"
-
 #include <nlohmann/json.hpp>
 
 #include <algorithm>
 #include <filesystem>
 #include <iostream>
 #include <string>
+
+#include "binary_file_replayer.h"
 
 namespace beaconconfig = beacon::market_data_generator::config;
 

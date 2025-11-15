@@ -5,36 +5,40 @@
 # Author:       Bryan Camp
 # =============================================================================
 
-# Minimum CMake version
 cmake_minimum_required(VERSION 3.26)
-
-# Project name
 project(playback LANGUAGES CXX)
-
-# Set the C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Collect sources
-add_executable(playback
-    main.cpp
-    replayers/replayer_factory/replayer_factory.cpp
+# Note: This app can be built two ways:
+# (1) As a standalone executable. 
+# (2) With a larger Beacon build of other executables.
+# 
+# Regardless, we need to know the root of the repo for:
+# vendor, config, etc.
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    # This is a standalone build. Adjust the REPO root.
+    set(BEACON_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../..")
+else()
+    # This is part of a larger Beacon build.
+    set(BEACON_ROOT "${CMAKE_SOURCE_DIR}")
+endif()
+
+# UGLY, FIXCollect sources using glob
+file(GLOB PLAYBACK_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )
 
-# Include directories
-set(SERIALIZERS_PATH /Users/bryancamp/SoftwareDevelopment/cpp/professional/Beacon)
+add_executable(playback ${PLAYBACK_SOURCES})
 
 target_include_directories(playback PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/advisors
-    ${CMAKE_CURRENT_SOURCE_DIR}/authorities
-    ${CMAKE_CURRENT_SOURCE_DIR}/interfaces
-    ${CMAKE_CURRENT_SOURCE_DIR}/replayers
-    ${CMAKE_CURRENT_SOURCE_DIR}/replayers/replayer_factory
-    ${CMAKE_CURRENT_SOURCE_DIR}/replayers/replayer_types
-    ${CMAKE_CURRENT_SOURCE_DIR}/utils
-    ${CMAKE_CURRENT_SOURCE_DIR}/vendor
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/interfaces
+    ${BEACON_ROOT}/include
+    ${BEACON_ROOT}/vendor
 )
 
 # Add exchanges as an INTERFACE library for header-only usage

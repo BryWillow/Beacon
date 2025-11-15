@@ -1,0 +1,4 @@
+{
+  "type": "max_price_move_classifier",
+  "price_move_threshold": 25.0
+}

@@ -11,7 +11,9 @@
 
 #include <vector>
 #include <memory>
-#include "../interfaces/IPlaybackRules.h"
+
+#include <IPlaybackRule.h>
+#include <IClassifyMessagePriority.h>
 #include "../playback_state.h"
 #include "../advisors/message_priority_classifier.cpp"
 
@@ -117,16 +119,4 @@ public:
 private:
   playback::advisors::IClassifyMessagePriority* _advisor;
 };
-
-// Example usage in playback setup (e.g., main.cpp):
-/*
-#include "authorities/rules_engine.h"
-#include "advisors/message_priority_classifier.cpp"
-
-playback::advisors::PriceBasedMessagePriorityClassifier priorityClassifier;
-auto priorityDropRule = std::make_unique<playback::rules::PriorityDropRule>(&priorityClassifier);
-
-RulesEngine rulesEngine;
-rulesEngine.addRule(std::move(priorityDropRule));
-*/
 } // namespace playback::rules

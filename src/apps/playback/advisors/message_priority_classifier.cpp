@@ -1,19 +1,37 @@
-#include "../interfaces/IClassifyMessagePriority.h"
+#include <IClassifyMessagePriority.h>
 #include "../playback_state.h"
 
 namespace playback::advisors {
 
-// Example: Classifies messages as CRITICAL if price > 1000, else NORMAL
-class PriceBasedMessagePriorityClassifier : public IClassifyMessagePriority {
+// Classifies messages as CRITICAL if price move exceeds threshold, else NORMAL
+class MaxPriceMoveMessagePriorityClassifier : public IClassifyMessagePriority {
 public:
+  MaxPriceMoveMessagePriorityClassifier(double threshold)
+    : _thresholdMovePrice(threshold), _lastPrice(0.0), _isFirstPrice(true) {}
+
   MessagePriority classify(size_t messageIndex, const char* message, const PlaybackState& state) override {
-    // Example: Assume message contains price at offset 8 as double
     double price = *reinterpret_cast<const double*>(message + 8);
-    if (price > 1000.0) {
-      return MessagePriority::CRITICAL;
+    MessagePriority priority = MessagePriority::NORMAL;
+
+    if (_isFirstPrice) {
+      _lastPrice = price;
+      _isFirstPrice = false;
+      return priority;
     }
-    return MessagePriority::NORMAL;
+
+    double priceMove = std::abs(price - _lastPrice);
+    if (priceMove > _thresholdMovePrice) {
+      priority = MessagePriority::CRITICAL;
+    }
+
+    _lastPrice = price;
+    return priority;
   }
+
+private:
+  double _thresholdMovePrice;
+  double _lastPrice;
+  bool _isFirstPrice;
 };
 
 } // namespace playback::advisors

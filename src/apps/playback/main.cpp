@@ -1,7 +1,7 @@
 /*
  * =============================================================================
  * Project:      Beacon
- * Application:  exchange_market_data_playback
+ * Application:  playback
  * Purpose:      Main entry point for market data playback tool. Loads binary
  *               market data files and replays them with configurable timing,
  *               burst patterns, and chaos testing rules.
@@ -11,13 +11,12 @@
 
 #include <iostream>
 #include <fstream>
-#include <nlohmann/json.hpp>
-#include "market_data_playback.h"
-#include <message_senders/message_sender_factory.h>
-#include <playback_authorities/rules_engine.h>
 #include <atomic>
 #include <thread>
 #include <chrono>
+#include <nlohmann/json.hpp>
+#include <authorities/rules_engine.h>
+#include <replayers/replayer_factory.h>
 
 namespace fs = std::filesystem;
 
@@ -132,7 +131,6 @@ int main(int argc, char* argv[]) {
       int burstIntervalMs = ruleConfig.value("burst_interval_ms", 100);
       rulesEngine.addRule(std::make_unique<market_data_playback::playback_authorities::BurstRule>(burstSize, std::chrono::milliseconds(burstIntervalMs)));
     }
-    // ...repeat for other rule types...
   }
 
     // Parse arguments
